@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.essentials.GameStateManager;
+import com.nnldev.fartlek.states.LoadState;
 import com.nnldev.fartlek.states.MenuState;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
@@ -21,6 +22,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     //Can use this in any class to see if it is inside a rectangle.
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
+    public static boolean soundEnabled;
 
     private SpriteBatch batch;
     private GameStateManager gsm;
@@ -30,14 +32,15 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void create() {
+        soundEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         //r,g,b,alpha
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        gsm.push(new MenuState(gsm));
         mousePos = new Vector3();
         cam = new OrthographicCamera();
         cam.setToOrtho(false, Fartlek.WIDTH, Fartlek.HEIGHT);
+        gsm.push(new MenuState(gsm));
     }
 
     /**
