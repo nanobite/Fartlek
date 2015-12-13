@@ -21,7 +21,7 @@ public class Runner {
         position = new Vector3((Fartlek.WIDTH / 2) - (texture.getWidth() / 2), 160, 0);
         rectangle = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
         velocity = new Vector3();
-        horizontalSpeed = 8;
+        horizontalSpeed =10;
     }
 
     public void update() {
