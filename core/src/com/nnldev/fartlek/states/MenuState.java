@@ -5,16 +5,18 @@
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
+import com.nnldev.fartlek.sprites.FloorTile;
+
+import java.util.ArrayList;
 
 public class MenuState extends State {
     private Button playBtn;
     private Button soundBtn;
-
+    
     /**
      * Makes a new menu state
      *
@@ -42,16 +44,18 @@ public class MenuState extends State {
                 dispose();
             }
             if (soundBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                String message = "";
                 if (soundBtn.getPath().equals("sound.png")) {
                     Fartlek.soundEnabled = false;
                     soundBtn.setTexture("nosound.png");
+                    message = "Sound Off";
                 } else {
                     Fartlek.soundEnabled = true;
                     soundBtn.setTexture("sound.png");
+                    message = "Sound On";
                 }
             }
         }
-
     }
 
     /**
