@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by Nano on 12/12/2015.
  */
-public class Box extends Obstacle{
+public class Box implements Obstacle {
     public Box(String path, int x, int y) {
-        super(path, x, y);
+
     }
 
     @Override
@@ -39,6 +39,11 @@ public class Box extends Obstacle{
 
     @Override
     public void setRectangle(Rectangle rectangle) {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }
