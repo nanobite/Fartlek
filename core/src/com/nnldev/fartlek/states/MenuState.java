@@ -5,6 +5,7 @@
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
@@ -12,6 +13,7 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 
 public class MenuState extends State {
     private Button playBtn;
+    private Button soundBtn;
 
     /**
      * Makes a new menu state
@@ -21,6 +23,12 @@ public class MenuState extends State {
     public MenuState(GameStateManager gsm) {
         super(gsm);
         playBtn = new Button("playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
+        if (Fartlek.soundEnabled) {
+            soundBtn = new Button("sound.png", 30, Fartlek.HEIGHT - 30, true);
+        } else {
+            soundBtn = new Button("nosound.png", 30, Fartlek.HEIGHT - 30, true);
+        }
+
     }
 
     /**
@@ -32,6 +40,15 @@ public class MenuState extends State {
             if (playBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new PlayState(gsm));
                 dispose();
+            }
+            if (soundBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                if (soundBtn.getPath().equals("sound.png")) {
+                    Fartlek.soundEnabled = false;
+                    soundBtn.setTexture("nosound.png");
+                } else {
+                    Fartlek.soundEnabled = true;
+                    soundBtn.setTexture("sound.png");
+                }
             }
         }
 
@@ -58,6 +75,7 @@ public class MenuState extends State {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
         sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y);
+        sb.draw(soundBtn.getTexture(), soundBtn.getPosition().x, soundBtn.getPosition().y);
         sb.end();
     }
 
@@ -67,5 +85,6 @@ public class MenuState extends State {
     @Override
     public void dispose() {
         playBtn.dispose();
+        soundBtn.dispose();
     }
 }

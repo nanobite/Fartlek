@@ -13,6 +13,7 @@ public class Button {
     private Vector3 position;
     private Texture texture;
     private Rectangle rectangle;
+    private String path;
 
     /**
      * Draws a button, allowing for the decision to draw the button centred or not textured.
@@ -23,6 +24,7 @@ public class Button {
      * @param centre Whether the image will be centred onto the point or not.
      */
     public Button(String path, float x, float y, boolean centre) {
+        this.path = path;
         if (centre) {
             texture = new Texture(path);
             position = new Vector3(x - (texture.getWidth() / 2), y - (texture.getHeight() / 2), 0);
@@ -49,12 +51,25 @@ public class Button {
         this.texture = texture;
     }
 
+    public void setTexture(String path) {
+        this.path = path;
+        setTexture(new Texture(path));
+    }
+
     public Rectangle getRectangle() {
         return rectangle;
     }
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public void dispose() {
