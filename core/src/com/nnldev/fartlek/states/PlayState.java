@@ -5,13 +5,30 @@
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
+import com.nnldev.fartlek.essentials.TouchQuadrant;
+import com.nnldev.fartlek.sprites.FloorTile;
+import com.nnldev.fartlek.sprites.Obstacle;
+import com.nnldev.fartlek.sprites.Runner;
+
+import java.util.ArrayList;
 
 public class PlayState extends State {
     private Button exitBtn;
+    private Runner runner;
+    private TouchQuadrant bottomLeft;
+    private TouchQuadrant bottomRight;
+    private Music music;
+    private ArrayList<Obstacle> obstacles;
+    private ArrayList<FloorTile[]> floorTiles;
+    private int tileWidth;
+    private int tileHeight;
+    private String tileTextureName;
 
     /**
      * Creates a new game state
@@ -20,7 +37,31 @@ public class PlayState extends State {
      */
     public PlayState(GameStateManager gsm) {
         super(gsm);
+        tileTextureName = "floortile.png";
         exitBtn = new Button("exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        runner = new Runner("rabbit.png");
+        bottomLeft = new TouchQuadrant(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        bottomRight = new TouchQuadrant((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        obstacles = new ArrayList<Obstacle>();
+        tileWidth = new Texture(tileTextureName).getWidth();
+        tileHeight = new Texture(tileTextureName).getHeight();
+        floorTiles = new ArrayList<FloorTile[]>();
+        newTileRow();
+        startMusic("music1.mp3");
+    }
+
+    public void startMusic(String song) {
+        music = Gdx.audio.newMusic(Gdx.files.internal("music1.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.1f);
+        if (Fartlek.soundEnabled) music.play();
+    }
+
+    public void newTileRow() {
+        floorTiles.add(new FloorTile[FloorTile.TILES_PER_ROW]);
+        for (int i = 0; i < floorTiles.get(0).length; i++) {
+            floorTiles.get(floorTiles.size() - 1)[i] = new FloorTile(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
+        }
     }
 
     /**
@@ -28,11 +69,18 @@ public class PlayState extends State {
      */
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
             if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new MenuState(gsm));
                 dispose();
             }
+            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                runner.left();
+            }
+            if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                runner.right();
+            }
+
         }
     }
 
@@ -44,6 +92,25 @@ public class PlayState extends State {
     @Override
     public void update(float deltaTime) {
         handleInput();
+        runner.update();
+        //Loops through all the tiles and updates their positions
+        for (FloorTile[] tileArray : floorTiles) {
+            for (FloorTile tile : tileArray) {
+                tile.update();
+            }
+        }
+        //If the array at the top's height + its y position are equal to the height of the screen, it will add another array on top of it
+        if ((floorTiles.get(floorTiles.size() - 1)[0].getPosition().y + floorTiles.get(floorTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
+            newTileRow();
+        }
+        //If the array of tiles goes below 0 then it will dispose of it to avoid memory leaks and save space
+        if ((floorTiles.get(0)[0].getPosition().y + floorTiles.get(0)[0].getRectangle().height) < 0) {
+            //Removes the oldest one
+            for (FloorTile tile : floorTiles.get(0)) {
+                tile.dispose();
+            }
+            floorTiles.remove(0);
+        }
 
     }
 
@@ -56,6 +123,14 @@ public class PlayState extends State {
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
+        for (Obstacle obstacle : obstacles)
+            sb.draw(obstacle.getTexture(), obstacle.getPosition().x, obstacle.getPosition().y);
+        for (FloorTile[] tileArray : floorTiles) {
+            for (FloorTile tile : tileArray) {
+                sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
+            }
+        }
+        sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
         sb.end();
     }
@@ -66,5 +141,9 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         exitBtn.dispose();
+        runner.dispose();
+        music.dispose();
+        for (Obstacle obstacle : obstacles)
+            obstacle.dispose();
     }
 }
