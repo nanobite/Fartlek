@@ -7,6 +7,7 @@ package com.nnldev.fartlek;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,12 +27,14 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
 
     private SpriteBatch batch;
     private GameStateManager gsm;
+    private FPSLogger fpsLogger;
 
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
+        fpsLogger = new FPSLogger();
         soundEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
@@ -48,6 +51,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
+        fpsLogger.log();
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
