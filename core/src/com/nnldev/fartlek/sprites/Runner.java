@@ -99,4 +99,7 @@ public class Runner {
     public void dispose() {
         texture.dispose();
     }
+    public void changePic(String path){
+        texture = new Texture(path);
+    }
 }
