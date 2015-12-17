@@ -35,43 +35,82 @@ public class Button {
         rectangle = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
     }
 
+    /**
+     * Gets the position of the button
+     *
+     * @return
+     */
     public Vector3 getPosition() {
         return position;
     }
 
+    /**
+     * Sets the position of the button
+     *
+     * @param position
+     */
     public void setPosition(Vector3 position) {
         this.position = position;
     }
 
+    /**
+     * Gets the texture of the button
+     *
+     * @return
+     */
     public Texture getTexture() {
         return texture;
     }
 
+    /**
+     * Sets the texture of the button given a different texture
+     *
+     * @param texture
+     */
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
 
+    /**
+     * Sets the texture of the button given a name for the picture
+     *
+     * @param path
+     */
     public void setTexture(String path) {
         this.path = path;
         setTexture(new Texture(path));
     }
 
+    /**
+     * Gets the rectangle bounds for the button
+     *
+     * @return
+     */
     public Rectangle getRectangle() {
         return rectangle;
     }
 
+    /**
+     * Sets the rectangle bounds for the button
+     *
+     * @param rectangle
+     */
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
     }
 
+    /**
+     * Gets the name path for the picture
+     *
+     * @return
+     */
     public String getPath() {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
+    /**
+     * Disposes of the picture of the button
+     */
     public void dispose() {
         texture.dispose();
     }

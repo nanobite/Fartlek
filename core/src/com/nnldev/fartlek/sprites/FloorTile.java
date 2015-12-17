@@ -9,7 +9,7 @@ import com.nnldev.fartlek.Fartlek;
  * Created by Nano on 12/12/2015.
  */
 public class FloorTile {
-    public static final int TILES_PER_ROW = 8;
+    public static final int TILES_PER_ROW = 1;
     private Texture texture;
     private Vector3 position;
     private Vector3 velocity;
@@ -23,10 +23,17 @@ public class FloorTile {
      * @param y    The y position of the tile
      */
     public FloorTile(String path, float x, float y) {
-        velocity = new Vector3(0, -4, 0);
+        System.out.println("New tile.");
         texture = new Texture(path);
         position = new Vector3(x, y, 0);
         rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+        for (int i = 8; i > 0; i--) {
+            if (rectangle.getHeight() % i == 0) {
+                velocity = new Vector3(0, -i, 0);
+                i = -1;
+            }
+        }
+
     }
 
     /**

@@ -10,11 +10,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.essentials.GameStateManager;
-import com.nnldev.fartlek.states.LoadState;
 import com.nnldev.fartlek.states.MenuState;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
@@ -51,7 +49,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
-        fpsLogger.log();
+        //fpsLogger.log();
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
