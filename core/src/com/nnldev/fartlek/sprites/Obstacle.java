@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-public interface Obstacle {
+public abstract class Obstacle {
     /**
      * Updates the obstacle and it's position and what not
      *
      * @param dt The time which passed wicne the last update
      */
-    public void update(float dt);
+    public abstract void update(float dt);
 
     /**
      * Returns the position of the obstacle
