@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
-import com.nnldev.fartlek.essentials.TouchQuadrant;
+import com.nnldev.fartlek.essentials.TouchSector;
 import com.nnldev.fartlek.sprites.FloorTile;
 import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class PlayState extends State {
     private Button exitBtn;
     private Runner runner;
-    private TouchQuadrant bottomLeft;
-    private TouchQuadrant bottomRight;
+    private TouchSector bottomLeft;
+    private TouchSector bottomRight;
     private Music music;
     private ArrayList<Obstacle> obstacles;
     private ArrayList<FloorTile[]> floorTiles;
@@ -33,15 +33,15 @@ public class PlayState extends State {
     /**
      * Creates a new game state
      *
-     * @param gsm
+     * @param gsm The game state manager which is controlling this state
      */
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        tileTextureName = "floortile.png";
+        tileTextureName = "tile1.png";
         exitBtn = new Button("exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("rabbit.png");
-        bottomLeft = new TouchQuadrant(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        bottomRight = new TouchQuadrant((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        runner = new Runner("animation.png", 4);
+        bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         obstacles = new ArrayList<Obstacle>();
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
@@ -50,6 +50,11 @@ public class PlayState extends State {
         startMusic("music1.mp3");
     }
 
+    /**
+     * Starts playing a song
+     *
+     * @param song The name of the song to play
+     */
     public void startMusic(String song) {
         music = Gdx.audio.newMusic(Gdx.files.internal("music1.mp3"));
         music.setLooping(true);
@@ -57,6 +62,13 @@ public class PlayState extends State {
         if (Fartlek.soundEnabled) music.play();
     }
 
+    public void newObstacles() {
+
+    }
+
+    /**
+     * Makes a new row of tiles
+     */
     public void newTileRow() {
         floorTiles.add(new FloorTile[FloorTile.TILES_PER_ROW]);
         for (int i = 0; i < floorTiles.get(0).length; i++) {
@@ -69,14 +81,18 @@ public class PlayState extends State {
      */
     @Override
     protected void handleInput() {
+        //If oyu thouched the screen
         if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
+            //If the x,y position of the click is in the exit button
             if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new MenuState(gsm));
                 dispose();
             }
+            //If the x,y position of the click is in the bottom left
             if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 runner.left();
             }
+            //If the x,y position of the click is in the bottom right
             if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 runner.right();
             }
@@ -92,7 +108,7 @@ public class PlayState extends State {
     @Override
     public void update(float deltaTime) {
         handleInput();
-        runner.update();
+        runner.update(deltaTime);
         //Loops through all the tiles and updates their positions
         for (FloorTile[] tileArray : floorTiles) {
             for (FloorTile tile : tileArray) {
@@ -105,6 +121,7 @@ public class PlayState extends State {
         }
         //If the array of tiles goes below 0 then it will dispose of it to avoid memory leaks and save space
         if ((floorTiles.get(0)[0].getPosition().y + floorTiles.get(0)[0].getRectangle().height) < 0) {
+            System.out.println("Dispose of tile.");
             //Removes the oldest one
             for (FloorTile tile : floorTiles.get(0)) {
                 tile.dispose();
@@ -117,7 +134,7 @@ public class PlayState extends State {
     /**
      * Renders the graphics to the screen
      *
-     * @param sb
+     * @param sb The sprite batch which is all the stuff that's going to be drawn to the screen.
      */
     @Override
     public void render(SpriteBatch sb) {

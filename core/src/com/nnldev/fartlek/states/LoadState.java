@@ -6,7 +6,11 @@ import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.GameStateManager;
 
 public class LoadState extends State {
-
+    /**
+     * A load screen state
+     *
+     * @param gsm
+     */
     public LoadState(final GameStateManager gsm) {
         super(gsm);
     }
