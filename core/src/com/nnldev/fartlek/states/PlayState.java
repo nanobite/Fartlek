@@ -12,6 +12,7 @@ import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.essentials.TouchSector;
+import com.nnldev.fartlek.sprites.Box;
 import com.nnldev.fartlek.sprites.FloorTile;
 import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
@@ -24,11 +25,13 @@ public class PlayState extends State {
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
     private Music music;
-    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Obstacle[]> obstacles;
     private ArrayList<FloorTile[]> floorTiles;
     private int tileWidth;
     private int tileHeight;
+    private int obstacleSeperation = 50;
     private String tileTextureName;
+    private static Obstacle[] possibleObstacles = {};
 
     /**
      * Creates a new game state
@@ -42,7 +45,7 @@ public class PlayState extends State {
         runner = new Runner("animation.png", 4);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        obstacles = new ArrayList<Obstacle>();
+        obstacles = new ArrayList<Obstacle[]>();
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
         floorTiles = new ArrayList<FloorTile[]>();
@@ -62,8 +65,36 @@ public class PlayState extends State {
         if (Fartlek.soundEnabled) music.play();
     }
 
-    public void newObstacles() {
-
+    /**
+     * Creates a new obstacle
+     *
+     * @param len       The length of the array of obstacles which will be made
+     * @param obstacles The array of possible obstacles which could be in the randomized array
+     * @param nulls     The number of nulls which will be in the final array
+     * @return The randomized array of obstacles
+     */
+    //TODO: Right now this array won't work because there is no box.png and there is a bit more setup code to do before we can implement obstacles
+    public Obstacle[] newObstacleArray(int len, Obstacle[] obstacles, int nulls) {
+        Obstacle[] sendBack = new Obstacle[len];
+        for (int i = 0; i < len; i++) {
+            sendBack[i] = new Box("box.png", i * obstacleSeperation, Fartlek.HEIGHT, 0);
+        }
+        //first place nulls in random locations
+        for (int i = 0; i < nulls; i++) {
+            int zeroLoc = (int) (Math.random() * len);
+            while (sendBack[zeroLoc] == null) {
+                zeroLoc = (int) (Math.random() * len);
+            }
+            sendBack[zeroLoc] = null;
+        }
+        //fill up rest of numbers
+        for (int i = 0; i < len; i++) {
+            int random = (int) (Math.random() * obstacles.length);
+            if (sendBack[i] != null) {
+                sendBack[i] = obstacles[random];
+            }
+        }
+        return sendBack;
     }
 
     /**
@@ -140,13 +171,12 @@ public class PlayState extends State {
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
-        for (Obstacle obstacle : obstacles)
-            sb.draw(obstacle.getTexture(), obstacle.getPosition().x, obstacle.getPosition().y);
-        for (FloorTile[] tileArray : floorTiles) {
-            for (FloorTile tile : tileArray) {
+        for (Obstacle[] obstacleArr : obstacles)
+            for (Obstacle obstacle : obstacleArr)
+                sb.draw(obstacle.getTexture(), obstacle.getPosition().x, obstacle.getPosition().y);
+        for (FloorTile[] tileArray : floorTiles)
+            for (FloorTile tile : tileArray)
                 sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
-            }
-        }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
         sb.end();
@@ -160,7 +190,8 @@ public class PlayState extends State {
         exitBtn.dispose();
         runner.dispose();
         music.dispose();
-        for (Obstacle obstacle : obstacles)
-            obstacle.dispose();
+        for (Obstacle[] obstacleArr : obstacles)
+            for (Obstacle obstacle : obstacleArr)
+                obstacle.dispose();
     }
 }
