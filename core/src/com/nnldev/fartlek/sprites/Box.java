@@ -7,13 +7,17 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by Nano on 12/12/2015.
  */
-public class Box implements Obstacle {
-    private Texture texture;
-    private Vector3 position;
-    private Rectangle rectangle;
-    private Vector3 velocity;
+public class Box extends Obstacle {
     private int health;
 
+    /**
+     * Creates a
+     *
+     * @param path
+     * @param x
+     * @param y
+     * @param health
+     */
     public Box(String path, int x, int y, int health) {
         this.health = health;
         texture = new Texture(path);

@@ -1,3 +1,4 @@
+/*
 public static int[] rndmize(int len,int[] nums,int zeros){
   int[] sendBack = new int[len];
   for(int i =0;i<len;i++){
@@ -20,3 +21,4 @@ public static int[] rndmize(int len,int[] nums,int zeros){
   }
   return sendBack;
 }
+*/

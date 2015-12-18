@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class Obstacle {
+    protected Texture texture;
+    protected Vector3 velocity;
+    protected Vector3 position;
+    protected Rectangle rectangle;
     /**
      * Updates the obstacle and it's position and what not
      *
