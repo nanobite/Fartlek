@@ -159,7 +159,7 @@ public class Runner {
     }
 
     /**
-     * Makes a new bullet
+     * Adds a new bullet to the bullet timer
      */
     public void shoot() {
         bullets.add(new Bullet());
@@ -168,7 +168,8 @@ public class Runner {
     public void dispose() {
         texture.dispose();
     }
-    public void changePic(String path){
+
+    public void changePic(String path) {
         texture = new Texture(path);
     }
 }
