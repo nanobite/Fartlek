@@ -40,7 +40,7 @@ public class PlayState extends State {
         super(gsm);
         tileTextureName = "Scene\\bckg.png";
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("Characters\\ship1Anim.png", 3);
+        runner = new Runner("Characters\\sphereAnim.png", 9);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -48,7 +48,12 @@ public class PlayState extends State {
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
         floorTiles = new ArrayList<FloorTile[]>();
-        newTileRow();
+
+        floorTiles.add(new FloorTile[FloorTile.TILES_PER_ROW]);
+        for (int i = 0; i < floorTiles.get(0).length; i++) {
+            floorTiles.get(floorTiles.size() - 1)[i] = new FloorTile(tileTextureName, i * tileWidth, 0);
+        }
+        newTile();
         startMusic("music1.mp3");
     }
 
@@ -71,7 +76,7 @@ public class PlayState extends State {
     /**
      * Makes a new row of tiles
      */
-    public void newTileRow() {
+    public void newTile() {
         floorTiles.add(new FloorTile[FloorTile.TILES_PER_ROW]);
         for (int i = 0; i < floorTiles.get(0).length; i++) {
             floorTiles.get(floorTiles.size() - 1)[i] = new FloorTile(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
@@ -121,7 +126,7 @@ public class PlayState extends State {
         }
         //If the array at the top's height + its y position are equal to the height of the screen, it will add another array on top of it
         if ((floorTiles.get(floorTiles.size() - 1)[0].getPosition().y + floorTiles.get(floorTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
-            newTileRow();
+            newTile();
         }
         //If the array of tiles goes below 0 then it will dispose of it to avoid memory leaks and save space
         if ((floorTiles.get(0)[0].getPosition().y + floorTiles.get(0)[0].getRectangle().height) < 0) {
