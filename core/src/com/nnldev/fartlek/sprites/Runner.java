@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Animation;
 
+import java.util.ArrayList;
+
 /**
  * Created by Nano on 11/12/2015.
  */
@@ -20,23 +22,8 @@ public class Runner {
     private float horizontalSpeed;
     private float horizontalDeceleration = 0.5f;
     private final int RUNNER_Y = 160;
-    private int animFrames = 4;
     private final float ANIM_CYCLE_TIME = 0.25f;
-
-    /**
-     * Makes a new Runner who has a picture and stuff
-     *
-     * @param path The path for the image
-     */
-    public Runner(String path) {
-        texture = new Texture(path);
-        velocity = new Vector3(0, 0, 0);
-        position = new Vector3(((Fartlek.WIDTH / 2) - (texture.getWidth() / animFrames)), RUNNER_Y, 0);
-        rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-
-        horizontalSpeed = 8;
-
-    }
+    private ArrayList<Bullet> bullets;
 
     /**
      * Makes a new runner
@@ -45,9 +32,13 @@ public class Runner {
      * @param animFrames The number of frames in the picture t oallow for animation of the runner
      */
     public Runner(String path, int animFrames) {
-        this(path);
-        this.animFrames = animFrames;
+        texture = new Texture(path);
+        velocity = new Vector3(0, 0, 0);
+        position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
+        rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
+        horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
+        bullets = new ArrayList<Bullet>();
     }
 
     /**
@@ -67,10 +58,16 @@ public class Runner {
 
         position.x += velocity.x;
         position.y += velocity.y;
+        rectangle.y = position.y;
+        rectangle.x = position.x;
         if (position.x < 0) {
             position.x = 0;
         }
+        System.out.println("Right X: " + (position.x + rectangle.getWidth()));
+        System.out.println("Screen Width: " + Fartlek.WIDTH);
+        System.out.println("Player Width: " + rectangle.getWidth());
         if (position.x + rectangle.getWidth() > Fartlek.WIDTH) {
+            System.out.println(rectangle.getWidth());
             position.x = Fartlek.WIDTH - rectangle.getWidth();
         }
     }
@@ -116,6 +113,11 @@ public class Runner {
         return position;
     }
 
+    /**
+     * Sets the position of the runner
+     *
+     * @param position The vector3 position of where the runner will be drawn
+     */
     public void setPosition(Vector3 position) {
         this.position = position;
     }
@@ -134,7 +136,7 @@ public class Runner {
      *
      * @param texture
      */
-    public void setTexture(Texture texture) {
+    public void setTexture(Texture texture, int animFrames) {
         setPlayerAnimation(new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME));
     }
 
@@ -154,6 +156,13 @@ public class Runner {
      */
     public void setPlayerAnimation(Animation playerAnimation) {
         this.playerAnimation = playerAnimation;
+    }
+
+    /**
+     * Makes a new bullet
+     */
+    public void shoot() {
+        bullets.add(new Bullet());
     }
 
     public void dispose() {
