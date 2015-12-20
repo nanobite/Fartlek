@@ -22,11 +22,11 @@ public class MenuState extends State {
      */
     public MenuState(GameStateManager gsm) {
         super(gsm);
-        playBtn = new Button("playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
+        playBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
         if (Fartlek.soundEnabled) {
-            soundBtn = new Button("sound.png", 30, Fartlek.HEIGHT - 30, true);
+            soundBtn = new Button("Buttons\\sound.png", 30, Fartlek.HEIGHT - 30, true);
         } else {
-            soundBtn = new Button("nosound.png", 30, Fartlek.HEIGHT - 30, true);
+            soundBtn = new Button("Buttons\\nosound.png", 30, Fartlek.HEIGHT - 30, true);
         }
 
     }
@@ -42,12 +42,12 @@ public class MenuState extends State {
                 dispose();
             }
             if (soundBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                if (soundBtn.getPath().equals("sound.png")) {
+                if (soundBtn.getPath().equals("Buttons\\sound.png")) {
                     Fartlek.soundEnabled = false;
-                    soundBtn.setTexture("nosound.png");
+                    soundBtn.setTexture("Buttons\\nosound.png");
                 } else {
                     Fartlek.soundEnabled = true;
-                    soundBtn.setTexture("sound.png");
+                    soundBtn.setTexture("Buttons\\sound.png");
                 }
             }
         }

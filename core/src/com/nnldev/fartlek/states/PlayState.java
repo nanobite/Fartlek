@@ -23,6 +23,7 @@ public class PlayState extends State {
     private Runner runner;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
+    private TouchSector bottomMiddle;
     private Music music;
     private ArrayList<Obstacle> obstacles;
     private ArrayList<FloorTile[]> floorTiles;
@@ -37,11 +38,12 @@ public class PlayState extends State {
      */
     public PlayState(GameStateManager gsm) {
         super(gsm);
-        tileTextureName = "tile1.png";
-        exitBtn = new Button("exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("animation.png", 4);
+        tileTextureName = "Scene\\bckg.png";
+        exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        runner = new Runner("Characters\\ship1Anim.png", 3);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         obstacles = new ArrayList<Obstacle>();
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
@@ -56,7 +58,7 @@ public class PlayState extends State {
      * @param song The name of the song to play
      */
     public void startMusic(String song) {
-        music = Gdx.audio.newMusic(Gdx.files.internal("music1.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("Music\\song1.mp3"));
         music.setLooping(true);
         music.setVolume(0.1f);
         if (Fartlek.soundEnabled) music.play();
@@ -95,6 +97,8 @@ public class PlayState extends State {
             //If the x,y position of the click is in the bottom right
             if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 runner.right();
+            }
+            if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
             }
 
         }
