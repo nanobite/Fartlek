@@ -22,6 +22,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
     public static boolean soundEnabled;
+    public static int scrnHeight;
+    public static int scrnVertBezel;
 
     private SpriteBatch batch;
     private GameStateManager gsm;
@@ -40,7 +42,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         mousePos = new Vector3();
         cam = new OrthographicCamera();
-        cam.setToOrtho(false, Fartlek.WIDTH, Fartlek.HEIGHT);
+        scrnHeight = Gdx.graphics.getHeight();
         gsm.push(new MenuState(gsm));
     }
 
@@ -49,7 +51,12 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
+        //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
+        //scrnHeight = Gdx.graphics.getHeight();
+        scrnHeight = HEIGHT;
+        Fartlek.cam.setToOrtho(false, Fartlek.WIDTH, Fartlek.scrnHeight);
         //fpsLogger.log();
+        scrnVertBezel = (scrnHeight - WIDTH) / 2;
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
@@ -64,10 +71,10 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     /**
      * Sets the location of the mouse to wherever the mouse was pressed relative to the screen size.
      *
-     * @param screenX
-     * @param screenY
-     * @param pointer
-     * @param button
+     * @param screenX The X on the screen
+     * @param screenY The Y on the screen
+     * @param pointer The mouse
+     * @param button  idk
      * @return
      */
     @Override

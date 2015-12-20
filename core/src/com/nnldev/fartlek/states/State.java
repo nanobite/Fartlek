@@ -5,6 +5,7 @@
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.GameStateManager;
 
 public abstract class State {
@@ -18,6 +19,7 @@ public abstract class State {
      */
     protected State(GameStateManager gsm) {
         this.gsm = gsm;
+
     }
 
     /**

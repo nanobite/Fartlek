@@ -22,11 +22,11 @@ public class MenuState extends State {
      */
     public MenuState(GameStateManager gsm) {
         super(gsm);
-        playBtn = new Button("playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
+        playBtn = new Button("playbtn.png", Fartlek.WIDTH / 2, Fartlek.scrnHeight / 2, true);
         if (Fartlek.soundEnabled) {
-            soundBtn = new Button("sound.png", 30, Fartlek.HEIGHT - 30, true);
+            soundBtn = new Button("sound.png", 30, Fartlek.scrnHeight - 30, true);
         } else {
-            soundBtn = new Button("nosound.png", 30, Fartlek.HEIGHT - 30, true);
+            soundBtn = new Button("nosound.png", 30, Fartlek.scrnHeight - 30, true);
         }
 
     }

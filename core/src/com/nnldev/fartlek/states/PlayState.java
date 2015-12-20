@@ -41,10 +41,10 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         tileTextureName = "tile1.png";
-        exitBtn = new Button("exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        exitBtn = new Button("exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.scrnHeight - 30), true);
         runner = new Runner("animation.png", 4);
-        bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+        bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.scrnHeight / 2);
+        bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.scrnHeight / 3, Fartlek.scrnHeight / 2);
         obstacles = new ArrayList<Obstacle[]>();
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
@@ -77,7 +77,7 @@ public class PlayState extends State {
     public Obstacle[] newObstacleArray(int len, Obstacle[] obstacles, int nulls) {
         Obstacle[] sendBack = new Obstacle[len];
         for (int i = 0; i < len; i++) {
-            sendBack[i] = new Box("box.png", i * obstacleSeperation, Fartlek.HEIGHT, 0);
+            sendBack[i] = new Box("box.png", i * obstacleSeperation, Fartlek.scrnHeight, 0);
         }
         //first place nulls in random locations
         for (int i = 0; i < nulls; i++) {
@@ -103,7 +103,7 @@ public class PlayState extends State {
     public void newTileRow() {
         floorTiles.add(new FloorTile[FloorTile.TILES_PER_ROW]);
         for (int i = 0; i < floorTiles.get(0).length; i++) {
-            floorTiles.get(floorTiles.size() - 1)[i] = new FloorTile(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
+            floorTiles.get(floorTiles.size() - 1)[i] = new FloorTile(tileTextureName, i * tileWidth, Fartlek.scrnHeight);
         }
     }
 
@@ -147,7 +147,7 @@ public class PlayState extends State {
             }
         }
         //If the array at the top's height + its y position are equal to the height of the screen, it will add another array on top of it
-        if ((floorTiles.get(floorTiles.size() - 1)[0].getPosition().y + floorTiles.get(floorTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
+        if ((floorTiles.get(floorTiles.size() - 1)[0].getPosition().y + floorTiles.get(floorTiles.size() - 1)[0].getRectangle().height) == Fartlek.scrnHeight) {
             newTileRow();
         }
         //If the array of tiles goes below 0 then it will dispose of it to avoid memory leaks and save space
