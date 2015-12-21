@@ -227,9 +227,9 @@ public class PlayState extends State {
 		for (Obstacle[] obstacleArray : obstacles) {
 			for (Obstacle obstacle : obstacleArray) {
 				sb.draw(obstacle.getTexture(), obstacle.getXPosition(), obstacle.getPosition().y);
-				log += "\t" + obstacle + "\n";
+				// log += "\t" + obstacle + "\n";
 			}
-			log += "\n===========\n";
+			//log += "\n===========\n";
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
