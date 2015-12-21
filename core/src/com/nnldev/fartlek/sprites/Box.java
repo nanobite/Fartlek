@@ -34,7 +34,6 @@ public class Box extends Obstacle {
 		position.set(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);
 		if (position.y + rectangle.getHeight() < 0) {
 			velocity.set(0, 0, 0);
-			System.out.println("Below Zero");
 			dispose();
 		}
 	}

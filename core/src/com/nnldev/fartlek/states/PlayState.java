@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
+
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
@@ -18,8 +18,6 @@ import com.nnldev.fartlek.sprites.Box;
 import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class PlayState extends State {
@@ -36,7 +34,9 @@ public class PlayState extends State {
 	private String tileTextureName;
 	private Box emptyBox;
 	private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
-	private String log;
+	private ArrayList<Obstacle[]> obstacles;
+	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
+	private boolean DONE;
 
 	/**
 	 * Creates a new game state
@@ -46,7 +46,8 @@ public class PlayState extends State {
 	 */
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		log = "";
+		DONE = false;
+		obstacles = new ArrayList<Obstacle[]>();
 		emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
 		tileTextureName = "Scene\\bckg.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
@@ -62,6 +63,7 @@ public class PlayState extends State {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, 0);
 		}
 		newSceneTile();
+		newObstacles();
 		startMusic("music1.mp3");
 	}
 
@@ -80,6 +82,13 @@ public class PlayState extends State {
 	}
 
 	public void newObstacles() {
+		Obstacle[] tmpObstacles = randomObstacles(8, possibleObstacles, 2);
+		for (int i = 0; i < tmpObstacles.length; i++) {
+			tmpObstacles[i].setXPosition(i * tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER);
+			System.out.print(i * tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER + ", ");
+			tmpObstacles[i].setYPosition(Fartlek.HEIGHT);
+		}
+		obstacles.add(tmpObstacles);
 	}
 
 	/**
@@ -113,6 +122,16 @@ public class PlayState extends State {
 			if (!sendBack[i].equals(emptyBox))
 				sendBack[i] = obstacles[random];
 		}
+		String checks = "";
+		for (Obstacle obstacle : sendBack) {
+			if (obstacle.getPath().equals("empty.png") || obstacle.getPath().equals(emptyBox.getPath())) {
+				checks += "[O]";
+			} else {
+				checks += "[X]";
+			}
+		}
+		checks += "\tY: " + sendBack[0].getYPosition();
+		System.out.println("\n" + checks);
 		return sendBack;
 	}
 
@@ -136,6 +155,7 @@ public class PlayState extends State {
 			// If the x,y position of the click is in the exit button
 			if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
 				gsm.push(new MenuState(gsm));
+				DONE = true;
 				dispose();
 			}
 			// If the x,y position of the click is in the bottom left
@@ -165,32 +185,46 @@ public class PlayState extends State {
 	@Override
 	public void update(float dt) {
 		handleInput();
-		runner.update(dt);
-		// Loops through all the tiles and updates their positions
-		for (Scene[] tileArray : sceneTiles) {
-			for (Scene tile : tileArray) {
-				tile.update();
+		if (!DONE) {
+			runner.update(dt);
+			// Loops through all the tiles and updates their positions
+			for (Scene[] tileArray : sceneTiles) {
+				for (Scene tile : tileArray) {
+					tile.update();
+				}
 			}
-		}
-		// If the array at the top's height + its y position are equal to the
-		// height of the screen, it will add another array on top of it
-		if ((sceneTiles.get(sceneTiles.size() - 1)[0].getPosition().y
-				+ sceneTiles.get(sceneTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
-			newSceneTile();
-		}
-		// If the array of tiles goes below 0 then it will dispose of it to
-		// avoid memory leaks and save space
-		if ((sceneTiles.get(0)[0].getPosition().y + sceneTiles.get(0)[0].getRectangle().height) < 0) {
-			// Removes the oldest one
-			for (Scene tile : sceneTiles.get(0)) {
-				tile.dispose();
+			// If the array at the top's height + its y position are equal to
+			// the
+			// height of the screen, it will add another array on top of it
+			if ((sceneTiles.get(sceneTiles.size() - 1)[0].getPosition().y
+					+ sceneTiles.get(sceneTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
+				newSceneTile();
 			}
-			sceneTiles.remove(0);
-		}
-		obstacleTime += dt;
-		if (obstacleTime >= maxObstacleTime) {
-			newObstacles();
-			obstacleTime = 0;
+			// If the array of tiles goes below 0 then it will dispose of it to
+			// avoid memory leaks and save space
+			if ((sceneTiles.get(0)[0].getPosition().y + sceneTiles.get(0)[0].getRectangle().height) < 0) {
+				// Removes the oldest one
+				for (Scene tile : sceneTiles.get(0)) {
+					tile.dispose();
+				}
+				sceneTiles.remove(0);
+			}
+			for (int i = 0; i < obstacles.size(); i++) {
+				for (int j = 0; j < obstacles.get(i).length; j++) {
+					obstacles.get(i)[j].update(dt);
+				}
+			}
+			if (obstacles.size() > 0) {
+				if (((obstacles.get(0)[0].getYPosition() + obstacles.get(0)[0].getTexture().getHeight()) < 0)) {
+					obstacles.remove(0);
+				}
+			}
+
+			obstacleTime += dt;
+			if (obstacleTime >= maxObstacleTime) {
+				newObstacles();
+				obstacleTime = 0;
+			}
 		}
 	}
 
@@ -210,10 +244,15 @@ public class PlayState extends State {
 				sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
 			}
 		}
+		for (int i = 0; i < obstacles.size(); i++) {
+			for (int j = 0; j < obstacles.get(i).length; j++) {
+				sb.draw(obstacles.get(i)[j].getTexture(), obstacles.get(i)[j].getXPosition(),
+						obstacles.get(i)[j].getYPosition());
+			}
+		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
 		sb.end();
-
 	}
 
 	/**
@@ -227,7 +266,13 @@ public class PlayState extends State {
 		for (Scene[] sceneArray : sceneTiles) {
 			for (Scene scene : sceneArray)
 				scene.dispose();
-			sceneTiles.remove(0);
 		}
+		sceneTiles.clear();
+		for (Obstacle[] obstacleArray : obstacles) {
+			for (Obstacle obstacle : obstacleArray) {
+				obstacle.dispose();
+			}
+		}
+		obstacles.clear();
 	}
 }
