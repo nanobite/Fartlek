@@ -39,7 +39,7 @@ public class Runner {
 		velocity = new Vector3(0, 0, 0);
 		position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
 		rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-		horizontalSpeed =12;
+		horizontalSpeed = 12;
 		playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
 		bullets = new ArrayList<Bullet>();
 	}
@@ -60,18 +60,14 @@ public class Runner {
 		} else {
 			velocity.x = 0;
 		}
-
 		position.x += velocity.x;
 		position.y += velocity.y;
 		rectangle.y = position.y;
 		rectangle.x = position.x;
-		if (position.x < 0) {
+		if (position.x < 0)
 			position.x = 0;
-		}
-		if (position.x + rectangle.getWidth() > Fartlek.WIDTH) {
-			System.out.println(rectangle.getWidth());
+		if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
 			position.x = Fartlek.WIDTH - rectangle.getWidth();
-		}
 	}
 
 	/**

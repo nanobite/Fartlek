@@ -29,7 +29,6 @@ public class PlayState extends State {
 	private TouchSector bottomRight;
 	private TouchSector bottomMiddle;
 	private Music music;
-	private ArrayList<Obstacle[]> obstacles;
 	private ArrayList<Scene[]> sceneTiles;
 	private int tileWidth;
 	private int tileHeight;
@@ -55,7 +54,6 @@ public class PlayState extends State {
 		bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
 		bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
 		bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-		obstacles = new ArrayList<Obstacle[]>();
 		tileWidth = new Texture(tileTextureName).getWidth();
 		tileHeight = new Texture(tileTextureName).getHeight();
 		sceneTiles = new ArrayList<Scene[]>();
@@ -82,12 +80,6 @@ public class PlayState extends State {
 	}
 
 	public void newObstacles() {
-		System.out.println("New Obstacles");
-		obstacles.add(randomObstacles(8, possibleObstacles, 0));
-		for (int i = 0; i < obstacles.get(obstacles.size() - 1).length; i++) {
-			obstacles.get(obstacles.size() - 1)[i].setPosition(
-					new Vector3(i * obstacles.get(obstacles.size() - 1)[i].getTexture().getWidth(), Fartlek.HEIGHT, 0));
-		}
 	}
 
 	/**
@@ -195,11 +187,6 @@ public class PlayState extends State {
 			}
 			sceneTiles.remove(0);
 		}
-		for (Obstacle[] obstacleArray : obstacles) {
-			for (Obstacle obstcle : obstacleArray) {
-				obstcle.update(dt);
-			}
-		}
 		obstacleTime += dt;
 		if (obstacleTime >= maxObstacleTime) {
 			newObstacles();
@@ -216,21 +203,12 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void render(SpriteBatch sb) {
-
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
-
 		for (Scene[] tileArray : sceneTiles) {
 			for (Scene tile : tileArray) {
 				sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
 			}
-		}
-		for (Obstacle[] obstacleArray : obstacles) {
-			for (Obstacle obstacle : obstacleArray) {
-				sb.draw(obstacle.getTexture(), obstacle.getXPosition(), obstacle.getPosition().y);
-				// log += "\t" + obstacle + "\n";
-			}
-			// log += "\n===========\n";
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
@@ -243,23 +221,9 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void dispose() {
-		try {
-			FileWriter fw = new FileWriter("log.txt");
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(log);
-			bw.close();
-			fw.close();
-			System.out.println("Wrote log");
-		} catch (Exception e) {
-			System.out.println("Couldn't write log.");
-			System.out.println("Error: " + e);
-		}
 		exitBtn.dispose();
 		runner.dispose();
 		music.dispose();
-		for (Obstacle[] obstacleArray : obstacles)
-			for (Obstacle obstacle : obstacleArray)
-				obstacle.dispose();
 		for (Scene[] sceneArray : sceneTiles) {
 			for (Scene scene : sceneArray)
 				scene.dispose();
