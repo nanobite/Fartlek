@@ -63,5 +63,6 @@ build/
 ## OS Specific
 .DS_Store
 
-##Graphics
+##My Stuff
 *.psd
+log.txt
