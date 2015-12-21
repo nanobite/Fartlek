@@ -13,159 +13,163 @@ import java.util.ArrayList;
  * Created by Nano on 11/12/2015.
  */
 public class Runner {
-    private Vector3 position;
-    private Vector3 velocity;
-    private Texture texture;
-    private Rectangle rectangle;
-    private Animation playerAnimation;
-    private int health;
-    private float horizontalSpeed;
-    private float horizontalDeceleration = 0.5f;
-    private final int RUNNER_Y = 160;
-    private final float ANIM_CYCLE_TIME = 0.25f;
-    private ArrayList<Bullet> bullets;
+	private Vector3 position;
+	private Vector3 velocity;
+	private Texture texture;
+	private Rectangle rectangle;
+	private Animation playerAnimation;
+	private int health;
+	private float horizontalSpeed;
+	private float horizontalDeceleration = 0.5f;
+	private final int RUNNER_Y = 160;
+	private final float ANIM_CYCLE_TIME = 0.25f;
+	private ArrayList<Bullet> bullets;
 
-    /**
-     * Makes a new runner
-     *
-     * @param path       The path for the runner's pic
-     * @param animFrames The number of frames in the picture t oallow for animation of the runner
-     */
-    public Runner(String path, int animFrames) {
-        texture = new Texture(path);
-        velocity = new Vector3(0, 0, 0);
-        position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
-        rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-        horizontalSpeed = 8;
-        playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
-        bullets = new ArrayList<Bullet>();
-    }
+	/**
+	 * Makes a new runner
+	 *
+	 * @param path
+	 *            The path for the runner's pic
+	 * @param animFrames
+	 *            The number of frames in the picture t oallow for animation of
+	 *            the runner
+	 */
+	public Runner(String path, int animFrames) {
+		texture = new Texture(path);
+		velocity = new Vector3(0, 0, 0);
+		position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
+		rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
+		horizontalSpeed =12;
+		playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
+		bullets = new ArrayList<Bullet>();
+	}
 
-    /**
-     * Updates the runner
-     *
-     * @param dt The change in time since the last time the runner's position was updated
-     */
-    public void update(float dt) {
-        playerAnimation.update(dt);
-        if (velocity.x > 0) {
-            velocity.x -= horizontalDeceleration;
-        } else if (velocity.x < 0) {
-            velocity.x += horizontalDeceleration;
-        } else {
-            velocity.x = 0;
-        }
+	/**
+	 * Updates the runner
+	 *
+	 * @param dt
+	 *            The change in time since the last time the runner's position
+	 *            was updated
+	 */
+	public void update(float dt) {
+		playerAnimation.update(dt);
+		if (velocity.x > 0) {
+			velocity.x -= horizontalDeceleration;
+		} else if (velocity.x < 0) {
+			velocity.x += horizontalDeceleration;
+		} else {
+			velocity.x = 0;
+		}
 
-        position.x += velocity.x;
-        position.y += velocity.y;
-        rectangle.y = position.y;
-        rectangle.x = position.x;
-        if (position.x < 0) {
-            position.x = 0;
-        }
-        System.out.println("Right X: " + (position.x + rectangle.getWidth()));
-        System.out.println("Screen Width: " + Fartlek.WIDTH);
-        System.out.println("Player Width: " + rectangle.getWidth());
-        if (position.x + rectangle.getWidth() > Fartlek.WIDTH) {
-            System.out.println(rectangle.getWidth());
-            position.x = Fartlek.WIDTH - rectangle.getWidth();
-        }
-    }
+		position.x += velocity.x;
+		position.y += velocity.y;
+		rectangle.y = position.y;
+		rectangle.x = position.x;
+		if (position.x < 0) {
+			position.x = 0;
+		}
+		if (position.x + rectangle.getWidth() > Fartlek.WIDTH) {
+			System.out.println(rectangle.getWidth());
+			position.x = Fartlek.WIDTH - rectangle.getWidth();
+		}
+	}
 
-    /**
-     * Moves the character left
-     */
-    public void left() {
-        velocity.x = -horizontalSpeed;
-    }
+	/**
+	 * Moves the character left
+	 */
+	public void left() {
+		velocity.x = -horizontalSpeed;
+	}
 
-    /**
-     * Moves the character right
-     */
-    public void right() {
-        velocity.x = horizontalSpeed;
-    }
+	/**
+	 * Moves the character right
+	 */
+	public void right() {
+		velocity.x = horizontalSpeed;
+	}
 
-    /**
-     * Returns the rectangle hitbox of the character
-     *
-     * @return
-     */
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
+	/**
+	 * Returns the rectangle hitbox of the character
+	 *
+	 * @return
+	 */
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
 
-    /**
-     * Sets the rectangle hitbox of the character
-     *
-     * @param rectangle
-     */
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
-    }
+	/**
+	 * Sets the rectangle hitbox of the character
+	 *
+	 * @param rectangle
+	 */
+	public void setRectangle(Rectangle rectangle) {
+		this.rectangle = rectangle;
+	}
 
-    /**
-     * Gets the position of the character
-     *
-     * @return
-     */
-    public Vector3 getPosition() {
-        return position;
-    }
+	/**
+	 * Gets the position of the character
+	 *
+	 * @return
+	 */
+	public Vector3 getPosition() {
+		return position;
+	}
 
-    /**
-     * Sets the position of the runner
-     *
-     * @param position The vector3 position of where the runner will be drawn
-     */
-    public void setPosition(Vector3 position) {
-        this.position = position;
-    }
+	/**
+	 * Sets the position of the runner
+	 *
+	 * @param position
+	 *            The vector3 position of where the runner will be drawn
+	 */
+	public void setPosition(Vector3 position) {
+		this.position = position;
+	}
 
-    /**
-     * Returns the current texture for the player.
-     *
-     * @return
-     */
-    public TextureRegion getTexture() {
-        return playerAnimation.getFrame();
-    }
+	/**
+	 * Returns the current texture for the player.
+	 *
+	 * @return
+	 */
+	public TextureRegion getTexture() {
+		return playerAnimation.getFrame();
+	}
 
-    /**
-     * Sets the texture for the animations to somethign new
-     *
-     * @param texture
-     */
-    public void setTexture(Texture texture, int animFrames) {
-        setPlayerAnimation(new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME));
-    }
+	/**
+	 * Sets the texture for the animations to somethign new
+	 *
+	 * @param texture
+	 */
+	public void setTexture(Texture texture, int animFrames) {
+		setPlayerAnimation(new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME));
+	}
 
-    /**
-     * Gets the player animation
-     *
-     * @return
-     */
-    public Animation getPlayerAnimation() {
-        return playerAnimation;
-    }
+	/**
+	 * Gets the player animation
+	 *
+	 * @return
+	 */
+	public Animation getPlayerAnimation() {
+		return playerAnimation;
+	}
 
-    /**
-     * Sets the player animation
-     *
-     * @param playerAnimation
-     */
-    public void setPlayerAnimation(Animation playerAnimation) {
-        this.playerAnimation = playerAnimation;
-    }
+	/**
+	 * Sets the player animation
+	 *
+	 * @param playerAnimation
+	 */
+	public void setPlayerAnimation(Animation playerAnimation) {
+		this.playerAnimation = playerAnimation;
+	}
 
-    /**
-     * Adds a new bullet to the bullet timer
-     */
-    public void shoot() {
-        bullets.add(new Bullet());
-    }
+	/**
+	 * Adds a new bullet to the bullet timer
+	 */
+	public void shoot() {
+		System.out.println("Shoot");
+		bullets.add(new Bullet());
+	}
 
-    public void dispose() {
-        texture.dispose();
-    }
+	public void dispose() {
+		texture.dispose();
+	}
 }
