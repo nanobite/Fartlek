@@ -139,7 +139,7 @@ public class PlayState extends State {
 	 */
 	@Override
 	protected void handleInput() {
-		// If oyu thouched the screen
+		// If you touched the screen
 		if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
 			// If the x,y position of the click is in the exit button
 			if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
@@ -154,6 +154,7 @@ public class PlayState extends State {
 			if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
 				runner.right();
 			}
+			// If the x,y position of the click is in the bottom middle
 			if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
 					&& Gdx.input.justTouched()) {
 				runner.shoot();
@@ -227,9 +228,9 @@ public class PlayState extends State {
 		for (Obstacle[] obstacleArray : obstacles) {
 			for (Obstacle obstacle : obstacleArray) {
 				sb.draw(obstacle.getTexture(), obstacle.getXPosition(), obstacle.getPosition().y);
-				log += "\t" + obstacle + "\n";
+				// log += "\t" + obstacle + "\n";
 			}
-			log += "\n===========\n";
+			// log += "\n===========\n";
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
