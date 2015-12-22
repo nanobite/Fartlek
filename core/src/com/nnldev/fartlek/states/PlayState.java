@@ -8,7 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
@@ -19,6 +19,7 @@ import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PlayState extends State {
 	private Button exitBtn;
@@ -30,13 +31,14 @@ public class PlayState extends State {
 	private ArrayList<Scene[]> sceneTiles;
 	private int tileWidth;
 	private int tileHeight;
-	private float obstacleTime, maxObstacleTime = 1.5f;
+	private float obstacleTime, maxObstacleTime = 0.75f;
 	private String tileTextureName;
 	private Box emptyBox;
 	private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
 	private ArrayList<Obstacle[]> obstacles;
 	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
 	private boolean DONE;
+	private int AMT_OBSTACLES = 8;
 
 	/**
 	 * Creates a new game state
@@ -82,13 +84,18 @@ public class PlayState extends State {
 	}
 
 	public void newObstacles() {
-		Obstacle[] tmpObstacles = randomObstacles(8, possibleObstacles, 2);
-		for (int i = 0; i < tmpObstacles.length; i++) {
-			tmpObstacles[i].setXPosition(i * tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER);
-			System.out.print(i * tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER + ", ");
-			tmpObstacles[i].setYPosition(Fartlek.HEIGHT);
+		Obstacle[] tmpObstacles = Arrays.copyOf(randomObstacles(AMT_OBSTACLES, possibleObstacles, 2), AMT_OBSTACLES);
+		for(int i=0;i<tmpObstacles.length;i++){
+			tmpObstacles[i].setPosition(new Vector3(i* tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER,Fartlek.HEIGHT,0));
+			System.out.println("Stuff: "+tmpObstacles[i].getXPosition());
 		}
+		String out = "New Pos's: ";
+		for (int i=0;i<tmpObstacles.length;i++) {
+			out += tmpObstacles[i].getPosition().x + ", ";
+		}
+		 System.out.println(out);
 		obstacles.add(tmpObstacles);
+
 	}
 
 	/**
@@ -124,11 +131,18 @@ public class PlayState extends State {
 		}
 		String checks = "";
 		for (Obstacle obstacle : sendBack) {
-			if (obstacle.getPath().equals("empty.png") || obstacle.getPath().equals(emptyBox.getPath())) {
+			if (obstacle.getPath().equals(emptyBox.getPath())) {
 				checks += "[O]";
 			} else {
 				checks += "[X]";
 			}
+		}
+		checks+="\nX Position: ";
+		for (int i = 0; i < sendBack.length; i++) {
+			sendBack[i].setXPosition(i * sendBack[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER);
+			System.out.println(sendBack[i].getXPosition());
+			checks+=sendBack[i].getXPosition()+", ";
+			sendBack[i].setYPosition(Fartlek.HEIGHT);
 		}
 		checks += "\tY: " + sendBack[0].getYPosition();
 		System.out.println("\n" + checks);
@@ -184,6 +198,7 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void update(float dt) {
+		// System.out.println("Update");
 		handleInput();
 		if (!DONE) {
 			runner.update(dt);
@@ -210,14 +225,16 @@ public class PlayState extends State {
 				sceneTiles.remove(0);
 			}
 			for (int i = 0; i < obstacles.size(); i++) {
+				String xcoords = "X Coordinates: ";
 				for (int j = 0; j < obstacles.get(i).length; j++) {
 					obstacles.get(i)[j].update(dt);
+					xcoords += obstacles.get(i)[j].getXPosition() + ", ";
 				}
+				// System.out.println(xcoords);
 			}
-			if (obstacles.size() > 0) {
-				if (((obstacles.get(0)[0].getYPosition() + obstacles.get(0)[0].getTexture().getHeight()) < 0)) {
-					obstacles.remove(0);
-				}
+			if ((obstacles.size() > 0)
+					&& ((obstacles.get(0)[0].getYPosition() + obstacles.get(0)[0].getTexture().getHeight()) < 0)) {
+				obstacles.remove(0);
 			}
 
 			obstacleTime += dt;
@@ -237,6 +254,7 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void render(SpriteBatch sb) {
+		// System.out.println("Render");
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
 		for (Scene[] tileArray : sceneTiles) {
@@ -245,10 +263,13 @@ public class PlayState extends State {
 			}
 		}
 		for (int i = 0; i < obstacles.size(); i++) {
+			String xcoords = "X Coordinates: ";
 			for (int j = 0; j < obstacles.get(i).length; j++) {
 				sb.draw(obstacles.get(i)[j].getTexture(), obstacles.get(i)[j].getXPosition(),
 						obstacles.get(i)[j].getYPosition());
+				xcoords += obstacles.get(i)[j].getXPosition() + ", ";
 			}
+			// System.out.println(xcoords);
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);

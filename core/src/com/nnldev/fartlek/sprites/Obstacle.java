@@ -9,7 +9,7 @@ import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 public abstract class Obstacle {
 	protected Texture texture;
 	protected Vector3 velocity;
-	protected Vector3 position;
+	//protected Vector3 position;
 	protected Rectangle rectangle;
 	protected String path;
 	public static int obstacleSpeed = -2;
@@ -17,7 +17,7 @@ public abstract class Obstacle {
 	protected Obstacle(String path, float x, float y) {
 		this.path = path;
 		texture = new Texture(path);
-		position = new Vector3(x, y, 0);
+		//position = new Vector3(x, y, 0);
 		velocity = new Vector3(0, obstacleSpeed, 0);
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 	}
