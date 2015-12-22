@@ -95,7 +95,6 @@ public class PlayState extends State {
 		}
 		 System.out.println(out);
 		obstacles.add(tmpObstacles);
-
 	}
 
 	/**
