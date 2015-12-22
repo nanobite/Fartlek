@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class Box extends Obstacle {
 	private int health;
-	private Vector3 position;
 
 	/**
 	 * Creates a
@@ -22,7 +21,7 @@ public class Box extends Obstacle {
 	public Box(String path, float x, float y, int health) {
 		super(path, x, y);
 		this.health = health;
-		position = new Vector3(x,y,0);
+		
 	}
 
 	/**
@@ -64,7 +63,6 @@ public class Box extends Obstacle {
 
 	@Override
 	public void setXPosition(float x) {
-		
 		position.x = x;
 	}
 

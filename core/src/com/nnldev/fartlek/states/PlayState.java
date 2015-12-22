@@ -82,18 +82,14 @@ public class PlayState extends State {
 		if (Fartlek.soundEnabled)
 			music.play();
 	}
-
+	/**
+	 * Adds a new osbtacle
+	 */
 	public void newObstacles() {
 		Obstacle[] tmpObstacles = Arrays.copyOf(randomObstacles(AMT_OBSTACLES, possibleObstacles, 2), AMT_OBSTACLES);
 		for(int i=0;i<tmpObstacles.length;i++){
-			tmpObstacles[i].setPosition(new Vector3(i* tmpObstacles[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER,Fartlek.HEIGHT,0));
-			System.out.println("Stuff: "+tmpObstacles[i].getXPosition());
+			System.out.println(tmpObstacles[i].getPosition());
 		}
-		String out = "New Pos's: ";
-		for (int i=0;i<tmpObstacles.length;i++) {
-			out += tmpObstacles[i].getPosition().x + ", ";
-		}
-		 System.out.println(out);
 		obstacles.add(tmpObstacles);
 	}
 
@@ -128,23 +124,10 @@ public class PlayState extends State {
 			if (!sendBack[i].equals(emptyBox))
 				sendBack[i] = obstacles[random];
 		}
-		String checks = "";
-		for (Obstacle obstacle : sendBack) {
-			if (obstacle.getPath().equals(emptyBox.getPath())) {
-				checks += "[O]";
-			} else {
-				checks += "[X]";
-			}
-		}
-		checks+="\nX Position: ";
 		for (int i = 0; i < sendBack.length; i++) {
 			sendBack[i].setXPosition(i * sendBack[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER);
-			System.out.println(sendBack[i].getXPosition());
-			checks+=sendBack[i].getXPosition()+", ";
 			sendBack[i].setYPosition(Fartlek.HEIGHT);
 		}
-		checks += "\tY: " + sendBack[0].getYPosition();
-		System.out.println("\n" + checks);
 		return sendBack;
 	}
 
@@ -197,7 +180,6 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void update(float dt) {
-		// System.out.println("Update");
 		handleInput();
 		if (!DONE) {
 			runner.update(dt);
@@ -224,18 +206,14 @@ public class PlayState extends State {
 				sceneTiles.remove(0);
 			}
 			for (int i = 0; i < obstacles.size(); i++) {
-				String xcoords = "X Coordinates: ";
 				for (int j = 0; j < obstacles.get(i).length; j++) {
 					obstacles.get(i)[j].update(dt);
-					xcoords += obstacles.get(i)[j].getXPosition() + ", ";
 				}
-				// System.out.println(xcoords);
 			}
 			if ((obstacles.size() > 0)
 					&& ((obstacles.get(0)[0].getYPosition() + obstacles.get(0)[0].getTexture().getHeight()) < 0)) {
 				obstacles.remove(0);
 			}
-
 			obstacleTime += dt;
 			if (obstacleTime >= maxObstacleTime) {
 				newObstacles();
@@ -262,13 +240,10 @@ public class PlayState extends State {
 			}
 		}
 		for (int i = 0; i < obstacles.size(); i++) {
-			String xcoords = "X Coordinates: ";
 			for (int j = 0; j < obstacles.get(i).length; j++) {
 				sb.draw(obstacles.get(i)[j].getTexture(), obstacles.get(i)[j].getXPosition(),
 						obstacles.get(i)[j].getYPosition());
-				xcoords += obstacles.get(i)[j].getXPosition() + ", ";
 			}
-			// System.out.println(xcoords);
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
