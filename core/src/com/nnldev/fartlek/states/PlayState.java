@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PlayState extends State {
+	//private ObstacleManager obstacleManager;
 	private Button exitBtn;
 	private Runner runner;
 	private TouchSector bottomLeft;
@@ -29,16 +30,14 @@ public class PlayState extends State {
 	private TouchSector bottomMiddle;
 	private Music music;
 	private ArrayList<Scene[]> sceneTiles;
-	private int tileWidth;
-	private int tileHeight;
-	private float obstacleTime, maxObstacleTime = 0.75f;
+	private float obstacleTime, maxObstacleTime = 2.0f;
 	private String tileTextureName;
 	private Box emptyBox;
-	private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
-	private ArrayList<Obstacle[]> obstacles;
 	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
 	private boolean DONE;
-	private int AMT_OBSTACLES = 8;
+	private int AMT_OBSTACLES = 9, AMT_HOLES = 4;
+	private int tileWidth;
+	private int tileHeight;
 
 	/**
 	 * Creates a new game state
@@ -49,7 +48,6 @@ public class PlayState extends State {
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		DONE = false;
-		obstacles = new ArrayList<Obstacle[]>();
 		emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
 		tileTextureName = "Scene\\bckg.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
@@ -65,8 +63,17 @@ public class PlayState extends State {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, 0);
 		}
 		newSceneTile();
-		newObstacles();
 		startMusic("music1.mp3");
+	}
+
+	/**
+	 * Makes a new row of tiles
+	 */
+	public void newSceneTile() {
+		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
+		for (int i = 0; i < sceneTiles.get(0).length; i++) {
+			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
+		}
 	}
 
 	/**
@@ -81,64 +88,6 @@ public class PlayState extends State {
 		music.setVolume(0.1f);
 		if (Fartlek.soundEnabled)
 			music.play();
-	}
-	/**
-	 * Adds a new osbtacle
-	 */
-	public void newObstacles() {
-		Obstacle[] tmpObstacles = Arrays.copyOf(randomObstacles(AMT_OBSTACLES, possibleObstacles, 2), AMT_OBSTACLES);
-		for(int i=0;i<tmpObstacles.length;i++){
-			System.out.println(tmpObstacles[i].getPosition());
-		}
-		obstacles.add(tmpObstacles);
-	}
-
-	/**
-	 * Creates an array of obstacles with a given length, a given amount of
-	 * empty indices, and an array of permitted obstacles
-	 * 
-	 * @param len
-	 *            Length of the returned array
-	 * @param obstacles
-	 *            The list of possible obstacles
-	 * @param nulls
-	 *            The amount of empty indices
-	 * @return
-	 */
-	public Obstacle[] randomObstacles(int len, Obstacle[] obstacles, int nulls) {
-		Obstacle[] sendBack = new Obstacle[len];
-		for (int i = 0; i < len; i++) {
-			sendBack[i] = new Box("empty.png", 0, 0, 0);
-		}
-		// First place nulls in random indices
-		for (int i = 0; i < nulls; i++) {
-			int zeroLoc = (int) (Math.random() * len);
-			while (sendBack[zeroLoc].equals(emptyBox)) {
-				zeroLoc = (int) (Math.random() * len);
-			}
-			sendBack[zeroLoc] = emptyBox;
-		}
-		// Fills up rest of indices with obstacles
-		for (int i = 0; i < len; i++) {
-			int random = (int) (Math.random() * obstacles.length);
-			if (!sendBack[i].equals(emptyBox))
-				sendBack[i] = obstacles[random];
-		}
-		for (int i = 0; i < sendBack.length; i++) {
-			sendBack[i].setXPosition(i * sendBack[i].getRectangle().getWidth() + HORIZONTAL_OBSTACLE_BUFFER);
-			sendBack[i].setYPosition(Fartlek.HEIGHT);
-		}
-		return sendBack;
-	}
-
-	/**
-	 * Makes a new row of tiles
-	 */
-	public void newSceneTile() {
-		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
-		for (int i = 0; i < sceneTiles.get(0).length; i++) {
-			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
-		}
 	}
 
 	/**
@@ -167,7 +116,6 @@ public class PlayState extends State {
 					&& Gdx.input.justTouched()) {
 				runner.shoot();
 			}
-
 		}
 	}
 
@@ -205,18 +153,8 @@ public class PlayState extends State {
 				}
 				sceneTiles.remove(0);
 			}
-			for (int i = 0; i < obstacles.size(); i++) {
-				for (int j = 0; j < obstacles.get(i).length; j++) {
-					obstacles.get(i)[j].update(dt);
-				}
-			}
-			if ((obstacles.size() > 0)
-					&& ((obstacles.get(0)[0].getYPosition() + obstacles.get(0)[0].getTexture().getHeight()) < 0)) {
-				obstacles.remove(0);
-			}
 			obstacleTime += dt;
 			if (obstacleTime >= maxObstacleTime) {
-				newObstacles();
 				obstacleTime = 0;
 			}
 		}
@@ -231,18 +169,11 @@ public class PlayState extends State {
 	 */
 	@Override
 	public void render(SpriteBatch sb) {
-		// System.out.println("Render");
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
 		for (Scene[] tileArray : sceneTiles) {
 			for (Scene tile : tileArray) {
 				sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
-			}
-		}
-		for (int i = 0; i < obstacles.size(); i++) {
-			for (int j = 0; j < obstacles.get(i).length; j++) {
-				sb.draw(obstacles.get(i)[j].getTexture(), obstacles.get(i)[j].getXPosition(),
-						obstacles.get(i)[j].getYPosition());
 			}
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
@@ -263,11 +194,103 @@ public class PlayState extends State {
 				scene.dispose();
 		}
 		sceneTiles.clear();
-		for (Obstacle[] obstacleArray : obstacles) {
-			for (Obstacle obstacle : obstacleArray) {
-				obstacle.dispose();
+	}
+
+	private class ObstacleManager {
+		private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
+		private ArrayList<Obstacle[]> obstacles;
+
+		/**
+		 * Makes it a lot easier to control the obstacles and find what is wrong
+		 * with them.
+		 */
+		public ObstacleManager() {
+			obstacles = new ArrayList<Obstacle[]>();
+		}
+
+		/**
+		 * Creates an array of obstacles with a given length, a given amount of
+		 * empty indices, and an array of permitted obstacles
+		 * 
+		 * @param len
+		 *            Length of the returned array
+		 * @param obstacles
+		 *            The list of possible obstacles
+		 * @param nulls
+		 *            The amount of empty indices
+		 * @return
+		 */
+		public Obstacle[] randomObstacles(int len, Obstacle[] obstacles, int nulls) {
+			Obstacle[] sendBack = new Obstacle[len];
+			for (int i = 0; i < len; i++) {
+				sendBack[i] = new Box("empty.png", 0, 0, 0);
+			}
+			// First place nulls in random indices
+			for (int i = 0; i < nulls; i++) {
+				int zeroLoc = (int) (Math.random() * len);
+				while (sendBack[zeroLoc].equals(emptyBox)) {
+					zeroLoc = (int) (Math.random() * len);
+				}
+				sendBack[zeroLoc] = emptyBox;
+			}
+			// Fills up rest of indices with obstacles
+			for (int i = 0; i < len; i++) {
+				int random = (int) (Math.random() * obstacles.length);
+				if (!sendBack[i].equals(emptyBox))
+					sendBack[i] = obstacles[random];
+			}
+			// Sets the coordinates
+			for (int i = 0; i < sendBack.length; i++) {
+				sendBack[i].setPosition(new Vector3(
+						i * sendBack[i].getTexture().getWidth() + HORIZONTAL_OBSTACLE_BUFFER, Fartlek.HEIGHT, 0));
+			}
+			return sendBack;
+		}
+
+		/**
+		 * Adds a new osbtacle
+		 */
+		public void newObstacles() {
+			Obstacle[] tmpObstacles = randomObstacles(AMT_OBSTACLES, possibleObstacles, AMT_HOLES);
+			obstacles.add(tmpObstacles);
+			for (int i = 0; i < obstacles.get(obstacles.size() - 1).length; i++) {
 			}
 		}
-		obstacles.clear();
+
+		public void update(float dt) {
+			// Updates all of the obstacles
+			for (int i = 0; i < obstacles.size(); i++) {
+				for (int j = 0; j < obstacles.get(i).length; j++) {
+					obstacles.get(i)[j].update(dt);
+				}
+			}
+			for (int i = 0; i < obstacles.size(); i++) {
+				if ((obstacles.get(i)[0].getYPosition() + obstacles.get(i)[0].getTexture().getHeight()) < 0) {
+					for (int j = 0; j < obstacles.get(i).length; j++) {
+						obstacles.get(i)[j].dispose();
+					}
+					obstacles.remove(i);
+				}
+			}
+		}
+
+		public void render(SpriteBatch sb) {
+			for (int i = 0; i < obstacles.size(); i++) {
+				for (int j = 0; j < obstacles.get(i).length; j++) {
+					sb.draw(obstacles.get(i)[j].getTexture(),
+							j * obstacles.get(i)[j].getTexture().getWidth() + HORIZONTAL_OBSTACLE_BUFFER,
+							obstacles.get(i)[j].getYPosition());
+				}
+			}
+		}
+
+		public void dispose() {
+			for (Obstacle[] obstacleArray : obstacles) {
+				for (Obstacle obstacle : obstacleArray) {
+					obstacle.dispose();
+				}
+			}
+			obstacles.clear();
+		}
 	}
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 
 public abstract class Obstacle {
 	protected Texture texture;
@@ -12,7 +11,7 @@ public abstract class Obstacle {
 	protected Vector3 position;
 	protected Rectangle rectangle;
 	protected String path;
-	public static int obstacleSpeed = -2;
+	public static int obstacleSpeed = -1;
 
 	protected Obstacle(String path, float x, float y) {
 		this.path = path;
