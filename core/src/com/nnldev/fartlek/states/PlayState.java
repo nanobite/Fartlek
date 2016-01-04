@@ -51,7 +51,7 @@ public class PlayState extends State {
 		emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
 		tileTextureName = "Scene\\bckg.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-		runner = new Runner("Characters\\sphereAnim.png", 9);
+		runner = new Runner("Characters\\ship1Anim.png", 3);
 		bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
 		bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
 		bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
