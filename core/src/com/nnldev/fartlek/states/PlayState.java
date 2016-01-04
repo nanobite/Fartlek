@@ -170,7 +170,7 @@ public class PlayState extends State {
 	 *            shown
 	 */
 	@Override
-	public void update(float dt) {
+	public void update(float dt) {//dt is delta time
 		handleInput();
 		runner.update(dt);
 		// Loops through all the tiles and updates their positions
@@ -194,9 +194,9 @@ public class PlayState extends State {
 			}
 			sceneTiles.remove(0);
 		}
-		for (Obstacle[] obstacleArray : obstacles) {
+		for (Obstacle[] obstacleArray : obstacles) {//loops through entire obstacleArray
 			for (Obstacle obstcle : obstacleArray) {
-				obstcle.update(dt);
+				obstacle.update(dt);
 			}
 		}
 		obstacleTime += dt;
