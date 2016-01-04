@@ -67,7 +67,6 @@ public class Runner {
      */
     public void update(float dt) {
         soundTimer += dt;
-        System.out.println(dt);
         if (soundTimer >= 0.3f) {
             soundTimer = 0;
             soundPlayable = true;

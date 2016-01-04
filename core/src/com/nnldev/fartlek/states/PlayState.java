@@ -49,7 +49,7 @@ public class PlayState extends State {
 		super(gsm);
 		DONE = false;
 		emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
-		tileTextureName = "Scene\\bckg.png";
+		tileTextureName = "Scene\\bckg1.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
 		runner = new Runner("Characters\\sphereAnim.png", 9);
 		bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -84,7 +84,7 @@ public class PlayState extends State {
 	 */
 	public void startMusic(String song) {
 		music = Gdx.audio.newMusic(Gdx.files.internal("Music\\song1.mp3"));
-		music.setLooping(true);
+		music.setLooping(false);
 		music.setVolume(0.1f);
 		if (Fartlek.soundEnabled)
 			music.play();
