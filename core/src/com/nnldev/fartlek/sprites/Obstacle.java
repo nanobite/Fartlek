@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 
 public abstract class Obstacle {
 	protected Texture texture;

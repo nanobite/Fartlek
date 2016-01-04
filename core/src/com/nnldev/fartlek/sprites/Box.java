@@ -21,6 +21,7 @@ public class Box extends Obstacle {
 	public Box(String path, float x, float y, int health) {
 		super(path, x, y);
 		this.health = health;
+		
 	}
 
 	/**
@@ -31,10 +32,9 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public void update(float dt) {
-		position.set(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);
-		if (position.y + rectangle.getHeight() < 0) {
-			velocity.set(0, 0, 0);
-			System.out.println("Below Zero");
+		setYPosition(super.position.y+super.velocity.y);
+		if (super.position.y + rectangle.getHeight() < 0) {
+			super.velocity.set(0, 0, 0);
 			dispose();
 		}
 	}
@@ -46,7 +46,7 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public Vector3 getPosition() {
-		return position;
+		return super.position;
 	}
 
 	/**
@@ -58,12 +58,12 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public void setPosition(Vector3 position) {
-		this.position = position;
+		super.position = position;
 	}
 
 	@Override
 	public void setXPosition(float x) {
-		position.x = x;
+		super.position.x = x;
 	}
 
 	public float getXPosition() {
@@ -72,29 +72,26 @@ public class Box extends Obstacle {
 
 	@Override
 	public void setYPosition(float y) {
-		position.y = y;
+		super.position.y = y;
 
 	}
 
 	public float getYPosition() {
-		return position.y;
+		return super.position.y;
 	}
 
 	@Override
 	public Vector3 getVelocity() {
-		// TODO Auto-generated method stub
 		return super.getVelocity();
 	}
 
 	@Override
 	public void setVelocity(Vector3 velocity) {
-		// TODO Auto-generated method stub
 		super.setVelocity(velocity);
 	}
 
 	@Override
 	public String getPath() {
-		// TODO Auto-generated method stub
 		return super.getPath();
 	}
 
@@ -120,7 +117,7 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public void setTexture(Texture texture) {
-		this.texture = texture;
+		super.texture = texture;
 	}
 
 	/**
@@ -128,7 +125,7 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public Rectangle getRectangle() {
-		return rectangle;
+		return super.rectangle;
 	}
 
 	/**
@@ -164,7 +161,7 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public void dispose() {
-		texture.dispose();
+		super.texture.dispose();
 	}
 
 	@Override
