@@ -5,133 +5,48 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 
-public abstract class Obstacle {
-	protected Texture texture;
-	protected Vector3 velocity;
-	protected Vector3 position;
-	protected Rectangle rectangle;
-	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+public class Obstacle {
+	private Texture texture;
+	private int x;
+	private int y;
+	private Rectangle rectangle;
+	private String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+	private boolean empty; //tells whether or not the obstacle is empty
 	public static int obstacleSpeed = -2;
+	
 	/* constructor
 	path, name of texture
 	x, x position
 	y, pretty much just to animate it
 	*/
-	protected Obstacle(String path, float x, float y) {
+	protected Obstacle(String path, float x, float y,boolean e) {
 		this.path = path;
 		texture = new Texture(path); //there can be multiple textures for obstacles
-		position = new Vector3(x, y, 0); // position
-		velocity = new Vector3(0, obstacleSpeed, 0); //obselete for now
+		this.x=x;
+		this.y=y;
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+		empty = e;
 	}
-
-	/**
-	 * Updates the obstacle and it's position and what not
-	 *
-	 * @param dt
-	 *            The time which passed since the last update
-	 */
-	public abstract void update(float dt);
-
-	/**
-	 * Returns the position of the obstacle
-	 *
-	 * @return The Vector3 position of the obstacle.
-	 */
-	public abstract Vector3 getPosition();
-
-	/**
-	 * Sets the position of the obstacle.
-	 *
-	 * @param position
-	 *            The Vector3 of the position you would like to set the
-	 *            obstacle's position to.
-	 */
-	public abstract void setPosition(Vector3 position);
-
-	/**
-	 * Sets the x coordinate of the obstacle's position
-	 * 
-	 * @param x
-	 *            The x coordinate of the obstacle's position
-	 */
-	public abstract void setXPosition(float x);
-
-	public abstract float getXPosition();
-
-	/**
-	 * Sets the y coordinate of the obstacle's position
-	 * 
-	 * @param y
-	 *            The y coordinate of the obstacle's position
-	 */
-	public abstract void setYPosition(float y);
-
-	public abstract float getYPosition();
-
-	/**
-	 * Returns the texture of the obstacle.
-	 *
-	 * @return The texture of the obstacle.
-	 */
-	public abstract Texture getTexture();
-
-	/**
-	 * Sets the texture of the obstacle.
-	 *
-	 * @param texture
-	 *            The texture which the obstacle will be set to
-	 */
-	public abstract void setTexture(Texture texture);
-
-	/**
-	 * Gets the rectangle which represents its hitbox of the obstacle to use
-	 * it's position
-	 *
-	 * @return The rectangle whose bounds represent the bounds of the obstacle
-	 */
-	public abstract Rectangle getRectangle();
-
-	/**
-	 * Sets the rectangle of the obstacle to a new rectangle
-	 *
-	 * @param rectangle
-	 *            The rectangle for whome the bounds of this obstacle shall be
-	 *            set to
-	 */
-	public abstract void setRectangle(Rectangle rectangle);
-
-	public Vector3 getVelocity() {
-		return velocity;
+	//returns status of box, "empty" or not
+	public static boolean emptyStatus(){
+		return empty;
 	}
-
-	public void setVelocity(Vector3 velocity) {
-		this.velocity = velocity;
+	//sets status of box
+	public static void setEmpty(boolean e){
+		empty = e;
 	}
-
-	public String getPath() {
-		return path;
+	//set texture of box
+	public static void setTexture(String p){
+		path = p;
+		texture = new Texture(p);
 	}
-
-	public void setPath(String texturePath) {
-		this.path = texturePath;
+	public static void setY(int y){
+		this.y = y;
 	}
-
-	/**
-	 * Disposes of some of the objects that can cause memory leaks
-	 */
-	public abstract void dispose();
-
-	/**
-	 * Checks if two obstacles are equal or not
-	 * 
-	 * @param obstacle
-	 * @return
-	 */
-	public abstract boolean equals(Obstacle obstacle);
-
-	/**
-	 * Returns a string representation of the Obstacle
-	 */
-	public abstract String toString();
+	public static int getY(){
+		return y;
+	}
+	public static String toString(){
+		return "X Value: "+ x +"Texture: "+ path;
+	}
 }
