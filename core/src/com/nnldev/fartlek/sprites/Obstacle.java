@@ -10,14 +10,18 @@ public abstract class Obstacle {
 	protected Vector3 velocity;
 	protected Vector3 position;
 	protected Rectangle rectangle;
-	protected String path;
-	public static int obstacleSpeed = -1;
-
+	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+	public static int obstacleSpeed = -2;
+	/* constructor
+	path, name of texture
+	x, x position
+	y, pretty much just to animate it
+	*/
 	protected Obstacle(String path, float x, float y) {
 		this.path = path;
-		texture = new Texture(path);
-		position = new Vector3(x, y, 0);
-		velocity = new Vector3(0, obstacleSpeed, 0);
+		texture = new Texture(path); //there can be multiple textures for obstacles
+		position = new Vector3(x, y, 0); // position
+		velocity = new Vector3(0, obstacleSpeed, 0); //obselete for now
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 	}
 

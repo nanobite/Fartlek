@@ -65,4 +65,5 @@ build/
 
 ##My Stuff
 *.psd
+log.txt
 google-services.json
