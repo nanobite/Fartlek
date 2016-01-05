@@ -19,13 +19,8 @@ public class Obstacle {
 	x, x position
 	y, pretty much just to animate it
 	*/
-<<<<<<< HEAD
 	public Obstacle(String pathh, int xx, int yy,boolean e) {//i had to use weird double letters to avoid errors with this.
 		path = pathh;
-=======
-	protected Obstacle(String path, int x, int y,boolean e) {
-		this.path = path;
->>>>>>> 58d5ed07ed5e9c9e87b699ec0e02c2b5d586d0dc
 		texture = new Texture(path); //there can be multiple textures for obstacles
 		x=xx;
 		y=yy;
