@@ -29,6 +29,8 @@ public class PlayState extends State {
 	private TouchSector bottomMiddle;
 	private Music music;
 	private ArrayList<Scene[]> sceneTiles;
+	private Obstacle[] obstacleLine;
+	private boolean obstacleExists;
 	private float obstacleTime, maxObstacleTime = 2.0f;
 	private String tileTextureName;
 	private Box emptyBox;
@@ -37,6 +39,7 @@ public class PlayState extends State {
 	private int AMT_OBSTACLES = 9, AMT_HOLES = 4;
 	private int tileWidth;
 	private int tileHeight;
+	private float obstacleTimer, MAX_OBSTACLE_TIMER=4;//timer for obstacles
 
 	/**
 	 * Creates a new game state
@@ -88,7 +91,27 @@ public class PlayState extends State {
 		if (Fartlek.soundEnabled)
 			music.play();
 	}
-
+	public Obstacle[] randomObstacles(int len, int nulls) {
+		Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
+		for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
+			sendBack[i] = new Obstacle("empty.png", ((Fartlek.WIDTH)/5)*i, Fartlek.HEIGHT,false);
+		}
+		// Set value of empty spaces to be empty
+		for (int i = 0; i < nulls; i++) {
+			int zeroLoc = (int) (Math.random() * len);
+			while (!sendBack[zeroLoc].emptyStatus()) {//if that random spot is already empty
+				zeroLoc = (int) (Math.random() * len);
+			}
+			sendBack[zeroLoc].setEmpty(true);
+		}
+		// Fills up rest of indices with obstacles
+		for (int i = 0; i < len; i++) {
+			if (!sendBack[i].emptyStatus){
+				sendBack[i].setTexture("box.png");
+			}
+		}
+		return sendBack;
+	}
 	/**
 	 * Handles user input
 	 */
@@ -117,7 +140,7 @@ public class PlayState extends State {
 			}
 		}
 	}
-
+	
 	/**
 	 * Updates the play state and all the information
 	 *
@@ -129,6 +152,23 @@ public class PlayState extends State {
 	public void update(float dt) {//dt is delta time
 		handleInput();
 		if (!DONE) {
+			obstacleTimer+=dt;
+			if(obstacleTimer>=MAX_OBSTACLE_TIME){//timer has hit for a new obstacle line
+				obstacleTimer=0;
+				obstacleExists = true;//says that an obstacle line is moving
+				//code goes here for obstacle
+				obstacleLine = randomObstacles(5, 3);
+				for(int i = 0;i<5;i++){//moves the obstacles down
+					obstacleLine[i].setY(obstacleLine.getY()+4);
+				}
+				//if obstacleLine is below screen
+				if ((obstacleLine[0].getY-40)<0){
+					obstacleExists = false;
+					for(int i = 0;i<5;i++){//deletes the line
+						obstacleLine[i].dispose();
+					}
+				}
+			}
 			runner.update(dt);
 			// Loops through all the tiles and updates their positions
 			for (Scene[] tileArray : sceneTiles) {
@@ -152,10 +192,6 @@ public class PlayState extends State {
 				}
 				sceneTiles.remove(0);
 			}
-			obstacleTime += dt;
-			if (obstacleTime >= maxObstacleTime) {
-				obstacleTime = 0;
-			}
 		}
 	}
 
@@ -170,11 +206,12 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
-		for (Scene[] tileArray : sceneTiles) {
-			for (Scene tile : tileArray) {
-				sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
+		for(int i=0;i<sceneTiles.size()){
+			for(int j=9;j<sceneTiles.get(i).length){
+				sb.draw(sceneTiles.get(i)[j].getTexture(),sceneTiles.get(i)[j].getPosition().x, sceneTiles.get(i)[j].getPosition().y);
 			}
 		}
+		//draw obstacles here
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
 		sb.end();
@@ -194,7 +231,7 @@ public class PlayState extends State {
 		}
 		sceneTiles.clear();
 	}
-
+	/*
 	private class ObstacleManager {
 		private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
 		private ArrayList<Obstacle[]> obstacles;
@@ -203,7 +240,7 @@ public class PlayState extends State {
 		 * Makes it a lot easier to control the obstacles and find what is wrong
 		 * with them.
 		 */
-		public ObstacleManager() {
+		/*public ObstacleManager() {
 			obstacles = new ArrayList<Obstacle[]>();
 		}
 
@@ -218,7 +255,7 @@ public class PlayState extends State {
 		 * @param nulls
 		 *            The amount of empty indices
 		 * @return
-		 */
+		 *//**
 		public Obstacle[] randomObstacles(int len, Obstacle[] obstacles, int nulls) {
 			Obstacle[] sendBack = new Obstacle[len];
 			for (int i = 0; i < len; i++) {
@@ -248,7 +285,7 @@ public class PlayState extends State {
 
 		/**
 		 * Adds a new osbtacle
-		 */
+		 *//**
 		public void newObstacles() {
 			Obstacle[] tmpObstacles = randomObstacles(AMT_OBSTACLES, possibleObstacles, AMT_HOLES);
 			obstacles.add(tmpObstacles);
@@ -291,5 +328,6 @@ public class PlayState extends State {
 			}
 			obstacles.clear();
 		}
-	}
+	}**/
+	
 }
