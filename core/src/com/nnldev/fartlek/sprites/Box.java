@@ -28,7 +28,7 @@ public class Box extends Obstacle {
 	 * Updates the box
 	 *
 	 * @param dt
-	 *            The time which passed wicne the last update
+	 *            The time which passed since the last update
 	 */
 	@Override
 	public void update(float dt) {
