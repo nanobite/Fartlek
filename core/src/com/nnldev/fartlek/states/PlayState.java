@@ -98,7 +98,7 @@ public class PlayState extends State {
 		// If you touched the screen
 		if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
 			// If the x,y position of the click is in the exit button
-			if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+			if (exitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
 				gsm.push(new MenuState(gsm));
 				DONE = true;
 				dispose();

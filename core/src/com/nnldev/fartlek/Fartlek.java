@@ -26,7 +26,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static boolean soundEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
-    public boolean GYROAVAILABLE;
+    public static boolean ACCELEROMETER_AVAILABLE;
     public int ORIENTATION;
     public Orientation nativeOrientation;
     public Vector3 ACCEL;
@@ -51,8 +51,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         cam = new OrthographicCamera();
         scrnHeight = Gdx.graphics.getHeight();
         gsm.push(new MenuState(gsm));
-        GYROAVAILABLE = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
-        if (GYROAVAILABLE) {
+        ACCELEROMETER_AVAILABLE = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+        if (ACCELEROMETER_AVAILABLE) {
             ORIENTATION = Gdx.input.getRotation();
             nativeOrientation = Gdx.input.getNativeOrientation();
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
@@ -66,10 +66,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public void render() {
         accDelta += Gdx.graphics.getDeltaTime();
         updateAccValues();
-        if(accDelta>=0.5f){
-            System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
-            accDelta = 0;
-        }
+        printAccValues(accDelta);
         //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
         //scrnHeight = Gdx.graphics.getHeight();
         scrnHeight = HEIGHT;
@@ -81,12 +78,17 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
     }
-
+    public void printAccValues(float accDelta){
+        if(accDelta>=0.5f&& ACCELEROMETER_AVAILABLE){
+            System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
+            accDelta = 0;
+        }
+    }
     /**
      * Updates the accelerometer values
      */
     public void updateAccValues() {
-        if (GYROAVAILABLE) {
+        if (ACCELEROMETER_AVAILABLE) {
             ACCEL.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
     }
