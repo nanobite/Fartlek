@@ -29,12 +29,11 @@ public class PlayState extends State {
 	private TouchSector bottomMiddle;
 	private Music music;
 	private ArrayList<Scene[]> sceneTiles;
+	private ArrayList<Obstacle[]> obstacleSet;
 	private float obstacleTime, maxObstacleTime = 2.0f;
 	private String tileTextureName;
-	private Box emptyBox;
 	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
 	private boolean DONE;
-	private int AMT_OBSTACLES = 9, AMT_HOLES = 4;
 	private int tileWidth;
 	private int tileHeight;
 
@@ -61,6 +60,8 @@ public class PlayState extends State {
 		for (int i = 0; i < sceneTiles.get(0).length; i++) {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, 0);
 		}
+		obstacleSet = new ArrayList<Obstacle[]>();
+		obstacleSet.add(new Obstacle)
 		newSceneTile();
 		startMusic("music1.mp3");
 	}
@@ -192,104 +193,11 @@ public class PlayState extends State {
 			for (Scene scene : sceneArray)
 				scene.dispose();
 		}
+		for (Obstacle[] obstacleArray : obstacleSet) {
+			for (Obstacle ob : obstacleArray)
+				Obstacle.dispose();
+		}
 		sceneTiles.clear();
-	}
-
-	private class ObstacleManager {
-		private Obstacle[] possibleObstacles = { new Box("Items\\box.png", 0, Fartlek.HEIGHT, 100) };
-		private ArrayList<Obstacle[]> obstacles;
-
-		/**
-		 * Makes it a lot easier to control the obstacles and find what is wrong
-		 * with them.
-		 */
-		public ObstacleManager() {
-			obstacles = new ArrayList<Obstacle[]>();
-		}
-
-		/**
-		 * Creates an array of obstacles with a given length, a given amount of
-		 * empty indices, and an array of permitted obstacles
-		 * 
-		 * @param len
-		 *            Length of the returned array
-		 * @param obstacles
-		 *            The list of possible obstacles
-		 * @param nulls
-		 *            The amount of empty indices
-		 * @return
-		 */
-		public Obstacle[] randomObstacles(int len, Obstacle[] obstacles, int nulls) {
-			Obstacle[] sendBack = new Obstacle[len];
-			for (int i = 0; i < len; i++) {
-				sendBack[i] = new Box("empty.png", 0, 0, 0);
-			}
-			// First place nulls in random indices
-			for (int i = 0; i < nulls; i++) {
-				int zeroLoc = (int) (Math.random() * len);
-				while (sendBack[zeroLoc].equals(emptyBox)) {
-					zeroLoc = (int) (Math.random() * len);
-				}
-				sendBack[zeroLoc] = emptyBox;
-			}
-			// Fills up rest of indices with obstacles
-			for (int i = 0; i < len; i++) {
-				int random = (int) (Math.random() * obstacles.length);
-				if (!sendBack[i].equals(emptyBox))
-					sendBack[i] = obstacles[random];
-			}
-			// Sets the coordinates
-			for (int i = 0; i < sendBack.length; i++) {
-				sendBack[i].setPosition(new Vector3(
-						i * sendBack[i].getTexture().getWidth() + HORIZONTAL_OBSTACLE_BUFFER, Fartlek.HEIGHT, 0));
-			}
-			return sendBack;
-		}
-
-		/**
-		 * Adds a new osbtacle
-		 */
-		public void newObstacles() {
-			Obstacle[] tmpObstacles = randomObstacles(AMT_OBSTACLES, possibleObstacles, AMT_HOLES);
-			obstacles.add(tmpObstacles);
-			for (int i = 0; i < obstacles.get(obstacles.size() - 1).length; i++) {
-			}
-		}
-
-		public void update(float dt) {
-			// Updates all of the obstacles
-			for (int i = 0; i < obstacles.size(); i++) {
-				for (int j = 0; j < obstacles.get(i).length; j++) {
-					obstacles.get(i)[j].update(dt);
-				}
-			}
-			for (int i = 0; i < obstacles.size(); i++) {
-				if ((obstacles.get(i)[0].getYPosition() + obstacles.get(i)[0].getTexture().getHeight()) < 0) {
-					for (int j = 0; j < obstacles.get(i).length; j++) {
-						obstacles.get(i)[j].dispose();
-					}
-					obstacles.remove(i);
-				}
-			}
-		}
-
-		public void render(SpriteBatch sb) {
-			for (int i = 0; i < obstacles.size(); i++) {
-				for (int j = 0; j < obstacles.get(i).length; j++) {
-					sb.draw(obstacles.get(i)[j].getTexture(),
-							j * obstacles.get(i)[j].getTexture().getWidth() + HORIZONTAL_OBSTACLE_BUFFER,
-							obstacles.get(i)[j].getYPosition());
-				}
-			}
-		}
-
-		public void dispose() {
-			for (Obstacle[] obstacleArray : obstacles) {
-				for (Obstacle obstacle : obstacleArray) {
-					obstacle.dispose();
-				}
-			}
-			obstacles.clear();
-		}
+		obstacleSet.clear();
 	}
 }
