@@ -49,4 +49,7 @@ public class Obstacle {
 	public static String toString(){
 		return "X Value: "+ x +"Texture: "+ path;
 	}
+	public static Texture getTexture(){
+		return texture;
+	}
 }
