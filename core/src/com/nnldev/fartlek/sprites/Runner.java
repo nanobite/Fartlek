@@ -1,5 +1,7 @@
 package com.nnldev.fartlek.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,30 +25,52 @@ public class Runner {
     private float horizontalDeceleration = 0.5f;
     private final int RUNNER_Y = 160;
     private final float ANIM_CYCLE_TIME = 0.25f;
-    private ArrayList<Bullet> bullets;
-
+    private Sound moveSound;
+    private float soundTimer;
+    private boolean soundPlayable;
     /**
      * Makes a new runner
      *
      * @param path       The path for the runner's pic
-     * @param animFrames The number of frames in the picture t oallow for animation of the runner
+     * @param animFrames The number of frames in the picture t oallow for animation of
+     *                   the runner
      */
     public Runner(String path, int animFrames) {
+        soundTimer = 0;
+        soundPlayable = false;
         texture = new Texture(path);
         velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
         rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-        horizontalSpeed = 8;
+        horizontalSpeed = 12;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
-        bullets = new ArrayList<Bullet>();
+        moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
+    }
+
+    /**
+     * The play sound
+     */
+    private void playMoveSound() {
+        if (soundPlayable) {
+            moveSound.stop();
+            moveSound.play(0.01f);
+            soundPlayable = false;
+        }
+
     }
 
     /**
      * Updates the runner
      *
-     * @param dt The change in time since the last time the runner's position was updated
+     * @param dt The change in time since the last time the runner's position
+     *           was updated
      */
     public void update(float dt) {
+        soundTimer += dt;
+        if (soundTimer >= 0.3f) {
+            soundTimer = 0;
+            soundPlayable = true;
+        }
         playerAnimation.update(dt);
         if (velocity.x > 0) {
             velocity.x -= horizontalDeceleration;
@@ -55,27 +79,21 @@ public class Runner {
         } else {
             velocity.x = 0;
         }
-
         position.x += velocity.x;
         position.y += velocity.y;
         rectangle.y = position.y;
         rectangle.x = position.x;
-        if (position.x < 0) {
+        if (position.x < 0)
             position.x = 0;
-        }
-        System.out.println("Right X: " + (position.x + rectangle.getWidth()));
-        System.out.println("Screen Width: " + Fartlek.WIDTH);
-        System.out.println("Player Width: " + rectangle.getWidth());
-        if (position.x + rectangle.getWidth() > Fartlek.WIDTH) {
-            System.out.println(rectangle.getWidth());
+        if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle.getWidth();
-        }
     }
 
     /**
      * Moves the character left
      */
     public void left() {
+        playMoveSound();
         velocity.x = -horizontalSpeed;
     }
 
@@ -83,6 +101,7 @@ public class Runner {
      * Moves the character right
      */
     public void right() {
+        playMoveSound();
         velocity.x = horizontalSpeed;
     }
 
@@ -162,10 +181,10 @@ public class Runner {
      * Adds a new bullet to the bullet timer
      */
     public void shoot() {
-        bullets.add(new Bullet());
     }
 
     public void dispose() {
         texture.dispose();
+        moveSound.dispose();
     }
 }
