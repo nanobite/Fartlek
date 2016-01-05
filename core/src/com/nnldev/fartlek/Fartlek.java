@@ -30,7 +30,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public int ORIENTATION;
     public Orientation nativeOrientation;
     public Vector3 ACCEL;
-
+    public String characterSprite = "Characters\\ship1Anim.png";
+    public int characterSpriteNum = 3;
     private SpriteBatch batch;
     private GameStateManager gsm;
     private float accDelta;
