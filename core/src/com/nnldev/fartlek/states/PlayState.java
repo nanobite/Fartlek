@@ -31,6 +31,7 @@ public class PlayState extends State {
 	private ArrayList<Scene[]> sceneTiles;
 	private ArrayList<Obstacle[]> obstacleSet;
 	private float obstacleTime, maxObstacleTime = 2.0f;
+	private Box emptyBox;
 	private String tileTextureName;
 	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
 	private boolean DONE;
