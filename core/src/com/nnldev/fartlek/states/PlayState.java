@@ -158,6 +158,8 @@ public class PlayState extends State {
 				obstacleExists = true;//says that an obstacle line is moving
 				//code goes here for obstacle
 				obstacleLine = randomObstacles(5, 3);
+			}
+			if(obstacleExists){//moves the obstacle
 				for(int i = 0;i<5;i++){//moves the obstacles down
 					obstacleLine[i].setY(obstacleLine.getY()+4);
 				}
@@ -167,7 +169,7 @@ public class PlayState extends State {
 					for(int i = 0;i<5;i++){//deletes the line
 						obstacleLine[i].dispose();
 					}
-				}
+				}	
 			}
 			runner.update(dt);
 			// Loops through all the tiles and updates their positions
@@ -212,6 +214,9 @@ public class PlayState extends State {
 			}
 		}
 		//draw obstacles here
+		for(int i=0;i<5;i++){
+			sb.draw(obstacleLine[i].getTexture(),obstacleLine[i].getX(),obstacleLine[i].getY());
+		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
 		sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
 		sb.end();
