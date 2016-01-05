@@ -19,43 +19,43 @@ public class Obstacle {
 	x, x position
 	y, pretty much just to animate it
 	*/
-	public Obstacle(String path, int x, int y,boolean e) {
-		this.path = path;
+	public Obstacle(String pathh, int xx, int yy,boolean e) {//i had to use weird double letters to avoid errors with this.
+		path = pathh;
 		texture = new Texture(path); //there can be multiple textures for obstacles
-		this.x=x;
-		this.y=y;
+		x=xx;
+		y=yy;
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 		empty = e;
 	}
 	//returns status of box, "empty" or not
-	public static boolean emptyStatus(){
+	public boolean emptyStatus(){
 		return empty;
 	}
 	//sets status of box
-	public static void setEmpty(boolean e){
+	public void setEmpty(boolean e){
 		empty = e;
 	}
 	//set texture of box
-	public static void setTexture(String p){
+	public void setTexture(String p){
 		path = p;
 		texture = new Texture(p);
 	}
-	public static void setY(int yy){
+	public void setY(int yy){
 		y = yy;
 	}
-	public static int getY(){
+	public int getY(){
 		return y;
 	}
-	public static int getX(){
+	public int getX(){
 		return x;
 	}
-	public static void setX(int xx){
+	public void setX(int xx){
 		x=xx;
 	}
 	/*public static String toString(){
 		return "X Value: "+ x +"Texture: "+ path;
 	}*/
-	public static Texture getTexture(){
+	public Texture getTexture(){
 		return texture;
 	}
 }
