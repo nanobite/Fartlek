@@ -106,7 +106,7 @@ public class PlayState extends State {
 		}
 		// Fills up rest of indices with obstacles
 		for (int i = 0; i < len; i++) {
-			if (!sendBack[i].emptyStatus){
+			if (!sendBack[i].emptyStatus()){
 				sendBack[i].setTexture("box.png");
 			}
 		}
@@ -153,7 +153,7 @@ public class PlayState extends State {
 		handleInput();
 		if (!DONE) {
 			obstacleTimer+=dt;
-			if(obstacleTimer>=MAX_OBSTACLE_TIME){//timer has hit for a new obstacle line
+			if(obstacleTimer>=MAX_OBSTACLE_TIMER){//timer has hit for a new obstacle line
 				obstacleTimer=0;
 				obstacleExists = true;//says that an obstacle line is moving
 				//code goes here for obstacle
@@ -161,14 +161,14 @@ public class PlayState extends State {
 			}
 			if(obstacleExists){//moves the obstacle
 				for(int i = 0;i<5;i++){//moves the obstacles down
-					obstacleLine[i].setY(obstacleLine.getY()+4);
+					obstacleLine[i].setY((obstacleLine[i].getY())+4);
 				}
 				//if obstacleLine is below screen
-				if ((obstacleLine[0].getY-40)<0){
+				if ((obstacleLine[0].getY()-40)<0){
 					obstacleExists = false;
-					for(int i = 0;i<5;i++){//deletes the line
+					/*for(int i = 0;i<5;i++){//deletes the line
 						obstacleLine[i].dispose();
-					}
+					}*/
 				}	
 			}
 			runner.update(dt);
@@ -208,8 +208,8 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
-		for(int i=0;i<sceneTiles.size()){
-			for(int j=9;j<sceneTiles.get(i).length){
+		for(int i=0;i<sceneTiles.size();i++){
+			for(int j=9;j<sceneTiles.get(i).length;i++){
 				sb.draw(sceneTiles.get(i)[j].getTexture(),sceneTiles.get(i)[j].getPosition().x, sceneTiles.get(i)[j].getPosition().y);
 			}
 		}

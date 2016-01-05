@@ -6,12 +6,12 @@ import com.badlogic.gdx.math.Vector3;
 
 
 public class Obstacle {
-	private Texture texture;
-	private int x;
-	private int y;
+	private static Texture texture;
+	private static int x;
+	private static int y;
 	private Rectangle rectangle;
-	private String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-	private boolean empty; //tells whether or not the obstacle is empty
+	private static String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+	private static boolean empty; //tells whether or not the obstacle is empty
 	public static int obstacleSpeed = -2;
 	
 	/* constructor
@@ -19,7 +19,7 @@ public class Obstacle {
 	x, x position
 	y, pretty much just to animate it
 	*/
-	protected Obstacle(String path, float x, float y,boolean e) {
+	public Obstacle(String path, int x, int y,boolean e) {
 		this.path = path;
 		texture = new Texture(path); //there can be multiple textures for obstacles
 		this.x=x;
@@ -40,15 +40,21 @@ public class Obstacle {
 		path = p;
 		texture = new Texture(p);
 	}
-	public static void setY(int y){
-		this.y = y;
+	public static void setY(int yy){
+		y = yy;
 	}
 	public static int getY(){
 		return y;
 	}
-	public static String toString(){
-		return "X Value: "+ x +"Texture: "+ path;
+	public static int getX(){
+		return x;
 	}
+	public static void setX(int xx){
+		x=xx;
+	}
+	/*public static String toString(){
+		return "X Value: "+ x +"Texture: "+ path;
+	}*/
 	public static Texture getTexture(){
 		return texture;
 	}
