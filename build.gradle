@@ -45,13 +45,11 @@ project(":desktop") {
 
 project(":android") {
     apply plugin: "android"
-    apply plugin: 'com.google.gms.google-services'
 
     configurations { natives }
 
     dependencies {
         compile project(":core")
-        compile 'com.google.android.gms:play-services-analytics:8.3.0'
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
