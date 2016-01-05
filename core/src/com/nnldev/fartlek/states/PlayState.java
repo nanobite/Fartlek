@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PlayState extends State {
-	//private ObstacleManager obstacleManager;
+	// private ObstacleManager obstacleManager;
 	private Button exitBtn;
 	private Runner runner;
 	private TouchSector bottomLeft;
@@ -70,6 +70,7 @@ public class PlayState extends State {
 	 * Makes a new row of tiles
 	 */
 	public void newSceneTile() {
+		System.out.println("New Scene Tile");
 		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
 		for (int i = 0; i < sceneTiles.get(0).length; i++) {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
@@ -148,10 +149,11 @@ public class PlayState extends State {
 			// avoid memory leaks and save space
 			if ((sceneTiles.get(0)[0].getPosition().y + sceneTiles.get(0)[0].getRectangle().height) < 0) {
 				// Removes the oldest one
-				for (Scene tile : sceneTiles.get(0)) {
-					tile.dispose();
+				for(int i=0;i<sceneTiles.get(0).length;i++){
+					sceneTiles.get(0)[i].dispose();
 				}
 				sceneTiles.remove(0);
+				System.out.println("Removed Tile, now there are: "+sceneTiles.size()+" tile Arrays.");
 			}
 			obstacleTime += dt;
 			if (obstacleTime >= maxObstacleTime) {
