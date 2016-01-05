@@ -19,7 +19,7 @@ public class Obstacle {
 	x, x position
 	y, pretty much just to animate it
 	*/
-	protected Obstacle(String path, float x, float y,boolean e) {
+	protected Obstacle(String path, int x, int y,boolean e) {
 		this.path = path;
 		texture = new Texture(path); //there can be multiple textures for obstacles
 		this.x=x;
