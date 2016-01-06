@@ -6,12 +6,14 @@ package com.nnldev.fartlek;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.Input.Orientation;
+
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.states.MenuState;
 
@@ -24,17 +26,23 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static boolean soundEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
-
+    public boolean GYROAVAILABLE;
+    public int ORIENTATION;
+    public Orientation nativeOrientation;
+    public Vector3 ACCEL;
+    public String characterSprite = "Characters\\ship1Anim.png";
+    public int characterSpriteNum = 3;
     private SpriteBatch batch;
     private GameStateManager gsm;
-    private FPSLogger fpsLogger;
+    private float accDelta;
+    //private FPSLogger fpsLogger;
 
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
-        fpsLogger = new FPSLogger();
+        //fpsLogger = new FPSLogger();
         soundEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
@@ -44,6 +52,12 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         cam = new OrthographicCamera();
         scrnHeight = Gdx.graphics.getHeight();
         gsm.push(new MenuState(gsm));
+        GYROAVAILABLE = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
+        if (GYROAVAILABLE) {
+            ORIENTATION = Gdx.input.getRotation();
+            nativeOrientation = Gdx.input.getNativeOrientation();
+            ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
+        }
     }
 
     /**
@@ -51,6 +65,12 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
+        accDelta += Gdx.graphics.getDeltaTime();
+        updateAccValues();
+        if(accDelta>=0.5f){
+            System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
+            accDelta = 0;
+        }
         //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
         //scrnHeight = Gdx.graphics.getHeight();
         scrnHeight = HEIGHT;
@@ -63,6 +83,18 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         gsm.render(batch);
     }
 
+    /**
+     * Updates the accelerometer values
+     */
+    public void updateAccValues() {
+        if (GYROAVAILABLE) {
+            ACCEL.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
+        }
+    }
+
+    /**
+     * Disposes of random useless stuff.
+     */
     @Override
     public void dispose() {
         batch.dispose();

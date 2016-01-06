@@ -15,16 +15,27 @@ public class LoadState extends State {
         super(gsm);
     }
 
+    /**
+     *
+     */
     @Override
     protected void handleInput() {
 
     }
 
+    /**
+     *
+     * @param deltaTime The time since the previous update
+     */
     @Override
     public void update(float deltaTime) {
 
     }
 
+    /**
+     *
+     * @param sb All the graphics that will be drawn
+     */
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(Fartlek.cam.combined);
@@ -32,6 +43,9 @@ public class LoadState extends State {
         sb.end();
     }
 
+    /**
+     *
+     */
     @Override
     public void dispose() {
     }
