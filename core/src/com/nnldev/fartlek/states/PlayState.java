@@ -19,10 +19,6 @@ import com.nnldev.fartlek.sprites.Runner;
 import java.util.ArrayList;
 
 public class PlayState extends State {
-<<<<<<< HEAD
-=======
-	// private ObstacleManager obstacleManager;
->>>>>>> origin/nanobranch
 	private Button exitBtn;
 	private Runner runner;
 	private TouchSector bottomLeft;
