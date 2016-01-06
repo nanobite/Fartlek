@@ -1,5 +1,5 @@
 /**
- * @author Nano
+ * @author Nano, Nick
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
@@ -90,7 +90,7 @@ public class PlayState extends State {
 	public Obstacle[] randomObstacles(int len, int nulls) {
 		Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
 		for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
-			sendBack[i] = new Obstacle("empty.png", ((Fartlek.WIDTH)/5)*i, Fartlek.HEIGHT,false);
+			sendBack[i] = new Obstacle("empty.png", (float)(((Fartlek.WIDTH)/5)*i), (float)(Fartlek.HEIGHT),false);
 		}
 		// Set value of empty spaces to be empty
 		for (int i = 0; i < nulls; i++) {
@@ -157,7 +157,7 @@ public class PlayState extends State {
 			}
 			if(obstacleExists){//moves the obstacle
 				for(int i = 0;i<5;i++){//moves the obstacles down
-					obstacleLine[i].setY((obstacleLine[i].getY())+4);
+					obstacleLine[i].setY((float)((obstacleLine[i].getY())+4));
 				}
 				//if obstacleLine is below screen
 				if ((obstacleLine[0].getY()-40)<0){
