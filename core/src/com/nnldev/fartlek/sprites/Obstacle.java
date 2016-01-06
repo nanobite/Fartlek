@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 
 
 public abstract class Obstacle {
+	public static final int OBS_PER_ROW = 5;
 	protected Texture texture;
 	protected Vector3 velocity;
 	protected Vector3 position;
