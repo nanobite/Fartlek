@@ -32,8 +32,8 @@ public class PlayState extends State {
 	private ArrayList<Obstacle[]> obstacleSet;
 	private float obstacleTime, maxObstacleTime = 2.0f;
 	private Box emptyBox;
+	private String boxTextureName;
 	private String tileTextureName;
-	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
 	private boolean DONE;
 	private int tileWidth;
 	private int tileHeight;
@@ -48,6 +48,7 @@ public class PlayState extends State {
 		super(gsm);
 		DONE = false;
 		emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
+		boxTextureName = "Items\\box.png";
 		tileTextureName = "Scene\\bckg1.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
 		runner = new Runner("Characters\\ship1Anim.png", 3);
@@ -61,8 +62,12 @@ public class PlayState extends State {
 		for (int i = 0; i < sceneTiles.get(0).length; i++) {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, 0);
 		}
+		//creates obstacles (all boxes, for now), similar to creation of scene tiles -L
 		obstacleSet = new ArrayList<Obstacle[]>();
-		obstacleSet.add(new Obstacle)
+		obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
+		for (int i = 0; i < obstacleSet.get(0).length; i++) {
+			(obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(//boxTextureName, (Fartlek.WIDTH/Obstacle.OBS_PER_ROW) * i, Fartlek.HEIGHT, 100);
+		}
 		newSceneTile();
 		startMusic("music1.mp3");
 	}
