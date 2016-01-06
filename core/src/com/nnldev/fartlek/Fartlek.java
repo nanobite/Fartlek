@@ -68,18 +68,20 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
-        //Sets it to the screen height
         scrnHeight = Gdx.graphics.getHeight();
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
         } else {
+            //Works fine on desktop
             if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 cam.setToOrtho(false, WIDTH, scrnHeight);
+                cam.translate(0, -(scrnHeight - HEIGHT) / 2, 0);
             } else {
-                cam.setToOrtho(false, WIDTH, 900);
+                cam.setToOrtho(false, WIDTH, HEIGHT+(HEIGHT/16));
+                cam.translate(0, -(((border.getHeight()-HEIGHT)/32)), 0);
             }
-            cam.position.set(0, cam.viewportHeight/2f, 0);
         }
+        cam.update();
         accDelta += Gdx.graphics.getDeltaTime();
         updateAccValues();
         printAccValues(accDelta);
@@ -88,7 +90,6 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
-        batch.setProjectionMatrix(cam.combined);
         batch.begin();
         batch.draw(border, -(border.getWidth() - WIDTH) / 2, -(border.getHeight() / 4));
         batch.end();
