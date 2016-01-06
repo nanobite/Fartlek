@@ -88,6 +88,7 @@ public class PlayState extends State {
 			music.play();
 	}
 	public Obstacle[] randomObstacles(int len, int nulls) {
+		System.out.println("Random Obstacles");
 		Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
 		for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
 			sendBack[i] = new Obstacle("empty.png", (float)(((Fartlek.WIDTH)/5)*i), (float)(Fartlek.HEIGHT),false);
@@ -155,7 +156,9 @@ public class PlayState extends State {
 				//code goes here for obstacle
 				obstacleLine = randomObstacles(5, 3);
 			}
+			System.out.println("Obstacle Exist?");
 			if(obstacleExists){//moves the obstacle
+				System.out.println("Obstacle Exists");
 				for(int i = 0;i<5;i++){//moves the obstacles down
 					obstacleLine[i].setY((float)((obstacleLine[i].getY())+4));
 				}
@@ -189,7 +192,7 @@ public class PlayState extends State {
 					sceneTiles.get(0)[i].dispose();
 				}
 				sceneTiles.remove(0);
-				System.out.println("Removed Tile, now there are: "+sceneTiles.size()+" tile Arrays.");
+				System.out.println("Removed Tile, now there are: " + sceneTiles.size() + " tile Arrays.");
 			}
 		}
 	}

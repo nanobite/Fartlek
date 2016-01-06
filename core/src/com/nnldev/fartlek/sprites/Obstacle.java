@@ -13,11 +13,12 @@ public class Obstacle {
     private static boolean empty; //tells whether or not the obstacle is empty
     public static int obstacleSpeed = -2;
 
-    /** constructor
-    path, name of texture
-    x, x position
-    y, pretty much just to animate it
-    */
+    /**
+     * @param pathh
+     * @param x
+     * @param y
+     * @param e
+     */
     public Obstacle(String pathh, float x, float y, boolean e) {//i had to use weird double letters to avoid errors with this.
         position = new Vector3();
         path = pathh;
@@ -29,7 +30,6 @@ public class Obstacle {
     }
 
     /**
-     *
      * @return
      */
     public boolean emptyStatus() {
@@ -37,7 +37,6 @@ public class Obstacle {
     }
 
     /**
-     *
      * @param e
      */
     public void setEmpty(boolean e) {
@@ -45,38 +44,58 @@ public class Obstacle {
     }
 
     /**
-     *
      * @param p
      */
-    public void setTexture(String p) {
-        path = p;
-        texture = new Texture(p);
+    public void setTexture(String path) {
+        this.path = path;
+        texture = new Texture(path);
     }
 
+    /**
+     * @param y
+     */
     public void setY(float y) {
         position.y = y;
     }
 
+    /**
+     * @return
+     */
     public float getY() {
         return position.y;
     }
 
+    /**
+     * @return
+     */
     public float getX() {
         return position.x;
     }
 
+    /**
+     * @param x
+     */
     public void setX(float x) {
         position.x = x;
     }
 
+    /**
+     * @return
+     */
     public Vector3 getPosition() {
         return position;
     }
 
+    /**
+     * @param position
+     */
     public void setPosition(Vector3 position) {
         this.position.set(position);
     }
 
+    /**
+     * @return
+     */
     public Texture getTexture() {
         return texture;
     }
