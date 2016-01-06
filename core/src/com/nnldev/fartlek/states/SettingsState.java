@@ -11,7 +11,7 @@ import com.nnldev.fartlek.essentials.GameStateManager;
  */
 public class SettingsState extends State {
     private Button exitBtn;
-    private Button soundBtn;
+    private Button musicBtn;
 
     /**
      * @param gsm
@@ -20,9 +20,9 @@ public class SettingsState extends State {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         if (Fartlek.soundEnabled) {
-            soundBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
+            musicBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         } else {
-            soundBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
+            musicBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         }
     }
 
@@ -32,17 +32,17 @@ public class SettingsState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
-            if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (exitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new MenuState(gsm));
                 dispose();
             }
-            if (soundBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                if (soundBtn.getPath().equals("Buttons\\sound.png")) {
+            if (musicBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                if (musicBtn.getPath().equals("Buttons\\sound.png")) {
                     Fartlek.soundEnabled = false;
-                    soundBtn.setTexture("Buttons\\nosound.png");
+                    musicBtn.setTexture("Buttons\\nosound.png");
                 } else {
                     Fartlek.soundEnabled = true;
-                    soundBtn.setTexture("Buttons\\sound.png");
+                    musicBtn.setTexture("Buttons\\sound.png");
                 }
             }
         }
@@ -63,7 +63,7 @@ public class SettingsState extends State {
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
-        sb.draw(soundBtn.getTexture(), soundBtn.getPosition().x, soundBtn.getPosition().y);
+        sb.draw(musicBtn.getTexture(), musicBtn.getPosition().x, musicBtn.getPosition().y);
         sb.end();
     }
 
@@ -73,6 +73,6 @@ public class SettingsState extends State {
     @Override
     public void dispose() {
         exitBtn.dispose();
-        soundBtn.dispose();
+        musicBtn.dispose();
     }
 }

@@ -19,6 +19,10 @@ import com.nnldev.fartlek.sprites.Runner;
 import java.util.ArrayList;
 
 public class PlayState extends State {
+<<<<<<< HEAD
+=======
+	// private ObstacleManager obstacleManager;
+>>>>>>> origin/nanobranch
 	private Button exitBtn;
 	private Runner runner;
 	private TouchSector bottomLeft;
@@ -67,6 +71,7 @@ public class PlayState extends State {
 	 * Makes a new row of tiles
 	 */
 	public void newSceneTile() {
+		System.out.println("New Scene Tile");
 		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
 		for (int i = 0; i < sceneTiles.get(0).length; i++) {
 			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
@@ -115,7 +120,7 @@ public class PlayState extends State {
 		// If you touched the screen
 		if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
 			// If the x,y position of the click is in the exit button
-			if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+			if (exitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
 				gsm.push(new MenuState(gsm));
 				DONE = true;
 				dispose();
@@ -184,10 +189,11 @@ public class PlayState extends State {
 			// avoid memory leaks and save space
 			if ((sceneTiles.get(0)[0].getPosition().y + sceneTiles.get(0)[0].getRectangle().height) < 0) {
 				// Removes the oldest one
-				for (Scene tile : sceneTiles.get(0)) {
-					tile.dispose();
+				for(int i=0;i<sceneTiles.get(0).length;i++){
+					sceneTiles.get(0)[i].dispose();
 				}
 				sceneTiles.remove(0);
+				System.out.println("Removed Tile, now there are: "+sceneTiles.size()+" tile Arrays.");
 			}
 		}
 	}

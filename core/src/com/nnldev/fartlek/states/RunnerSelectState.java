@@ -27,7 +27,7 @@ public class RunnerSelectState extends State {
     @Override
     protected void handleInput() {
         if(Gdx.input.justTouched()){
-            if(exitBtn.getRectangle().contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){
+            if(exitBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){
                 gsm.push(new MenuState(gsm));
                 dispose();
             }
