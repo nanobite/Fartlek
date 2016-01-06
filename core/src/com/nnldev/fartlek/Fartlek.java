@@ -4,6 +4,7 @@
  */
 package com.nnldev.fartlek;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -35,7 +36,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     private SpriteBatch batch;
     private GameStateManager gsm;
     private float accDelta;
-    private Texture border;
+    public Texture border;
     //private FPSLogger fpsLogger;
 
     /**
@@ -72,24 +73,32 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
         } else {
-            cam.setToOrtho(false, WIDTH, scrnHeight);
-            cam.position.set(0, ((scrnHeight - HEIGHT) / 2), 0);
+            if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                cam.setToOrtho(false, WIDTH, scrnHeight);
+            } else {
+                cam.setToOrtho(false, WIDTH, 900);
+            }
+            cam.position.set(0, cam.viewportHeight/2f, 0);
         }
         accDelta += Gdx.graphics.getDeltaTime();
         updateAccValues();
         printAccValues(accDelta);
-        //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
-        //fpsLogger.log();
         scrnVertBezel = (scrnHeight - WIDTH) / 2;
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
+        batch.setProjectionMatrix(cam.combined);
         batch.begin();
-        batch.draw(border, -(border.getWidth() - WIDTH) / 2, -(border.getHeight() - Gdx.graphics.getHeight()) / 2);
+        batch.draw(border, -(border.getWidth() - WIDTH) / 2, -(border.getHeight() / 4));
         batch.end();
     }
 
+    /**
+     * Prints the accelerometer values in regular intervals.
+     *
+     * @param accDelta
+     */
     public void printAccValues(float accDelta) {
         if (accDelta >= 0.5f && ACCELEROMETER_AVAILABLE) {
             System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
