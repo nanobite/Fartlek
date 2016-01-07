@@ -107,6 +107,7 @@ public class PlayState extends State {
 				sendBack[i].setTexture("box.png");
 			}
 		}
+		System.out.println("Done With Obstacles");
 		return sendBack;
 	}
 	/**

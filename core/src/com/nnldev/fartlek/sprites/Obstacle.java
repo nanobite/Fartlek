@@ -14,19 +14,19 @@ public class Obstacle {
     public static int obstacleSpeed = -2;
 
     /**
-     * @param pathh
+     * @param path
      * @param x
      * @param y
-     * @param e
+     * @param empty
      */
-    public Obstacle(String pathh, float x, float y, boolean e) {//i had to use weird double letters to avoid errors with this.
+    public Obstacle(String path, float x, float y, boolean empty) {//i had to use weird double letters to avoid errors with this.
         position = new Vector3();
-        path = pathh;
+        this.path = path;
         texture = new Texture(path); //there can be multiple textures for obstacles
         position.x = x;
         position.y = y;
         rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
-        empty = e;
+        empty = empty;
     }
 
     /**
@@ -44,7 +44,7 @@ public class Obstacle {
     }
 
     /**
-     * @param p
+     * @param path
      */
     public void setTexture(String path) {
         this.path = path;
