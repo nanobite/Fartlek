@@ -28,7 +28,7 @@ public class PlayState extends State {
 	private TouchSector bottomRight;
 	private TouchSector bottomMiddle;
 	private Music music;
-	private ArrayList<Scene[]> sceneTiles;
+	private ArrayList<Scene> sceneTiles;
 	private ArrayList<Obstacle[]> obstacleSet;
 	private float obstacleTime, maxObstacleTime = 2.0f;
 	private Box emptyBox;
@@ -57,18 +57,18 @@ public class PlayState extends State {
 		bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
 		tileWidth = new Texture(tileTextureName).getWidth();
 		tileHeight = new Texture(tileTextureName).getHeight();
-		sceneTiles = new ArrayList<Scene[]>();
-		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
-		for (int i = 0; i < sceneTiles.get(0).length; i++) {
-			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, 0);
+		sceneTiles = new ArrayList<Scene>();
+		for (int i = 0; i < 3; i++) {
+			sceneTiles.add(i, new Scene(tileTextureName, 0, i * Fartlek.HEIGHT);
 		}
 		//creates obstacles (all boxes, for now), similar to creation of scene tiles -L
+		/*
 		obstacleSet = new ArrayList<Obstacle[]>();
 		obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
 		for (int i = 0; i < obstacleSet.get(0).length; i++) {
 			(obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(//boxTextureName, (Fartlek.WIDTH/Obstacle.OBS_PER_ROW) * i, Fartlek.HEIGHT, 100);
 		}
-		newSceneTile();
+		*/
 		startMusic("music1.mp3");
 	}
 
@@ -76,10 +76,7 @@ public class PlayState extends State {
 	 * Makes a new row of tiles
 	 */
 	public void newSceneTile() {
-		sceneTiles.add(new Scene[Scene.TILES_PER_ROW]);
-		for (int i = 0; i < sceneTiles.get(0).length; i++) {
-			sceneTiles.get(sceneTiles.size() - 1)[i] = new Scene(tileTextureName, i * tileWidth, Fartlek.HEIGHT);
-		}
+		sceneTiles.add(new Scene(tileTextureName, 0, i * Fartlek.HEIGHT);
 	}
 
 	/**
@@ -138,25 +135,16 @@ public class PlayState extends State {
 		if (!DONE) {
 			runner.update(dt);
 			// Loops through all the tiles and updates their positions
-			for (Scene[] tileArray : sceneTiles) {
-				for (Scene tile : tileArray) {
-					tile.update();
-				}
+			for (int i = 0; i < sceneTiles.size(), i++) {
+				sceneTiles.get(i).update();
 			}
-			// If the array at the top's height + its y position are equal to
-			// the
-			// height of the screen, it will add another array on top of it
-			if ((sceneTiles.get(sceneTiles.size() - 1)[0].getPosition().y
-					+ sceneTiles.get(sceneTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
+			if (Scene.remainingTiles < 3) {
 				newSceneTile();
 			}
-			// If the array of tiles goes below 0 then it will dispose of it to
+			// If the tile goes below 0 then it will dispose of it to
 			// avoid memory leaks and save space
-			if ((sceneTiles.get(0)[0].getPosition().y + sceneTiles.get(0)[0].getRectangle().height) < 0) {
+			if ((sceneTiles.get(0).getPosition().y + sceneTiles.get(0).getRectangle().height) < 0) {
 				// Removes the oldest one
-				for (Scene tile : sceneTiles.get(0)) {
-					tile.dispose();
-				}
 				sceneTiles.remove(0);
 			}
 			obstacleTime += dt;
