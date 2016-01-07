@@ -9,7 +9,7 @@ import com.nnldev.fartlek.Fartlek;
  * Created by Nano on 12/12/2015.
  */
 public class Scene {
-	public static final int TILES_PER_ROW = 1;
+	public static int remainingTiles = 0;
 	private Texture texture;
 	private Vector3 position;
 	private Vector3 velocity;
@@ -26,6 +26,7 @@ public class Scene {
 	 *            The y position of the tile
 	 */
 	public Scene(String path, float x, float y) {
+		remainingTiles++;
 		texture = new Texture(path);
 		position = new Vector3(x, y, 0);
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
@@ -102,6 +103,7 @@ public class Scene {
 		position.x += velocity.x;
 		position.y += velocity.y;
 		if (position.y + rectangle.getHeight() < 0) {
+			remainingTiles--;
 			dispose();
 		}
 	}
