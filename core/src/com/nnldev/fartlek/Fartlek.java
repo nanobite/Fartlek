@@ -64,9 +64,9 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
-        accDelta += Gdx.graphics.getDeltaTime();
+        accDelta += Gdx.graphics.getRawDeltaTime();
         updateAccValues();
-        if(accDelta>=0.5f){
+        if(accDelta>=0.5f&&GYROAVAILABLE){
             System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
             accDelta = 0;
         }
