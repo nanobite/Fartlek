@@ -161,7 +161,7 @@ public class Box extends Obstacle {
 	 */
 	@Override
 	public void dispose() {
-		super.texture.dispose();
+		super.dispose();
 	}
 
 	@Override

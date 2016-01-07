@@ -121,7 +121,9 @@ public abstract class Obstacle {
 	/**
 	 * Disposes of some of the objects that can cause memory leaks
 	 */
-	public abstract void dispose();
+	public void dispose(){
+		texture.dispose();
+	}
 
 	/**
 	 * Checks if two obstacles are equal or not
