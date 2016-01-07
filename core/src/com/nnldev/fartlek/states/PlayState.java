@@ -96,7 +96,7 @@ public class PlayState extends State {
 		// Set value of empty spaces to be empty
 		for (int i = 0; i < nulls; i++) {
 			int zeroLoc = (int) (Math.random() * len);
-			while (!sendBack[zeroLoc].emptyStatus()) {//if that random spot is already empty
+			while (sendBack[zeroLoc].emptyStatus()) {//if that random spot is already empty
 				zeroLoc = (int) (Math.random() * len);
 			}
 			sendBack[zeroLoc].setEmpty(true);
