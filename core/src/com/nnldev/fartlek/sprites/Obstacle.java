@@ -7,11 +7,11 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Obstacle {
     private Vector3 position;
-    private static Texture texture;
+    private Texture texture;
     private Rectangle rectangle;
-    private static String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-    private static boolean empty; //tells whether or not the obstacle is empty
-    public static int obstacleSpeed = -2;
+    private String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+    private boolean empty; //tells whether or not the obstacle is empty
+    public int obstacleSpeed = -2;
 
     /**
      * @param path
@@ -19,14 +19,14 @@ public class Obstacle {
      * @param y
      * @param empty
      */
-    public Obstacle(String path, float x, float y, boolean empty) {//i had to use weird double letters to avoid errors with this.
+    public Obstacle(String path, float x, float y, boolean emptyy) {//i had to use weird double letters to avoid errors with this.
         position = new Vector3();
         this.path = path;
         texture = new Texture(path); //there can be multiple textures for obstacles
         position.x = x;
         position.y = y;
         rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
-        empty = empty;
+        empty = emptyy;
     }
 
     /**
@@ -46,9 +46,9 @@ public class Obstacle {
     /**
      * @param path
      */
-    public void setTexture(String path) {
-        this.path = path;
-        texture = new Texture(path);
+    public void setTexture(String pathh) {
+        path = pathh;
+        texture = new Texture(pathh);
     }
 
     /**
@@ -89,8 +89,8 @@ public class Obstacle {
     /**
      * @param position
      */
-    public void setPosition(Vector3 position) {
-        this.position.set(position);
+    public void setPosition(Vector3 positionn) {
+        position.set(positionn);
     }
 
     /**
