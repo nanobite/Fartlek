@@ -30,7 +30,7 @@ public class MenuState extends State {
         infoBtn = new Button("Buttons\\infobtn.png", Fartlek.WIDTH / 2 - 120, Fartlek.HEIGHT / 2 - 100, true);
         settingsBtn = new Button("Buttons\\settings.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2 - 150, true);
         runnerBtn = new Button("Buttons\\runnericon.png", Fartlek.WIDTH / 2 + 120, Fartlek.HEIGHT / 2 - 100, true);
-        startGameSound=Gdx.audio.newSound(Gdx.files.internal("Sounds\\startgamenoise.ogg"));
+        startGameSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\startgamenoise.ogg"));
     }
 
     /**
@@ -39,19 +39,19 @@ public class MenuState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.justTouched()) {
-            if (runnerBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (runnerBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new RunnerSelectState(gsm));
                 dispose();
             }
-            if (settingsBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (settingsBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new SettingsState(gsm));
                 dispose();
             }
-            if (infoBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (infoBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new InfoState(gsm));
                 dispose();
             }
-            if (playBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (playBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 startGameSound.play(0.75f);
                 gsm.push(new PlayState(gsm));
                 dispose();
@@ -82,7 +82,6 @@ public class MenuState extends State {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
         sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y);
-
         sb.draw(settingsBtn.getTexture(), settingsBtn.getPosition().x, settingsBtn.getPosition().y);
         sb.draw(infoBtn.getTexture(), infoBtn.getPosition().x, infoBtn.getPosition().y);
         sb.draw(runnerBtn.getTexture(), runnerBtn.getPosition().x, runnerBtn.getPosition().y);

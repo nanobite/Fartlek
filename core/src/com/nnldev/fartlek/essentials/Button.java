@@ -4,6 +4,7 @@
  */
 package com.nnldev.fartlek.essentials;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -88,6 +89,28 @@ public class Button {
      */
     public Rectangle getRectangle() {
         return rectangle;
+    }
+
+    /**
+     * Returns whether or not the position of the click is in the rectangle or not
+     *
+     * @param coords The position of the click
+     * @return
+     */
+    public boolean contains(Vector3 coords) {
+        if (rectangle.contains(coords.x, coords.y)) Gdx.input.vibrate(50);
+        return (rectangle.contains(coords.x, coords.y)) ? true : false;
+    }
+
+    /**
+     * Returns whether ot not the position of a click is in the rectangle or not
+     *
+     * @param x The x position of the click
+     * @param y The y position of the click
+     * @return
+     */
+    public boolean contains(float x, float y) {
+        return contains(new Vector3(x, y, 0));
     }
 
     /**
