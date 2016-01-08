@@ -61,7 +61,7 @@ public class PlayState extends State {
         for (int i = 0; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * Scene.getTexture().getHeight));
         }
-        System.out.println("Scene Tiles: " + sceneTiles.size());
+        System.out.println("Scene Tiles: " + sceneTiles.size()); //<----point of this????
         //creates obstacles (all boxes, for now), similar to creation of scene tiles -L
         /*
         obstacleSet = new ArrayList<Obstacle[]>();
@@ -78,7 +78,7 @@ public class PlayState extends State {
      * Makes a new row of tiles
      */
     public void resetSceneTile(int index) {
-        sceneTiles.get(index).setY(Fartlek.HEIGHT);
+        sceneTiles.get(index).setY(2 * Fartlek.HEIGHT);
     }
 
     /**
