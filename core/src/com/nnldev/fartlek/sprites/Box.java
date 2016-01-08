@@ -21,7 +21,6 @@ public class Box extends Obstacle {
 	public Box(String path, float x, float y, int health) {
 		super(path, x, y);
 		this.health = health;
-		
 	}
 
 	/**

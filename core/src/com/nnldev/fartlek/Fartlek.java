@@ -68,19 +68,6 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
-<<<<<<< HEAD
-        accDelta += Gdx.graphics.getRawDeltaTime();
-        updateAccValues();
-        if(accDelta>=0.5f&&GYROAVAILABLE){
-            System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
-            accDelta = 0;
-        }
-        //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
-        //scrnHeight = Gdx.graphics.getHeight();
-        scrnHeight = HEIGHT;
-        Fartlek.cam.setToOrtho(false, Fartlek.WIDTH, Fartlek.scrnHeight);
-        //fpsLogger.log();
-=======
         scrnHeight = Gdx.graphics.getHeight();
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
@@ -98,7 +85,6 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         accDelta += Gdx.graphics.getDeltaTime();
         updateAccValues();
         printAccValues(accDelta);
->>>>>>> nanobranch
         scrnVertBezel = (scrnHeight - WIDTH) / 2;
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
