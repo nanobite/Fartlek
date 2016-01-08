@@ -28,7 +28,8 @@ public class PlayState extends State {
     private Music music;
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle[]> obstacleSet;
-    private float obstacleTime, maxObstacleTime = 2.0f;
+    private float scoreTime, maxScoreTime = 1.0f; //-L
+    private int score; //-L
     private Box emptyBox;
     private String boxTextureName;
     private String tileTextureName;
@@ -150,10 +151,10 @@ public class PlayState extends State {
                     resetSceneTile(i);
                 }
             }
-
-            obstacleTime += dt;
-            if (obstacleTime >= maxObstacleTime) {
-                obstacleTime = 0;
+            scoreTime += dt; //-L
+            if (scoreTime >= maxScoreTime) {
+                scoreTime = 0;
+                score += 1;
             }
         }
 
