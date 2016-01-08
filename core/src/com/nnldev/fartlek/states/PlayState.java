@@ -91,7 +91,7 @@ public class PlayState extends State {
 		System.out.println("Random Obstacles");
 		Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
 		for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
-			sendBack[i] = new Obstacle("empty.png", (float)(((Fartlek.WIDTH)/5)*i), (float)(Fartlek.HEIGHT),false);
+			sendBack[i] = new Obstacle("empty.png", (float)((((Fartlek.WIDTH)/5)*i)+23), (float)(Fartlek.HEIGHT),false);
 		}
 		// Set value of empty spaces to be empty
 		for (int i = 0; i < nulls; i++) {
@@ -104,7 +104,7 @@ public class PlayState extends State {
 		// Fills up rest of indices with obstacles
 		for (int i = 0; i < len; i++) {
 			if (!sendBack[i].emptyStatus()){
-				sendBack[i].setTexture("box.png");
+				sendBack[i].setTexture("obs.png");
 			}
 		}
 		System.out.println("Done With Obstacles");
