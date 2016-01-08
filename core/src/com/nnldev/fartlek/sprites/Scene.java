@@ -34,7 +34,7 @@ public class Scene {
      *
      * @return The tile picture to draw
      */
-    public Texture getTexture() {
+    public static Texture getTexture() {
         return texture;
     }
 
