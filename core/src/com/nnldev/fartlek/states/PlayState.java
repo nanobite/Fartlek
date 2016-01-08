@@ -27,7 +27,7 @@ public class PlayState extends State {
 	private Music music;
 	private ArrayList<Scene[]> sceneTiles;
 	private Obstacle[] obstacleLine;
-	private boolean obstacleExists;
+	private boolean obstacleExists=false;
 	private float obstacleTime, maxObstacleTime = 2.0f;
 	private String tileTextureName;
 	private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
@@ -155,20 +155,21 @@ public class PlayState extends State {
 				obstacleTimer=0;
 				obstacleExists = true;//says that an obstacle line is moving
 				//code goes here for obstacle
-				obstacleLine = randomObstacles(5, 3);
+				obstacleLine = randomObstacles(5, 3); //second parameter is number of empty spots, 5 total spots for obstacle
 			}
-			System.out.println("Obstacle Exist?");
 			if(obstacleExists){//moves the obstacle
 				System.out.println("Obstacle Exists");
 				for(int i = 0;i<5;i++){//moves the obstacles down
-					obstacleLine[i].setY((float)((obstacleLine[i].getY())+4));
+					System.out.println(""+obstacleLine[i].getY());
+					obstacleLine[i].setY(((obstacleLine[i].getY())-9));//moves by 9 down each tick
 				}
 				//if obstacleLine is below screen
-				if ((obstacleLine[0].getY()-40)<0){
+				if ((obstacleLine[0].getY()+30)<0){
 					obstacleExists = false;
 					/*for(int i = 0;i<5;i++){//deletes the line
 						obstacleLine[i].dispose();
 					}*/
+					System.out.println("reset");
 				}	
 			}
 			runner.update(dt);
@@ -209,15 +210,16 @@ public class PlayState extends State {
 	public void render(SpriteBatch sb) {
 		sb.setProjectionMatrix(Fartlek.cam.combined);
 		sb.begin();
-		for(int i=0;i<sceneTiles.size();i++){
-			for(int j=9;j<sceneTiles.get(i).length;i++){
-				sb.draw(sceneTiles.get(i)[j].getTexture(),sceneTiles.get(i)[j].getPosition().x, sceneTiles.get(i)[j].getPosition().y);
+		for (Scene[] tileArray : sceneTiles) {
+			for (Scene tile : tileArray) {
+				sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
 			}
 		}
 		//draw obstacles here
 		if(obstacleExists) {
-			for (int i = 0; i < 5; i++) {
-				sb.draw(obstacleLine[i].getTexture(), obstacleLine[i].getX(), obstacleLine[i].getY());
+			for(Obstacle toDraw:obstacleLine){
+				sb.draw(toDraw.getTexture(), toDraw.getX(), toDraw.getY());
+				//System.out.println("Drew ob");
 			}
 		}
 		sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
