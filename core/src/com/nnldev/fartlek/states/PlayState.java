@@ -46,7 +46,7 @@ public class PlayState extends State {
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		DONE = false;
-		tileTextureName = "Scene\\bckg1.png";
+		tileTextureName = "Scene\\bckg.png";
 		exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
 		runner = new Runner("Characters\\ship1Anim.png", 3);
 		bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
