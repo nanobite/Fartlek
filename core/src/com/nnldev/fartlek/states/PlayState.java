@@ -64,7 +64,6 @@ public class PlayState extends State {
         for (int i = 0; i < tiles; i++) {
             sceneTiles.get(i).setY(i * sceneTiles.get(i).getTexture().getHeight());
         }
-        System.out.println("Scene Tiles: " + sceneTiles.size());
         //creates obstacles (all boxes, for now), similar to creation of scene tiles -L
         /*
         obstacleSet = new ArrayList<Obstacle[]>();
@@ -81,7 +80,7 @@ public class PlayState extends State {
      * Makes a new row of tiles
      */
     public void resetSceneTile(int index) {
-        sceneTiles.get(index).setY(Fartlek.HEIGHT);
+        sceneTiles.get(index).setY(sceneTiles.get(0).getTexture().getHeight()*(tiles-1));
     }
 
     /**
@@ -158,7 +157,6 @@ public class PlayState extends State {
             if (obstacleTime >= maxObstacleTime) {
                 obstacleTime = 0;
             }
-            System.out.println("Tile " + 0 + "'s Y Pos: " + sceneTiles.get(0).getPosition().y);
         }
 
     }
@@ -195,6 +193,5 @@ public class PlayState extends State {
             scene.dispose();
         }
         sceneTiles.clear();
-        System.out.println("Scene Tiles: " + sceneTiles.size());
     }
 }
