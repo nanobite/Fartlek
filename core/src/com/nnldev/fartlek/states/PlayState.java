@@ -179,8 +179,7 @@ public class PlayState extends State {
 					tile.update();
 				}
 			}
-			// If the array at the top's height + its y position are equal to
-			// the
+			// If the array at the top's height + its y position are equal the
 			// height of the screen, it will add another array on top of it
 			if ((sceneTiles.get(sceneTiles.size() - 1)[0].getPosition().y
 					+ sceneTiles.get(sceneTiles.size() - 1)[0].getRectangle().height) == Fartlek.HEIGHT) {
