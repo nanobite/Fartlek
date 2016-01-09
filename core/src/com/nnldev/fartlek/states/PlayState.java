@@ -9,13 +9,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
-import com.nnldev.fartlek.essentials.Button;
-import com.nnldev.fartlek.essentials.GameStateManager;
-import com.nnldev.fartlek.essentials.TouchSector;
-import com.nnldev.fartlek.sprites.Scene;
-import com.nnldev.fartlek.sprites.Obstacle;
-import com.nnldev.fartlek.sprites.Box;
-import com.nnldev.fartlek.sprites.Runner;
+import com.nnldev.fartlek.essentials.*;
+import com.nnldev.fartlek.sprites.*;
 
 import java.util.ArrayList;
 
@@ -27,9 +22,6 @@ public class PlayState extends State {
     private TouchSector bottomMiddle;
     private Music music;
     private ArrayList<Scene> sceneTiles;
-    private ArrayList<Obstacle[]> obstacleSet;
-    private float scoreTime, maxScoreTime = 1.0f; //-L
-    private int score; //-L
     private Box emptyBox;
     private String boxTextureName;
     private String tileTextureName;
@@ -63,14 +55,6 @@ public class PlayState extends State {
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
-        //creates obstacles (all boxes, for now), similar to creation of scene tiles -L
-        /*
-        obstacleSet = new ArrayList<Obstacle[]>();
-		obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-		for (int i = 0; i < obstacleSet.get(0).length; i++) {
-			(obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(//boxTextureName, (Fartlek.WIDTH/Obstacle.OBS_PER_ROW) * i, Fartlek.HEIGHT, 100);
-		}
-		*/
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
     }
