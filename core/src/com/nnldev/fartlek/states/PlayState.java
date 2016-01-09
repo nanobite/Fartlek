@@ -86,7 +86,7 @@ public class PlayState extends State {
             } else {
                 boxTextureName = realBoxTextureName;
             }
-            obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(boxTextureName, (Fartlek.WIDTH / Obstacle.OBS_PER_ROW) * i,
+            obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(boxTextureName, (Fartlek.WIDTH / 4.88f) * i,
                     Fartlek.HEIGHT, 100);
         }
     }
@@ -146,7 +146,8 @@ public class PlayState extends State {
             }
             // If the x,y position of the click is in the bottom right
             if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                runner.right();
+                Vector3 newPos = new Vector3(runner.getPosition().x + 8, runner.getPosition().y, 0);
+                runner.setPosition(newPos);
             }
             // If the x,y position of the click is in the bottom middle
             if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
@@ -199,8 +200,9 @@ public class PlayState extends State {
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if (runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) {
-                        System.out.println("hit");
+                    if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
+                            obstacleSet.get(i)[j].getPath().equals("Items\\box.png")) {
+                        DONE = true;
                     }
                 }
             }
@@ -225,7 +227,8 @@ public class PlayState extends State {
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
             for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x, obstacleSet.get(i)[j].getPosition().y);
+                sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
+                        obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH)/5.5f, (Fartlek.WIDTH)/5.5f);
             }
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);

@@ -32,6 +32,7 @@ public class Box extends Obstacle {
 	@Override
 	public void update(float dt) {
 		setYPosition(super.position.y+super.velocity.y);
+		super.rectangle.setY(super.position.y+super.velocity.y);
 		if (super.position.y + rectangle.getHeight() < 0) {
 			super.velocity.set(0, 0, 0);
 			dispose();
@@ -56,9 +57,7 @@ public class Box extends Obstacle {
 	 *            obstacle's position to.
 	 */
 	@Override
-	public void setPosition(Vector3 position) {
-		super.position = position;
-	}
+	public void setPosition(Vector3 position) { super.position = position; }
 
 	@Override
 	public void setXPosition(float x) {

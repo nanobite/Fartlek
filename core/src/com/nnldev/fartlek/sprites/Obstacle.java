@@ -3,138 +3,134 @@ package com.nnldev.fartlek.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.nnldev.fartlek.Fartlek;
 
 
 public abstract class Obstacle {
-	public static final int OBS_PER_ROW = 5;
-	protected Texture texture;
-	protected Vector3 velocity;
-	protected Vector3 position;
-	protected Rectangle rectangle;
-	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-	public static int obstacleSpeed = -8;
-	/* constructor
+    public static final int OBS_PER_ROW = 5;
+    protected Texture texture;
+    protected Vector3 velocity;
+    protected Vector3 position;
+    protected Rectangle rectangle;
+    protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+    public int obstacleSpeed = -8;
+    /* constructor
 	path, name of texture
 	x, x position
 	y, pretty much just to animate it
 	*/
-	protected Obstacle(String path, float x, float y) {
-		this.path = path;
-		texture = new Texture(path); //there can be multiple textures for obstacles
-		position = new Vector3(x, y, 0); // position
-		velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
-		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
-	}
 
-	/**
-	 * Updates the obstacle and it's position and what not
-	 *
-	 * @param dt
-	 *            The time which passed since the last update
-	 */
-	public abstract void update(float dt);
+    protected Obstacle(String path, float x, float y) {
+        this.path = path;
+        texture = new Texture(path); //there can be multiple textures for obstacles
+        position = new Vector3(x, y, 0); // position
+        velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
+        rectangle = new Rectangle(x, y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
+    }
 
-	/**
-	 * Returns the position of the obstacle
-	 *
-	 * @return The Vector3 position of the obstacle.
-	 */
-	public abstract Vector3 getPosition();
+    /**
+     * Updates the obstacle and it's position and what not
+     *
+     * @param dt The time which passed since the last update
+     */
+    public abstract void update(float dt);
 
-	/**
-	 * Sets the position of the obstacle.
-	 *
-	 * @param position
-	 *            The Vector3 of the position you would like to set the
-	 *            obstacle's position to.
-	 */
-	public abstract void setPosition(Vector3 position);
+    /**
+     * Returns the position of the obstacle
+     *
+     * @return The Vector3 position of the obstacle.
+     */
+    public abstract Vector3 getPosition();
 
-	/**
-	 * Sets the x coordinate of the obstacle's position
-	 * 
-	 * @param x
-	 *            The x coordinate of the obstacle's position
-	 */
-	public abstract void setXPosition(float x);
+    /**
+     * Sets the position of the obstacle.
+     *
+     * @param position The Vector3 of the position you would like to set the
+     *                 obstacle's position to.
+     */
+    public abstract void setPosition(Vector3 position);
 
-	public abstract float getXPosition();
+    /**
+     * Sets the x coordinate of the obstacle's position
+     *
+     * @param x The x coordinate of the obstacle's position
+     */
+    public abstract void setXPosition(float x);
 
-	/**
-	 * Sets the y coordinate of the obstacle's position
-	 * 
-	 * @param y
-	 *            The y coordinate of the obstacle's position
-	 */
-	public abstract void setYPosition(float y);
+    public abstract float getXPosition();
 
-	public abstract float getYPosition();
+    /**
+     * Sets the y coordinate of the obstacle's position
+     *
+     * @param y The y coordinate of the obstacle's position
+     */
+    public abstract void setYPosition(float y);
 
-	/**
-	 * Returns the texture of the obstacle.
-	 *
-	 * @return The texture of the obstacle.
-	 */
-	public abstract Texture getTexture();
+    public abstract float getYPosition();
 
-	/**
-	 * Sets the texture of the obstacle.
-	 *
-	 * @param texture
-	 *            The texture which the obstacle will be set to
-	 */
-	public abstract void setTexture(Texture texture);
+    /**
+     * Returns the texture of the obstacle.
+     *
+     * @return The texture of the obstacle.
+     */
+    public abstract Texture getTexture();
 
-	/**
-	 * Gets the rectangle which represents its hitbox of the obstacle to use
-	 * it's position
-	 *
-	 * @return The rectangle whose bounds represent the bounds of the obstacle
-	 */
-	public abstract Rectangle getRectangle();
+    /**
+     * Sets the texture of the obstacle.
+     *
+     * @param texture The texture which the obstacle will be set to
+     */
+    public abstract void setTexture(Texture texture);
 
-	/**
-	 * Sets the rectangle of the obstacle to a new rectangle
-	 *
-	 * @param rectangle
-	 *            The rectangle for whome the bounds of this obstacle shall be
-	 *            set to
-	 */
-	public abstract void setRectangle(Rectangle rectangle);
+    /**
+     * Gets the rectangle which represents its hitbox of the obstacle to use
+     * it's position
+     *
+     * @return The rectangle whose bounds represent the bounds of the obstacle
+     */
+    public abstract Rectangle getRectangle();
 
-	public Vector3 getVelocity() {
-		return velocity;
-	}
+    /**
+     * Sets the rectangle of the obstacle to a new rectangle
+     *
+     * @param rectangle The rectangle for whome the bounds of this obstacle shall be
+     *                  set to
+     */
+    public abstract void setRectangle(Rectangle rectangle);
 
-	public void setVelocity(Vector3 velocity) {
-		this.velocity = velocity;
-	}
+    public Vector3 getVelocity() {
+        return velocity;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public void setVelocity(Vector3 velocity) {
+        this.velocity = velocity;
+    }
 
-	public void setPath(String texturePath) {
-		this.path = texturePath;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	/**
-	 * Disposes of some of the objects that can cause memory leaks
-	 */
-	public void dispose(){
-		texture.dispose();
-	}
+    public void setPath(String texturePath) {
+        this.path = texturePath;
+    }
 
-	/**
-	 * Checks if two obstacles are equal or not
-	 * 
-	 * @param obstacle something
-	 * @return boolean somthing
-	 */
-	public abstract boolean equals(Obstacle obstacle);
+    /**
+     * Disposes of some of the objects that can cause memory leaks
+     */
+    public void dispose() {
+        texture.dispose();
+    }
 
-	/**
-	 * Returns a string representation of the Obstacle
-	 */
-	public abstract String toString();
+    /**
+     * Checks if two obstacles are equal or not
+     *
+     * @param obstacle something
+     * @return boolean somthing
+     */
+    public abstract boolean equals(Obstacle obstacle);
+
+    /**
+     * Returns a string representation of the Obstacle
+     */
+    public abstract String toString();
 }
