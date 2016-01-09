@@ -4,99 +4,137 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-//Nick's obstacle class
-public class Obstacle {
-    private Vector3 position;
-    private Texture texture;
-    private Rectangle rectangle;
-    private String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-    private boolean empty; //tells whether or not the obstacle is empty
-    public int obstacleSpeed = -2;
 
-    /**
-     * @param path texture file path
-     * @param x co ord
-     * @param y co ord
-     * @param emptyy is the state of the obstacle
-     */
-    public Obstacle(String path, float x, float y, boolean emptyy) {//i had to use weird double letters to avoid errors with this.
-        position = new Vector3();
-        this.path = path;
-        texture = new Texture(path); //there can be multiple textures for obstacles
-        position.x = x;
-        position.y = y;
-        rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
-        empty = emptyy;
-    }
+public abstract class Obstacle {
+	public static final int OBS_PER_ROW = 5;
+	protected Texture texture;
+	protected Vector3 velocity;
+	protected Vector3 position;
+	protected Rectangle rectangle;
+	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
+	public static int obstacleSpeed = -2;
+	/* constructor
+	path, name of texture
+	x, x position
+	y, pretty much just to animate it
+	*/
+	protected Obstacle(String path, float x, float y) {
+		this.path = path;
+		texture = new Texture(path); //there can be multiple textures for obstacles
+		position = new Vector3(x, y, 0); // position
+		velocity = new Vector3(0, obstacleSpeed, 0); //obselete for now
+		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+	}
 
-    /**
-     * @return the state of the obstacle
-     */
-    public boolean emptyStatus() {
-        return empty;
-    }
+	/**
+	 * Updates the obstacle and it's position and what not
+	 *
+	 * @param dt
+	 *            The time which passed since the last update
+	 */
+	public abstract void update(float dt);
 
-    /**
-     * @param e state of the obstacle
-     */
-    public void setEmpty(boolean e) {
-        empty = e;
-    }
+	/**
+	 * Returns the position of the obstacle
+	 *
+	 * @return The Vector3 position of the obstacle.
+	 */
+	public abstract Vector3 getPosition();
 
-    /**
-     * @param pathh texture file path
-     */
-    public void setTexture(String pathh) {
-        path = pathh;
-        texture = new Texture(pathh);
-    }
+	/**
+	 * Sets the position of the obstacle.
+	 *
+	 * @param position
+	 *            The Vector3 of the position you would like to set the
+	 *            obstacle's position to.
+	 */
+	public abstract void setPosition(Vector3 position);
 
-    /**
-     * @param y the new y pos
-     */
-    public void setY(float y) {
-        position.y = y;
-    }
+	/**
+	 * Sets the x coordinate of the obstacle's position
+	 * 
+	 * @param x
+	 *            The x coordinate of the obstacle's position
+	 */
+	public abstract void setXPosition(float x);
 
-    /**
-     * @return the y pos
-     */
-    public float getY() {
-        return position.y;
-    }
+	public abstract float getXPosition();
 
-    /**
-     * @return the x pos
-     */
-    public float getX() {
-        return position.x;
-    }
+	/**
+	 * Sets the y coordinate of the obstacle's position
+	 * 
+	 * @param y
+	 *            The y coordinate of the obstacle's position
+	 */
+	public abstract void setYPosition(float y);
 
-    /**
-     * @param x the new x co ord
-     */
-    public void setX(float x) {
-        position.x = x;
-    }
+	public abstract float getYPosition();
 
-    /**
-     * @return the vector 3 pos
-     */
-    public Vector3 getPosition() {
-        return position;
-    }
+	/**
+	 * Returns the texture of the obstacle.
+	 *
+	 * @return The texture of the obstacle.
+	 */
+	public abstract Texture getTexture();
 
-    /**
-     * @param positionn the new vector 3 position
-     */
-    public void setPosition(Vector3 positionn) {
-        position.set(positionn);
-    }
+	/**
+	 * Sets the texture of the obstacle.
+	 *
+	 * @param texture
+	 *            The texture which the obstacle will be set to
+	 */
+	public abstract void setTexture(Texture texture);
 
-    /**
-     * @return the texture
-     */
-    public Texture getTexture() {
-        return texture;
-    }
+	/**
+	 * Gets the rectangle which represents its hitbox of the obstacle to use
+	 * it's position
+	 *
+	 * @return The rectangle whose bounds represent the bounds of the obstacle
+	 */
+	public abstract Rectangle getRectangle();
+
+	/**
+	 * Sets the rectangle of the obstacle to a new rectangle
+	 *
+	 * @param rectangle
+	 *            The rectangle for whome the bounds of this obstacle shall be
+	 *            set to
+	 */
+	public abstract void setRectangle(Rectangle rectangle);
+
+	public Vector3 getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(Vector3 velocity) {
+		this.velocity = velocity;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String texturePath) {
+		this.path = texturePath;
+	}
+
+	/**
+	 * Disposes of some of the objects that can cause memory leaks
+	 */
+	public void dispose(){
+		texture.dispose();
+	}
+
+	/**
+	 * Checks if two obstacles are equal or not
+	 * 
+	 * @param obstacle
+	 * @return
+	 */
+	public abstract boolean equals(Obstacle obstacle);
+
+	/**
+	 * Returns a string representation of the Obstacle
+	 */
+	public abstract String toString();
 }
