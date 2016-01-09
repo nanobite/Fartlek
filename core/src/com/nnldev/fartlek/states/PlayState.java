@@ -200,7 +200,7 @@ public class PlayState extends State {
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                     if (runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) {
-                        System.out.println("Hit");
+                        System.out.println("hit");
                     }
                 }
             }
