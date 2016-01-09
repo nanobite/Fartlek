@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
@@ -29,7 +30,8 @@ public class PlayState extends State {
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle[]> obstacleSet;
     private float obstacleTime, maxObstacleTime = 2.0f;
-    private Box emptyBox;
+    private String emptyBoxTextureName;
+    private String realBoxTextureName;
     private String boxTextureName;
     private String tileTextureName;
     private boolean DONE;
@@ -47,8 +49,8 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         DONE = false;
-        emptyBox = new Box("Items\\emptybox.png", 0, 0, 0);
-        boxTextureName = "Items\\box.png";
+        emptyBoxTextureName = "Items\\emptybox.png";
+        realBoxTextureName = "Items\\box.png";
         tileTextureName = "Scene\\bckg1.png";
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         runner = new Runner("Characters\\ship1Anim.png", 3);
@@ -62,14 +64,8 @@ public class PlayState extends State {
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
-        //creates obstacles (all boxes, for now), similar to creation of scene tiles -L
-        /*
         obstacleSet = new ArrayList<Obstacle[]>();
-		obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-		for (int i = 0; i < obstacleSet.get(0).length; i++) {
-			(obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(//boxTextureName, (Fartlek.WIDTH/Obstacle.OBS_PER_ROW) * i, Fartlek.HEIGHT, 100);
-		}
-		*/
+        newObstacles();
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
     }
@@ -78,7 +74,38 @@ public class PlayState extends State {
      * Makes a new row of tiles
      */
     public void resetSceneTile(int index) {
-        sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight()*(tiles-1)) - 10);
+        sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
+    }
+
+    public void newObstacles() {
+        obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
+        int[] obLine = generateObLine();
+        for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
+            if (obLine[i] == 0) {
+                boxTextureName = emptyBoxTextureName;
+            } else {
+                boxTextureName = realBoxTextureName;
+            }
+            obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(boxTextureName, (Fartlek.WIDTH / Obstacle.OBS_PER_ROW) * i,
+                    Fartlek.HEIGHT, 100);
+        }
+    }
+
+    public int[] generateObLine() {
+        int[] line = {1, 1, 1, 1, 1};
+        int zeros = (int) ((Math.random() * 5) + 1);
+        for (int i = 0; i < zeros; i++) {
+            int spot = (int) (Math.random() * 5);
+            while (line[spot] == 0) {
+                spot = (int) (Math.random() * 5);
+            }
+            line[spot] = 0;
+        }
+        return line;
+    }
+
+    public int lineFrequency() {
+        return (int) (Math.random() * (Fartlek.HEIGHT / 2));
     }
 
     /**
@@ -108,8 +135,14 @@ public class PlayState extends State {
                 dispose();
             }
             // If the x,y position of the click is in the bottom left
+            /*
             if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 runner.left();
+            }
+            */
+            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                Vector3 newPos = new Vector3(runner.getPosition().x - 8, runner.getPosition().y, 0);
+                runner.setPosition(newPos);
             }
             // If the x,y position of the click is in the bottom right
             if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
@@ -150,11 +183,29 @@ public class PlayState extends State {
                     resetSceneTile(i);
                 }
             }
-
-            obstacleTime += dt;
-            if (obstacleTime >= maxObstacleTime) {
-                obstacleTime = 0;
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    obstacleSet.get(i)[j].update(dt);
+                }
             }
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
+                        obstacleSet.remove(i);
+                        newObstacles();
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    if (runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) {
+                        System.out.println("Hit");
+                    }
+                }
+            }
+            //TODO: Change the frequency with which new lines appear
+            int lineFreq = lineFrequency();
         }
 
     }
@@ -171,6 +222,11 @@ public class PlayState extends State {
         sb.begin();
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
+        }
+        for (int i = 0; i < obstacleSet.size(); i++) {
+            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x, obstacleSet.get(i)[j].getPosition().y);
+            }
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);

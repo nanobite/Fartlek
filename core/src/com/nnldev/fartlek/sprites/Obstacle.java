@@ -12,7 +12,7 @@ public abstract class Obstacle {
 	protected Vector3 position;
 	protected Rectangle rectangle;
 	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-	public static int obstacleSpeed = -2;
+	public static int obstacleSpeed = -8;
 	/* constructor
 	path, name of texture
 	x, x position
@@ -22,7 +22,7 @@ public abstract class Obstacle {
 		this.path = path;
 		texture = new Texture(path); //there can be multiple textures for obstacles
 		position = new Vector3(x, y, 0); // position
-		velocity = new Vector3(0, obstacleSpeed, 0); //obselete for now
+		velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 	}
 
@@ -128,8 +128,8 @@ public abstract class Obstacle {
 	/**
 	 * Checks if two obstacles are equal or not
 	 * 
-	 * @param obstacle
-	 * @return
+	 * @param obstacle something
+	 * @return boolean somthing
 	 */
 	public abstract boolean equals(Obstacle obstacle);
 
