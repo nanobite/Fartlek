@@ -202,7 +202,9 @@ public class PlayState extends State {
                 for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                     if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
                             obstacleSet.get(i)[j].getPath().equals("Items\\box.png")) {
+                        gsm.push(new MenuState(gsm));
                         DONE = true;
+                        dispose();
                     }
                 }
             }
