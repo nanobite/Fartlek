@@ -82,7 +82,6 @@ public class MenuState extends State {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
         sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y);
-
         sb.draw(settingsBtn.getTexture(), settingsBtn.getPosition().x, settingsBtn.getPosition().y);
         sb.draw(infoBtn.getTexture(), infoBtn.getPosition().x, infoBtn.getPosition().y);
         sb.draw(runnerBtn.getTexture(), runnerBtn.getPosition().x, runnerBtn.getPosition().y);

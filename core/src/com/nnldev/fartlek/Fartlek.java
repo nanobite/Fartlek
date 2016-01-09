@@ -4,12 +4,14 @@
  */
 package com.nnldev.fartlek;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.Input.Orientation;
@@ -35,6 +37,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     private SpriteBatch batch;
     private GameStateManager gsm;
     private float accDelta;
+    public Texture border;
     //private FPSLogger fpsLogger;
 
     /**
@@ -47,7 +50,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         //r,g,b,alpha
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         mousePos = new Vector3();
         cam = new OrthographicCamera();
         scrnHeight = Gdx.graphics.getHeight();
@@ -58,6 +61,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             nativeOrientation = Gdx.input.getNativeOrientation();
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
+        border = new Texture("Extra\\border.png");
     }
 
     /**
@@ -65,26 +69,45 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
+        scrnHeight = Gdx.graphics.getHeight();
+        if (scrnHeight <= HEIGHT) {
+            cam.setToOrtho(false, WIDTH, HEIGHT);
+        } else {
+            //Works fine on desktop
+            if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                cam.setToOrtho(false, WIDTH, scrnHeight);
+                cam.translate(0, -(scrnHeight - HEIGHT) / 2, 0);
+            } else {
+                cam.setToOrtho(false, WIDTH, HEIGHT+(HEIGHT/16));
+                cam.translate(0, -(((border.getHeight()-HEIGHT)/32)), 0);
+            }
+        }
+        cam.update();
         accDelta += Gdx.graphics.getDeltaTime();
         updateAccValues();
         printAccValues(accDelta);
-        //So I was planning on making it so the screen was fulyl adjustable and stuff and would scale some stuff easier for larger screens but nah.
-        //scrnHeight = Gdx.graphics.getHeight();
-        scrnHeight = HEIGHT;
-        Fartlek.cam.setToOrtho(false, Fartlek.WIDTH, Fartlek.scrnHeight);
-        //fpsLogger.log();
         scrnVertBezel = (scrnHeight - WIDTH) / 2;
         Gdx.input.setInputProcessor(this);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
+        batch.begin();
+        batch.draw(border, -(border.getWidth() - WIDTH) / 2, -(border.getHeight() / 4));
+        batch.end();
     }
-    public void printAccValues(float accDelta){
-        if(accDelta>=0.5f&& ACCELEROMETER_AVAILABLE){
+
+    /**
+     * Prints the accelerometer values in regular intervals.
+     *
+     * @param accDelta
+     */
+    public void printAccValues(float accDelta) {
+        if (accDelta >= 0.5f && ACCELEROMETER_AVAILABLE) {
             System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
             accDelta = 0;
         }
     }
+
     /**
      * Updates the accelerometer values
      */

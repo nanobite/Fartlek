@@ -6,12 +6,14 @@ import com.badlogic.gdx.math.Vector3;
 
 
 public abstract class Obstacle {
+	public static final int OBS_PER_ROW = 5;
+	private boolean empty;
 	protected Texture texture;
 	protected Vector3 velocity;
 	protected Vector3 position;
 	protected Rectangle rectangle;
 	protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
-	public static int obstacleSpeed = -2;
+	public int obstacleSpeed = -8;
 	/* constructor
 	path, name of texture
 	x, x position
@@ -21,10 +23,19 @@ public abstract class Obstacle {
 		this.path = path;
 		texture = new Texture(path); //there can be multiple textures for obstacles
 		position = new Vector3(x, y, 0); // position
-		velocity = new Vector3(0, obstacleSpeed, 0); //obselete for now
+		velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
 		rectangle = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 	}
-
+	public Obstacle(String path, float x, float y, boolean empty) {//i had to use weird double letters to avoid errors with this.
+		this(path,x,y);
+		this.empty = empty;
+	}
+	public boolean getEmpty(){
+		return empty;
+	}
+	public void setEmpty(boolean empty){
+		this.empty = empty;
+	}
 	/**
 	 * Updates the obstacle and it's position and what not
 	 *
@@ -120,13 +131,15 @@ public abstract class Obstacle {
 	/**
 	 * Disposes of some of the objects that can cause memory leaks
 	 */
-	public abstract void dispose();
+	public void dispose(){
+		texture.dispose();
+	}
 
 	/**
 	 * Checks if two obstacles are equal or not
 	 * 
-	 * @param obstacle
-	 * @return
+	 * @param obstacle something
+	 * @return boolean somthing
 	 */
 	public abstract boolean equals(Obstacle obstacle);
 

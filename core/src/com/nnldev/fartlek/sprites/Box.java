@@ -8,176 +8,197 @@ import com.badlogic.gdx.math.Vector3;
  * Created by Nano on 12/12/2015.
  */
 public class Box extends Obstacle {
-	private int health;
+    private int health;
 
-	/**
-	 * Creates a
-	 *
-	 * @param path
-	 * @param x
-	 * @param y
-	 * @param health
-	 */
-	public Box(String path, float x, float y, int health) {
-		super(path, x, y);
-		this.health = health;
-		
-	}
+    /**
+     * Creates a
+     *
+     * @param path
+     * @param x
+     * @param y
+     * @param health
+     */
+    public Box(String path, float x, float y, int health) {
+        super(path, x, y);
+        this.health = health;
+    }
 
-	/**
-	 * Updates the box
-	 *
-	 * @param dt
-	 *            The time which passed wicne the last update
-	 */
-	@Override
-	public void update(float dt) {
-		setYPosition(super.position.y+super.velocity.y);
-		if (super.position.y + rectangle.getHeight() < 0) {
-			super.velocity.set(0, 0, 0);
-			dispose();
-		}
-	}
+    /**
+     *
+     * @param path
+     * @param x
+     * @param y
+     * @param empty
+     */
+    public Box(String path, float x, float y, boolean empty){
+        super(path, x, y, empty);
+    }
 
-	/**
-	 * Gets the position of the box
-	 *
-	 * @return
-	 */
-	@Override
-	public Vector3 getPosition() {
-		return super.position;
-	}
+    /**
+     *
+     * @param path
+     * @param x
+     * @param y
+     * @param health
+     * @param empty
+     */
+    public Box(String path, float x, float y, int health, boolean empty) {
+        this(path,x,y,empty);
+        this.health = health;
+    }
 
-	/**
-	 * Sets the position of the box
-	 *
-	 * @param position
-	 *            The Vector3 of the position you would like to set the
-	 *            obstacle's position to.
-	 */
-	@Override
-	public void setPosition(Vector3 position) {
-		super.position = position;
-	}
+    /**
+     * Updates the box
+     *
+     * @param dt The time which passed since the last update
+     */
+    @Override
+    public void update(float dt) {
+        setYPosition(super.position.y + super.velocity.y);
+        if (super.position.y + rectangle.getHeight() < 0) {
+            super.velocity.set(0, 0, 0);
+            dispose();
+        }
+    }
 
-	@Override
-	public void setXPosition(float x) {
-		super.position.x = x;
-	}
+    /**
+     * Gets the position of the box
+     *
+     * @return
+     */
+    @Override
+    public Vector3 getPosition() {
+        return super.position;
+    }
 
-	public float getXPosition() {
-		return position.x;
-	}
+    /**
+     * Sets the position of the box
+     *
+     * @param position The Vector3 of the position you would like to set the
+     *                 obstacle's position to.
+     */
+    @Override
+    public void setPosition(Vector3 position) {
+        super.position = position;
+        rectangle.setPosition(position.x,position.y);
+    }
 
-	@Override
-	public void setYPosition(float y) {
-		super.position.y = y;
+    @Override
+    public void setXPosition(float x) {
+        super.position.x = x;
+        rectangle.x = x;
+    }
 
-	}
+    public float getXPosition() {
+        return position.x;
+    }
 
-	public float getYPosition() {
-		return super.position.y;
-	}
+    @Override
+    public void setYPosition(float y) {
+        super.position.y = y;
+        rectangle.y = y;
+    }
 
-	@Override
-	public Vector3 getVelocity() {
-		return super.getVelocity();
-	}
+    public float getYPosition() {
+        return super.position.y;
+    }
 
-	@Override
-	public void setVelocity(Vector3 velocity) {
-		super.setVelocity(velocity);
-	}
+    @Override
+    public Vector3 getVelocity() {
+        return super.getVelocity();
+    }
 
-	@Override
-	public String getPath() {
-		return super.getPath();
-	}
+    @Override
+    public void setVelocity(Vector3 velocity) {
+        super.setVelocity(velocity);
+    }
 
-	@Override
-	public void setPath(String texturePath) {
-		// TODO Auto-generated method stub
-		super.setPath(texturePath);
-	}
+    @Override
+    public String getPath() {
+        return super.getPath();
+    }
 
-	/**
-	 * Gets the texture of the box
-	 *
-	 * @return
-	 */
-	@Override
-	public Texture getTexture() {
-		return texture;
-	}
+    @Override
+    public void setPath(String texturePath) {
+        // TODO Auto-generated method stub
+        super.setPath(texturePath);
+    }
 
-	/**
-	 * @param texture
-	 *            The texture which the obstacle will be set to
-	 */
-	@Override
-	public void setTexture(Texture texture) {
-		super.texture = texture;
-	}
+    /**
+     * Gets the texture of the box
+     *
+     * @return
+     */
+    @Override
+    public Texture getTexture() {
+        return texture;
+    }
 
-	/**
-	 * @return
-	 */
-	@Override
-	public Rectangle getRectangle() {
-		return super.rectangle;
-	}
+    /**
+     * @param texture The texture which the obstacle will be set to
+     */
+    @Override
+    public void setTexture(Texture texture) {
+        super.texture = texture;
+    }
 
-	/**
-	 * @param rectangle
-	 *            The rectangle for whome the bounds of this obstacle shall be
-	 *            set to
-	 */
-	@Override
-	public void setRectangle(Rectangle rectangle) {
-		this.rectangle = rectangle;
-	}
+    /**
+     * @return
+     */
+    @Override
+    public Rectangle getRectangle() {
+        return super.rectangle;
+    }
 
-	/**
-	 * Gets the health of the box
-	 *
-	 * @return The health of the box
-	 */
-	public int getHealth() {
-		return health;
-	}
+    /**
+     * @param rectangle The rectangle for whome the bounds of this obstacle shall be
+     *                  set to
+     */
+    @Override
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
 
-	/**
-	 * Sets the health of the box
-	 *
-	 * @param health
-	 */
-	public void setHealth(int health) {
-		this.health = health;
-	}
+    /**
+     * Gets the health of the box
+     *
+     * @return The health of the box
+     */
+    public int getHealth() {
+        return health;
+    }
 
-	/**
-	 * Disposes of the box's texture
-	 */
-	@Override
-	public void dispose() {
-		super.texture.dispose();
-	}
+    /**
+     * Sets the health of the box
+     *
+     * @param health
+     */
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
-	@Override
-	public boolean equals(Obstacle obstacle) {
-		if ((obstacle.path.equals(this.path))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Disposes of the box's texture
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 
-	@Override
-	public String toString() {
-		return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
-				+ velocity.x + "\tY=" + velocity.y + "\tZ=" + velocity.z + "\nWidth: " + rectangle.getWidth()
-				+ "\tHeight: " + rectangle.getHeight() + "\nHealth: " + health;
-	}
+    @Override
+    public boolean equals(Obstacle obstacle) {
+        if ((obstacle.path.equals(this.path))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
+                + velocity.x + "\tY=" + velocity.y + "\tZ=" + velocity.z + "\nWidth: " + rectangle.getWidth()
+                + "\tHeight: " + rectangle.getHeight() + "\nHealth: " + health;
+    }
 
 }
