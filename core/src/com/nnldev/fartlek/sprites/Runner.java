@@ -42,7 +42,7 @@ public class Runner {
         velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
         rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-        horizontalSpeed = 12;
+        horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
     }
