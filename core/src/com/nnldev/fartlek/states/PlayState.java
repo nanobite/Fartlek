@@ -32,20 +32,13 @@ public class PlayState extends State {
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
     private TouchSector bottomMiddle;
-    private Music music;
     private ArrayList<Scene> sceneTiles;
-    private ArrayList<Obstacle[]> obstacleSet;
-    private float obstacleTime, maxObstacleTime = 2.0f;
-    private String emptyBoxTextureName;
-    private String realBoxTextureName;
-    private String boxTextureName;
     private String tileTextureName;
     private boolean DONE;
-    private int tileWidth;
-    private int tileHeight;
-    private int tiles = 3;
-    public static String[] songs = {"Music\\song1.mp3"};
-    public static int currentSongNum;
+    private int tiles = 2;
+    private int STARTBUFFER = 2;
+    private float startTimer;
+    private int obstacles = 6, emptyobstacles = 2;
 
     /**
      * Creates a new game state
@@ -55,44 +48,27 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         DONE = false;
-        tileTextureName = "Scene\\bckg.png";
+        tileTextureName = "Scene\\bckg1.png";
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("Characters\\ship1Anim.png", 3);
+        runner = new Runner("Characters\\char1Anim.png", 9);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        tileWidth = new Texture(tileTextureName).getWidth();
-        tileHeight = new Texture(tileTextureName).getHeight();
         sceneTiles = new ArrayList<Scene>();
-        sceneTiles.add(new Scene(tileTextureName, 0,Fartlek.HEIGHT));
-        for (int i = 0; i < sceneTiles.size(); i++) {
-            //sceneTiles.get(i) = new Scene(tileTextureName, i * tileWidth, 0);
+        for (int i = 0; i < tiles; i++) {
+            sceneTiles.add(new Scene(tileTextureName, 0, i * (new Texture(tileTextureName)).getHeight()));
         }
-        startMusic("music1.mp3");
     }
 
     /**
      * Makes a new row of tiles
      */
     public void resetSceneTile(int index) {
-        sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
-    }
-
-    /**
-     * Starts playing a song
-     *
-     * @param song The name of the song to play
-     */
-    public void startMusic(String song) {
-        music = Gdx.audio.newMusic(Gdx.files.internal("Music\\song1.mp3"));
-        music.setLooping(false);
-        music.setVolume(0.1f);
-        if (Fartlek.soundEnabled)
-            music.play();
+        sceneTiles.get(index).setY((sceneTiles.get(index).getTexture().getHeight() * (tiles - 1)) - 8);
+        System.out.println("Y Position: " + ((sceneTiles.get(index).getTexture().getHeight() * (tiles - 1)) - 8) + "\t\tIndex: " + index);
     }
 
     public Obstacle[] randomObstacles(int len, int nulls) {
-        System.out.println("Random Obstacles");
         Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
         for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
             sendBack[i] = new Box("empty.png", (float) ((((Fartlek.WIDTH) / 5) * i) + 23), (float) (Fartlek.HEIGHT), false);
@@ -113,6 +89,12 @@ public class PlayState extends State {
         }
         System.out.println("Done With Obstacles");
         return sendBack;
+    }
+
+    public void die() {
+        gsm.push(new MenuState(gsm));
+        DONE = true;
+        dispose();
     }
 
     /**
@@ -152,28 +134,41 @@ public class PlayState extends State {
      */
     @Override
     public void update(float dt) {//dt is delta time
+        startTimer += dt;
         handleInput();
         if (!DONE) {
-            obstacleTimer += dt;
-            if (obstacleTimer >= MAX_OBSTACLE_TIMER) {//timer has hit for a new obstacle line
-                obstacleTimer = 0;
-                obstacleExists = true;//says that an obstacle line is moving
-                //code goes here for obstacle
-                obstacleLine = randomObstacles(5, 3); //second parameter is number of empty spots, 5 total spots for obstacle
+            if (startTimer >= STARTBUFFER) {
+                startTimer = STARTBUFFER;
+                try {
+                    System.out.println("Top Y Position: " + (obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()));
+                    if ((obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()) < 0) {//timer has hit for a new obstacle line
+                        obstacleExists = true;//says that an obstacle line is moving
+                        obstacleLine = randomObstacles(obstacles, emptyobstacles); //second parameter is number of empty spots, 5 total spots for obstacle
+
+                    }
+                } catch (Exception e) {
+                    obstacleExists = true;//says that an obstacle line is moving
+                    //code goes here for obstacle
+                    obstacleLine = randomObstacles(obstacles, emptyobstacles); //second parameter is number of empty spots, 5 total spots for obstacle
+                }
             }
+
             if (obstacleExists) {//moves the obstacle
-                System.out.println("Obstacle Exists");
-                for (int i = 0; i < 5; i++) {//moves the obstacles down
+                for (int i = 0; i < obstacles; i++) {//moves the obstacles down
                     //System.out.println("" + obstacleLine[i].getPosition().y);
-                    obstacleLine[i].setYPosition(((obstacleLine[i].getPosition().y) - 9));//moves by 9 down each tick
+                    obstacleLine[i].setYPosition(((obstacleLine[i].getPosition().y) - 4));//moves by 9 down each tick
+                    if (obstacleLine[i].getRectangle().overlaps(runner.getRectangle()) && !obstacleLine[i].getEmpty()) {
+                        die();
+                    }
                 }
                 //if obstacleLine is below screen
-                if ((obstacleLine[0].getPosition().y + 30) < 0) {
+                if ((obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()) < 0) {
                     obstacleExists = false;
-                    /*for(int i = 0;i<5;i++){//deletes the line
-                        obstacleLine[i].dispose();
-					}*/
-                    System.out.println("reset");
+                }
+            }
+            for (int i = 0; i < sceneTiles.size(); i++) {
+                if ((sceneTiles.get(i).getPosition().y + sceneTiles.get(i).getRectangle().height) < 0) {
+                    resetSceneTile(i);
                 }
             }
             runner.update(dt);
@@ -197,7 +192,6 @@ public class PlayState extends State {
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
-
         //draw obstacles here
         if (obstacleExists) {
             for (Obstacle toDraw : obstacleLine) {
@@ -216,7 +210,6 @@ public class PlayState extends State {
     public void dispose() {
         exitBtn.dispose();
         runner.dispose();
-        music.dispose();
         for (Scene scene : sceneTiles)
             scene.dispose();
         sceneTiles.clear();

@@ -139,6 +139,7 @@ public class Runner {
      */
     public void setPosition(Vector3 position) {
         this.position = position;
+        rectangle.setPosition(position.x,position.y);
     }
 
     /**

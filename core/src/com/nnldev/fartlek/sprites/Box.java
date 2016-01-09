@@ -80,11 +80,13 @@ public class Box extends Obstacle {
     @Override
     public void setPosition(Vector3 position) {
         super.position = position;
+        rectangle.setPosition(position.x,position.y);
     }
 
     @Override
     public void setXPosition(float x) {
         super.position.x = x;
+        rectangle.x = x;
     }
 
     public float getXPosition() {
@@ -94,7 +96,7 @@ public class Box extends Obstacle {
     @Override
     public void setYPosition(float y) {
         super.position.y = y;
-
+        rectangle.y = y;
     }
 
     public float getYPosition() {
