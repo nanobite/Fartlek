@@ -11,12 +11,12 @@ public class Box extends Obstacle {
     private int health;
 
     /**
-     * Creates a
+     * Creates a new box obstacle which has a health
      *
-     * @param path
-     * @param x
-     * @param y
-     * @param health
+     * @param path   The path of the box
+     * @param x      The x coordinate of the box
+     * @param y      The y coordinate of the box
+     * @param health The health of the box
      */
     public Box(String path, float x, float y, int health) {
         super(path, x, y);
@@ -24,26 +24,16 @@ public class Box extends Obstacle {
     }
 
     /**
+     * Creates a new box obstacle which has a health and an empty status
      *
-     * @param path
-     * @param x
-     * @param y
-     * @param empty
-     */
-    public Box(String path, float x, float y, boolean empty){
-        super(path, x, y, empty);
-    }
-
-    /**
-     *
-     * @param path
-     * @param x
-     * @param y
-     * @param health
-     * @param empty
+     * @param path   The path of the box
+     * @param x      The x coordinate of the box
+     * @param y      The y coordinate of the box
+     * @param health The health of the box
+     * @param empty  Whether or not the box is empty
      */
     public Box(String path, float x, float y, int health, boolean empty) {
-        this(path,x,y,empty);
+        super(path, x, y, empty);
         this.health = health;
     }
 
@@ -55,6 +45,7 @@ public class Box extends Obstacle {
     @Override
     public void update(float dt) {
         setYPosition(super.position.y + super.velocity.y);
+        super.rectangle.setY(super.position.y + super.velocity.y);
         if (super.position.y + rectangle.getHeight() < 0) {
             super.velocity.set(0, 0, 0);
             dispose();
@@ -64,7 +55,7 @@ public class Box extends Obstacle {
     /**
      * Gets the position of the box
      *
-     * @return
+     * @return the position of the box
      */
     @Override
     public Vector3 getPosition() {
@@ -80,44 +71,82 @@ public class Box extends Obstacle {
     @Override
     public void setPosition(Vector3 position) {
         super.position = position;
-        rectangle.setPosition(position.x,position.y);
     }
 
+    /**
+     * Sets the x coordinate of the box
+     *
+     * @param x The x coordinate of the obstacle's position
+     */
     @Override
     public void setXPosition(float x) {
         super.position.x = x;
-        rectangle.x = x;
     }
 
+    /**
+     * Returns the x position of the obstacle
+     *
+     * @return the x position of the obstacle
+     */
     public float getXPosition() {
         return position.x;
     }
 
+    /**
+     * Sets the y position of the box
+     *
+     * @param y The y coordinate of the obstacle's position
+     */
     @Override
     public void setYPosition(float y) {
         super.position.y = y;
-        rectangle.y = y;
+
     }
 
+    /**
+     * Gets the y position of the box
+     *
+     * @return The y positionf of the box
+     */
+    @Override
     public float getYPosition() {
         return super.position.y;
     }
 
+    /**
+     * Gets the velocity of the box
+     *
+     * @return
+     */
     @Override
     public Vector3 getVelocity() {
         return super.getVelocity();
     }
 
+    /**
+     * Sets the velocities of the obstacle
+     *
+     * @param velocity The velocities of theo obstacle
+     */
     @Override
     public void setVelocity(Vector3 velocity) {
         super.setVelocity(velocity);
     }
 
+    /**
+     * Gets the path of the obstacle
+     *
+     * @return
+     */
     @Override
     public String getPath() {
         return super.getPath();
     }
 
+    /**
+     * @param texturePath
+     * @deprecated There is no situation where this should be used
+     */
     @Override
     public void setPath(String texturePath) {
         // TODO Auto-generated method stub
@@ -185,6 +214,12 @@ public class Box extends Obstacle {
         super.dispose();
     }
 
+    /**
+     * Checks if two boxes are equal or not
+     *
+     * @param obstacle something
+     * @return
+     */
     @Override
     public boolean equals(Obstacle obstacle) {
         if ((obstacle.path.equals(this.path))) {
@@ -194,6 +229,11 @@ public class Box extends Obstacle {
         }
     }
 
+    /**
+     * Returns a string representation of the box
+     *
+     * @return The string representation of the box
+     */
     @Override
     public String toString() {
         return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="

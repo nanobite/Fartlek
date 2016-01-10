@@ -10,35 +10,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
-import com.nnldev.fartlek.essentials.Button;
-import com.nnldev.fartlek.essentials.GameStateManager;
-import com.nnldev.fartlek.essentials.TouchSector;
-import com.nnldev.fartlek.sprites.Scene;
-import com.nnldev.fartlek.sprites.Box;
-import com.nnldev.fartlek.sprites.Obstacle;
-import com.nnldev.fartlek.sprites.Runner;
+import com.nnldev.fartlek.essentials.*;
+import com.nnldev.fartlek.sprites.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PlayState extends State {
-    private Obstacle[] obstacleLine;
-    private boolean obstacleExists = false;
-    private final int HORIZONTAL_OBSTACLE_BUFFER = 20;
-    private int AMT_OBSTACLES = 9, AMT_HOLES = 4;
-    private float obstacleTimer, MAX_OBSTACLE_TIMER = 4;//timer for obstacles
     private Button exitBtn;
     private Runner runner;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
     private TouchSector bottomMiddle;
+    private Music music;
     private ArrayList<Scene> sceneTiles;
-    private String tileTextureName;
+    private Box emptyBox = new Box("Items\\emptybox.png", 0, 0, 0, true);
+    private ArrayList<Obstacle[]> obstacleSet;
     private boolean DONE;
-    private int tiles = 2;
-    private int STARTBUFFER = 2;
-    private float startTimer;
-    private int obstacles = 6, emptyobstacles = 2;
+    private int tiles = 3;
+    public static String[] songs = {"Music\\song1.mp3"};
+    public static int currentSongNum;
+    public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
+    public static String tileTextureName = "Scene\\bckg1.png";
 
     /**
      * Creates a new game state
@@ -48,30 +40,40 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         DONE = false;
-        tileTextureName = "Scene\\bckg1.png";
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("Characters\\char1Anim.png", 9);
+        runner = new Runner("Characters\\ship1Anim.png", 3);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         sceneTiles = new ArrayList<Scene>();
-        for (int i = 0; i < tiles; i++) {
-            sceneTiles.add(new Scene(tileTextureName, 0, i * (new Texture(tileTextureName)).getHeight()));
+        sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
+        for (int i = 1; i < tiles; i++) {
+            sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
+        obstacleSet = new ArrayList<Obstacle[]>();
+        newObstacles();
+        currentSongNum = 0;
+        startMusic(songs[currentSongNum]);
     }
 
     /**
      * Makes a new row of tiles
      */
     public void resetSceneTile(int index) {
-        sceneTiles.get(index).setY((sceneTiles.get(index).getTexture().getHeight() * (tiles - 1)) - 8);
-        System.out.println("Y Position: " + ((sceneTiles.get(index).getTexture().getHeight() * (tiles - 1)) - 8) + "\t\tIndex: " + index);
+        sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
 
+    /**
+     * Creates a random array of obstacles
+     *
+     * @param len   The length of the array
+     * @param nulls The number of empty slots in the array
+     * @return
+     */
     public Obstacle[] randomObstacles(int len, int nulls) {
         Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
         for (int i = 0; i < len; i++) {//fills them up with 5 obstacles side by side, no picture but not truly "empty"
-            sendBack[i] = new Box("empty.png", (float) ((((Fartlek.WIDTH) / 5) * i) + 23), (float) (Fartlek.HEIGHT), false);
+            sendBack[i] = new Box("empty.png", (float) ((((Fartlek.WIDTH) / 5) * i) + 23), (float) (Fartlek.HEIGHT), 100, false);
         }
         // Set value of empty spaces to be empty
         for (int i = 0; i < nulls; i++) {
@@ -91,10 +93,35 @@ public class PlayState extends State {
         return sendBack;
     }
 
-    public void die() {
-        gsm.push(new MenuState(gsm));
-        DONE = true;
-        dispose();
+    /**
+     * Makes new obstacles
+     */
+    public void newObstacles() {
+        obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
+        Obstacle[] obstacles = randomObstacles(5, 2);
+        for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
+            obstacleSet.get(obstacleSet.size() - 1)[i] = obstacles[i];
+        }
+    }
+
+    /**
+     * Starts playing a song
+     *
+     * @param song The name of the song to play
+     */
+    public void startMusic(String song) {
+        try {
+            if (music.isPlaying()) {
+                music.stop();
+            }
+        } catch (Exception e) {
+            System.out.println("Music Stop Error: \n" + e);
+        }
+        music = Gdx.audio.newMusic(Gdx.files.internal(song));
+        music.setLooping(false);
+        music.setVolume(0.5f);
+        if (Fartlek.soundEnabled)
+            music.play();
     }
 
     /**
@@ -105,18 +132,25 @@ public class PlayState extends State {
         // If you touched the screen
         if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
             // If the x,y position of the click is in the exit button
-            if (exitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+            if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new MenuState(gsm));
                 DONE = true;
                 dispose();
             }
             // If the x,y position of the click is in the bottom left
+            /*
             if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 runner.left();
             }
+            */
+            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                Vector3 newPos = new Vector3(runner.getPosition().x - 8, runner.getPosition().y, 0);
+                runner.setPosition(newPos);
+            }
             // If the x,y position of the click is in the bottom right
             if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                runner.right();
+                Vector3 newPos = new Vector3(runner.getPosition().x + 8, runner.getPosition().y, 0);
+                runner.setPosition(newPos);
             }
             // If the x,y position of the click is in the bottom middle
             if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
@@ -134,49 +168,54 @@ public class PlayState extends State {
      */
     @Override
     public void update(float dt) {//dt is delta time
-        startTimer += dt;
+        if (!music.isPlaying()) {
+            currentSongNum++;
+            if (currentSongNum > songs.length - 1) {
+                currentSongNum = 0;
+            }
+            startMusic(songs[currentSongNum]);
+        }
         handleInput();
         if (!DONE) {
-            if (startTimer >= STARTBUFFER) {
-                startTimer = STARTBUFFER;
-                try {
-                    System.out.println("Top Y Position: " + (obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()));
-                    if ((obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()) < 0) {//timer has hit for a new obstacle line
-                        obstacleExists = true;//says that an obstacle line is moving
-                        obstacleLine = randomObstacles(obstacles, emptyobstacles); //second parameter is number of empty spots, 5 total spots for obstacle
-
-                    }
-                } catch (Exception e) {
-                    obstacleExists = true;//says that an obstacle line is moving
-                    //code goes here for obstacle
-                    obstacleLine = randomObstacles(obstacles, emptyobstacles); //second parameter is number of empty spots, 5 total spots for obstacle
-                }
-            }
-
-            if (obstacleExists) {//moves the obstacle
-                for (int i = 0; i < obstacles; i++) {//moves the obstacles down
-                    //System.out.println("" + obstacleLine[i].getPosition().y);
-                    obstacleLine[i].setYPosition(((obstacleLine[i].getPosition().y) - 4));//moves by 9 down each tick
-                    if (obstacleLine[i].getRectangle().overlaps(runner.getRectangle()) && !obstacleLine[i].getEmpty()) {
-                        die();
-                    }
-                }
-                //if obstacleLine is below screen
-                if ((obstacleLine[0].getPosition().y + obstacleLine[0].getTexture().getHeight()) < 0) {
-                    obstacleExists = false;
-                }
-            }
+            runner.update(dt);
+            // Loops through all the tiles and updates their positions
             for (int i = 0; i < sceneTiles.size(); i++) {
+                sceneTiles.get(i).update();
+            }
+            for (int i = 0; i < tiles; i++) {
                 if ((sceneTiles.get(i).getPosition().y + sceneTiles.get(i).getRectangle().height) < 0) {
                     resetSceneTile(i);
                 }
             }
-            runner.update(dt);
-            // Loops through all the tiles and updates their positions
-            for (Scene tile : sceneTiles) {
-                tile.update();
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    obstacleSet.get(i)[j].update(dt);
+                }
             }
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
+                        System.out.println("Collision");
+                        obstacleSet.remove(i);
+                        newObstacles();
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                    if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
+                            !obstacleSet.get(i)[j].getEmpty()) {
+                        gsm.push(new MenuState(gsm));
+                        DONE = true;
+                        dispose();
+                    }
+                }
+            }
+            //TODO: Change the frequency with which new lines appear
+            int lineFreq = (int) (Math.random() * (Fartlek.HEIGHT / 2));
         }
+
     }
 
     /**
@@ -192,16 +231,17 @@ public class PlayState extends State {
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
-        //draw obstacles here
-        if (obstacleExists) {
-            for (Obstacle toDraw : obstacleLine) {
-                sb.draw(toDraw.getTexture(), toDraw.getPosition().x, toDraw.getPosition().y);
+        for (int i = 0; i < obstacleSet.size(); i++) {
+            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
+                        obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
             }
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
         sb.end();
     }
+    //TODO: Dispose of obstacles once they are fixed
 
     /**
      * Disposes of objects to avoid memory leaks
@@ -210,8 +250,11 @@ public class PlayState extends State {
     public void dispose() {
         exitBtn.dispose();
         runner.dispose();
-        for (Scene scene : sceneTiles)
+        music.stop();
+        music.dispose();
+        for (Scene scene : sceneTiles) {
             scene.dispose();
+        }
         sceneTiles.clear();
     }
 }

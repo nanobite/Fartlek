@@ -7,9 +7,10 @@ import com.nnldev.fartlek.Fartlek;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = Fartlek.TITLE;
         config.width = Fartlek.WIDTH;
         config.height = Fartlek.HEIGHT;
-        config.title = Fartlek.TITLE;
+        //config.fullscreen = true;
         new LwjglApplication(new Fartlek(), config);
     }
 }
