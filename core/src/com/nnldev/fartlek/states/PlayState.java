@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class PlayState extends State {
     private Button exitBtn;
+    private Button pauseBtn;
     private Runner runner;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
@@ -27,10 +28,17 @@ public class PlayState extends State {
     private ArrayList<Obstacle[]> obstacleSet;
     private boolean DONE;
     private int tiles = 3;
+    private int OBSTACLE_AMT = 5, OBSTACLE_EMPTYS = 2;
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = "Scene\\bckg1.png";
+
+    public enum Phase {
+        RUNNING, PAUSE
+    }
+
+    public Phase PLAYSTATE_PHASE;
 
     /**
      * Creates a new game state
@@ -41,7 +49,8 @@ public class PlayState extends State {
         super(gsm);
         DONE = false;
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("Characters\\ship1Anim.png", 3);
+        pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
+        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -54,6 +63,8 @@ public class PlayState extends State {
         newObstacles();
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
+        PLAYSTATE_PHASE = Phase.RUNNING;
+        Fartlek.SCORE = 0;
     }
 
     /**
@@ -68,7 +79,7 @@ public class PlayState extends State {
      *
      * @param len   The length of the array
      * @param nulls The number of empty slots in the array
-     * @return
+     * @return Returns an array of randomly generated obstacles
      */
     public Obstacle[] randomObstacles(int len, int nulls) {
         Obstacle[] sendBack = new Obstacle[len];//creates array of obstacles
@@ -97,8 +108,9 @@ public class PlayState extends State {
      * Makes new obstacles
      */
     public void newObstacles() {
+        Fartlek.SCORE++;
         obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-        Obstacle[] obstacles = randomObstacles(5, 2);
+        Obstacle[] obstacles = randomObstacles(OBSTACLE_AMT, OBSTACLE_EMPTYS);
         for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
             obstacleSet.get(obstacleSet.size() - 1)[i] = obstacles[i];
         }
@@ -124,6 +136,16 @@ public class PlayState extends State {
             music.play();
     }
 
+    public void pause() {
+        if (PLAYSTATE_PHASE == Phase.RUNNING) {
+            PLAYSTATE_PHASE = Phase.PAUSE;
+            pauseBtn.setTexture("Buttons\\unpausebtn.png");
+        } else if (PLAYSTATE_PHASE == Phase.PAUSE) {
+            PLAYSTATE_PHASE = Phase.RUNNING;
+            pauseBtn.setTexture("Buttons\\pausebtn.png");
+        }
+    }
+
     /**
      * Handles user input
      */
@@ -137,26 +159,26 @@ public class PlayState extends State {
                 DONE = true;
                 dispose();
             }
-            // If the x,y position of the click is in the bottom left
-            /*
-            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                runner.left();
+            //If the player clicks the pause button
+            if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y) && Gdx.input.justTouched()) {
+                pause();
             }
-            */
-            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                Vector3 newPos = new Vector3(runner.getPosition().x - 8, runner.getPosition().y, 0);
-                runner.setPosition(newPos);
+            if (PLAYSTATE_PHASE == Phase.RUNNING) {
+                // If the x,y position of the click is in the bottom left
+                if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    runner.left();
+                }
+                // If the x,y position of the click is in the bottom right
+                if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    runner.right();
+                }// If the x,y position of the click is in the bottom middle
+                if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
+                        && Gdx.input.justTouched()) {
+                    runner.shoot();
+                }
             }
-            // If the x,y position of the click is in the bottom right
-            if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                Vector3 newPos = new Vector3(runner.getPosition().x + 8, runner.getPosition().y, 0);
-                runner.setPosition(newPos);
-            }
-            // If the x,y position of the click is in the bottom middle
-            if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
-                    && Gdx.input.justTouched()) {
-                runner.shoot();
-            }
+
+
         }
     }
 
@@ -168,53 +190,55 @@ public class PlayState extends State {
      */
     @Override
     public void update(float dt) {//dt is delta time
-        if (!music.isPlaying()) {
-            currentSongNum++;
-            if (currentSongNum > songs.length - 1) {
-                currentSongNum = 0;
-            }
-            startMusic(songs[currentSongNum]);
-        }
         handleInput();
-        if (!DONE) {
-            runner.update(dt);
-            // Loops through all the tiles and updates their positions
-            for (int i = 0; i < sceneTiles.size(); i++) {
-                sceneTiles.get(i).update();
-            }
-            for (int i = 0; i < tiles; i++) {
-                if ((sceneTiles.get(i).getPosition().y + sceneTiles.get(i).getRectangle().height) < 0) {
-                    resetSceneTile(i);
+        if (PLAYSTATE_PHASE == Phase.RUNNING) {
+            if (!music.isPlaying()) {
+                currentSongNum++;
+                if (currentSongNum > songs.length - 1) {
+                    currentSongNum = 0;
                 }
+                startMusic(songs[currentSongNum]);
             }
-            for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    obstacleSet.get(i)[j].update(dt);
+
+            if (!DONE) {
+                runner.update(dt);
+                // Loops through all the tiles and updates their positions
+                for (int i = 0; i < sceneTiles.size(); i++) {
+                    sceneTiles.get(i).update();
                 }
-            }
-            for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
-                        System.out.println("Collision");
-                        obstacleSet.remove(i);
-                        newObstacles();
-                        break;
+                for (int i = 0; i < tiles; i++) {
+                    if ((sceneTiles.get(i).getPosition().y + sceneTiles.get(i).getRectangle().height) < 0) {
+                        resetSceneTile(i);
+                    }
+                }
+                for (int i = 0; i < obstacleSet.size(); i++) {
+                    for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                        obstacleSet.get(i)[j].update(dt);
+                    }
+                }
+                for (int i = 0; i < obstacleSet.size(); i++) {
+                    for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                        if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
+                            System.out.println("Collision");
+                            obstacleSet.remove(i);
+                            newObstacles();
+                            break;
+                        }
+                    }
+                }
+                for (int i = 0; i < obstacleSet.size(); i++) {
+                    for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                        if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
+                                !obstacleSet.get(i)[j].getEmpty()) {
+                            gsm.push(new MenuState(gsm));
+                            DONE = true;
+                            dispose();
+                        }
                     }
                 }
             }
-            for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
-                            !obstacleSet.get(i)[j].getEmpty()) {
-                        gsm.push(new MenuState(gsm));
-                        DONE = true;
-                        dispose();
-                    }
-                }
-            }
-            //TODO: Change the frequency with which new lines appear
-            int lineFreq = (int) (Math.random() * (Fartlek.HEIGHT / 2));
         }
+
 
     }
 
@@ -239,6 +263,10 @@ public class PlayState extends State {
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
+        sb.draw(pauseBtn.getTexture(), pauseBtn.getPosition().x, pauseBtn.getPosition().y);
+        //Draws a pause menu
+        if (PLAYSTATE_PHASE == Phase.PAUSE) {
+        }
         sb.end();
     }
     //TODO: Dispose of obstacles once they are fixed
@@ -248,7 +276,13 @@ public class PlayState extends State {
      */
     @Override
     public void dispose() {
+        Fartlek.SCORES.add(Fartlek.SCORE);
+        if (Fartlek.SCORE > Fartlek.SCORE_HIGH) {
+            Fartlek.SCORE_HIGH = Fartlek.SCORE;
+        }
+        System.out.println("Score: " + Fartlek.SCORE);
         exitBtn.dispose();
+        pauseBtn.dispose();
         runner.dispose();
         music.stop();
         music.dispose();

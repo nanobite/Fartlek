@@ -21,13 +21,23 @@ public class Runner {
     private Rectangle rectangle;
     private Animation playerAnimation;
     private int health;
-    private float horizontalSpeed;
     private float horizontalDeceleration = 0.5f;
+    private float horizontalSpeed;
     private final int RUNNER_Y = 160;
     private final float ANIM_CYCLE_TIME = 0.25f;
     private Sound moveSound;
     private float soundTimer;
     private boolean soundPlayable;
+
+    public Runner() {
+        velocity = new Vector3(0, 0, 0);
+        soundTimer = 0;
+        soundPlayable = false;
+        moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
+        health = 100;
+        horizontalSpeed = 9;
+    }
+
     /**
      * Makes a new runner
      *
@@ -36,24 +46,20 @@ public class Runner {
      *                   the runner
      */
     public Runner(String path, int animFrames) {
-        soundTimer = 0;
-        soundPlayable = false;
+        this();
         texture = new Texture(path);
-        velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
         rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
-        horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
-        moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
     }
 
     /**
-     * The play sound
+     * Plays the move sound
      */
     private void playMoveSound() {
         if (soundPlayable) {
             moveSound.stop();
-            moveSound.play(0.01f);
+            moveSound.play(0.1f);
             soundPlayable = false;
         }
 
@@ -139,7 +145,7 @@ public class Runner {
      */
     public void setPosition(Vector3 position) {
         this.position = position;
-        rectangle.setPosition(position.x,position.y);
+        rectangle.setPosition(position.x, position.y);
     }
 
     /**
