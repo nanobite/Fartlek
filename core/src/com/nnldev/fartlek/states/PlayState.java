@@ -6,8 +6,11 @@ package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
@@ -29,15 +32,18 @@ public class PlayState extends State {
     private Music music;
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle[]> obstacleSet;
-    private float obstacleTime, maxObstacleTime = 2.0f;
     private String emptyBoxTextureName;
     private String realBoxTextureName;
     private String boxTextureName;
     private String tileTextureName;
+    private int score;
     private boolean DONE;
     private int tileWidth;
     private int tileHeight;
     private int tiles = 3;
+    private BitmapFont scoreFont;
+    private FreeTypeFontGenerator generator;
+    private boolean dObs;
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
 
@@ -61,6 +67,13 @@ public class PlayState extends State {
         tileHeight = new Texture(tileTextureName).getHeight();
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
+        score = 0;
+        dObs = false;
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/vp.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 42;
+        parameter.color = Color.BLACK;
+        scoreFont = generator.generateFont(parameter);
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
@@ -93,7 +106,7 @@ public class PlayState extends State {
 
     public int[] generateObLine() {
         int[] line = {1, 1, 1, 1, 1};
-        int zeros = (int) ((Math.random() * 5) + 1);
+        int zeros = (int) ((Math.random() * 4) + 1);
         for (int i = 0; i < zeros; i++) {
             int spot = (int) (Math.random() * 5);
             while (line[spot] == 0) {
@@ -194,6 +207,7 @@ public class PlayState extends State {
                     if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
                         obstacleSet.remove(i);
                         newObstacles();
+                        score++;
                         break;
                     }
                 }
@@ -204,9 +218,13 @@ public class PlayState extends State {
                             obstacleSet.get(i)[j].getPath().equals("Items\\box.png")) {
                         gsm.push(new MenuState(gsm));
                         DONE = true;
-                        dispose();
+                        dObs = true;
+                        break;
                     }
                 }
+            }
+            if (dObs) {
+                dispose();
             }
             //TODO: Change the frequency with which new lines appear
             int lineFreq = lineFrequency();
@@ -230,14 +248,14 @@ public class PlayState extends State {
         for (int i = 0; i < obstacleSet.size(); i++) {
             for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                 sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
-                        obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH)/5.5f, (Fartlek.WIDTH)/5.5f);
+                        obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
             }
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
+        scoreFont.draw(sb, "" + score, Fartlek.WIDTH/35, (Fartlek.HEIGHT - (Fartlek.HEIGHT/70)));
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
         sb.end();
     }
-    //TODO: Dispose of obstacles once they are fixed
 
     /**
      * Disposes of objects to avoid memory leaks
@@ -248,9 +266,16 @@ public class PlayState extends State {
         runner.dispose();
         music.stop();
         music.dispose();
+        generator.dispose();
         for (Scene scene : sceneTiles) {
             scene.dispose();
         }
+        for (int i = 0; i < obstacleSet.size(); i++) {
+            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                obstacleSet.get(i)[j].dispose();
+            }
+        }
         sceneTiles.clear();
+        obstacleSet.clear();
     }
 }
