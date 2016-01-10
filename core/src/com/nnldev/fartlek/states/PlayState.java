@@ -32,7 +32,7 @@ public class PlayState extends State {
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
-    public static String tileTextureName = "Scene\\bckg1.png";
+    public static String tileTextureName = "Scene\\tile1.png";
 
     public enum Phase {
         RUNNING, PAUSE
@@ -62,9 +62,11 @@ public class PlayState extends State {
         obstacleSet = new ArrayList<Obstacle[]>();
         newObstacles();
         currentSongNum = 0;
-        startMusic(songs[currentSongNum]);
+
         PLAYSTATE_PHASE = Phase.RUNNING;
         Fartlek.SCORE = 0;
+
+        //startMusic(songs[currentSongNum]);
     }
 
     /**
@@ -122,13 +124,6 @@ public class PlayState extends State {
      * @param song The name of the song to play
      */
     public void startMusic(String song) {
-        try {
-            if (music.isPlaying()) {
-                music.stop();
-            }
-        } catch (Exception e) {
-            System.out.println("Music Stop Error: \n" + e);
-        }
         music = Gdx.audio.newMusic(Gdx.files.internal(song));
         music.setLooping(false);
         music.setVolume(0.5f);
@@ -192,13 +187,6 @@ public class PlayState extends State {
     public void update(float dt) {//dt is delta time
         handleInput();
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
-            if (!music.isPlaying()) {
-                currentSongNum++;
-                if (currentSongNum > songs.length - 1) {
-                    currentSongNum = 0;
-                }
-                startMusic(songs[currentSongNum]);
-            }
 
             if (!DONE) {
                 runner.update(dt);
@@ -238,8 +226,6 @@ public class PlayState extends State {
                 }
             }
         }
-
-
     }
 
     /**
@@ -284,8 +270,6 @@ public class PlayState extends State {
         exitBtn.dispose();
         pauseBtn.dispose();
         runner.dispose();
-        music.stop();
-        music.dispose();
         for (Scene scene : sceneTiles) {
             scene.dispose();
         }

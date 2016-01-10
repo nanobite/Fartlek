@@ -99,7 +99,7 @@ public class Runner {
      * Moves the character left
      */
     public void left() {
-        playMoveSound();
+        //playMoveSound();
         velocity.x = -horizontalSpeed;
     }
 
@@ -107,7 +107,7 @@ public class Runner {
      * Moves the character right
      */
     public void right() {
-        playMoveSound();
+        //playMoveSound();
         velocity.x = horizontalSpeed;
     }
 
