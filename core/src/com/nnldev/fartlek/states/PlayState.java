@@ -20,16 +20,22 @@ import com.nnldev.fartlek.sprites.Scene;
 import com.nnldev.fartlek.sprites.Box;
 import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
 public class PlayState extends State {
-    private Button exitBtn;
+    private Button pauseBtn;
+    private Button playBtn;
+    private Rectangle pauseRect;
+    private Rectangle playRect;
+    private String pauseExitPath;
     private Runner runner;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
     private TouchSector bottomMiddle;
     private Music music;
+    private float musicPos;
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle[]> obstacleSet;
     private String emptyBoxTextureName;
@@ -44,6 +50,10 @@ public class PlayState extends State {
     private BitmapFont scoreFont;
     private FreeTypeFontGenerator generator;
     private boolean dObs;
+    private boolean pause;
+    private boolean justPaused;
+    private boolean justUnpaused;
+    private boolean musicPlay;
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
 
@@ -57,23 +67,37 @@ public class PlayState extends State {
         DONE = false;
         emptyBoxTextureName = "Items\\emptybox.png";
         realBoxTextureName = "Items\\box.png";
-        tileTextureName = "Scene\\bckg1.png";
-        exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner("Characters\\ship1Anim.png", 3);
+        tileTextureName = "Scene\\tile1.png";
+        pauseExitPath = "Buttons\\pause.png";
+        pauseBtn = new Button(pauseExitPath, (float) (Fartlek.WIDTH * 0.86), (float) (Fartlek.HEIGHT * 0.92), false);
+        pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.86), (float) (Fartlek.HEIGHT * 0.92),
+                (Fartlek.WIDTH / 7), (Fartlek.WIDTH / 7));
+        playBtn = new Button("Buttons\\play.png", (Fartlek.WIDTH/2 - Fartlek.WIDTH/6),
+                (Fartlek.HEIGHT/2 - Fartlek.HEIGHT/8), false);
+        playRect = new Rectangle(playBtn.getPosition().x, playBtn.getPosition().y,
+                (Fartlek.WIDTH / 3), (Fartlek.HEIGHT / 4));
+        pauseBtn.setRectangle(pauseRect);
+        playBtn.setRectangle(playRect);
+        runner = new Runner("Characters\\char1Anim.png", 9);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         tileWidth = new Texture(tileTextureName).getWidth();
         tileHeight = new Texture(tileTextureName).getHeight();
-        sceneTiles = new ArrayList<Scene>();
-        sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
         score = 0;
         dObs = false;
+        pause = false;
+        musicPos = 0f;
+        justPaused = false;
+        justUnpaused = false;
+        musicPlay = false;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/vp.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 42;
+        parameter.size = 38;
         parameter.color = Color.BLACK;
         scoreFont = generator.generateFont(parameter);
+        sceneTiles = new ArrayList<Scene>();
+        sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
@@ -117,10 +141,6 @@ public class PlayState extends State {
         return line;
     }
 
-    public int lineFrequency() {
-        return (int) (Math.random() * (Fartlek.HEIGHT / 2));
-    }
-
     /**
      * Starts playing a song
      *
@@ -134,38 +154,73 @@ public class PlayState extends State {
             music.play();
     }
 
+
     /**
      * Handles user input
      */
     @Override
     protected void handleInput() {
-        // If you touched the screen
-        if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
-            // If the x,y position of the click is in the exit button
-            if (exitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                gsm.push(new MenuState(gsm));
-                DONE = true;
-                dispose();
+        justPaused = false;
+        justUnpaused = false;
+        musicPlay = true;
+        if (!pause) {
+            if (Gdx.input.justTouched()) {
+                // If the x,y position of the click is in the pause button
+                if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    pause = true;
+                    justPaused = true;
+                    musicPos = music.getPosition();
+                    music.pause();
+                    musicPlay = false;
+                    DONE = true;
+                    pauseExitPath = "Buttons\\exitbtn.png";
+                    pauseBtn.setTexture(pauseExitPath);
+                }
             }
-            // If the x,y position of the click is in the bottom left
-            /*
-            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                runner.left();
+        }
+        if (!justPaused) {
+            if (pause) {
+                //exit and play button are only checked if game is paused
+                if (Gdx.input.justTouched()) {
+                    // If the x,y position of the click is in the exit button
+                    if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        gsm.push(new MenuState(gsm));
+                        DONE = true;
+                        dispose();
+                    }
+                    // If the x,y position of the click is in the play button
+                    if (playBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        pause = false;
+                        justUnpaused = true;
+                        music.play();
+                        music.setPosition(musicPos);
+                        musicPlay = false;
+                        DONE = false;
+                        pauseExitPath = "Buttons\\pause.png";
+                        pauseBtn.setTexture(pauseExitPath);
+                    }
+                }
             }
-            */
-            if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                Vector3 newPos = new Vector3(runner.getPosition().x - 8, runner.getPosition().y, 0);
-                runner.setPosition(newPos);
-            }
-            // If the x,y position of the click is in the bottom right
-            if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                Vector3 newPos = new Vector3(runner.getPosition().x + 8, runner.getPosition().y, 0);
-                runner.setPosition(newPos);
-            }
-            // If the x,y position of the click is in the bottom middle
-            if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
-                    && Gdx.input.justTouched()) {
-                runner.shoot();
+        }
+        if (!justUnpaused) {
+            if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
+                if (!DONE) {
+                    // If the x,y position of the click is in the bottom left
+                    if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        Vector3 newPos = new Vector3(runner.getPosition().x - 8, runner.getPosition().y, 0);
+                        runner.setPosition(newPos);
+                    }
+                    // If the x,y position of the click is in the bottom right
+                    if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        Vector3 newPos = new Vector3(runner.getPosition().x + 8, runner.getPosition().y, 0);
+                        runner.setPosition(newPos);
+                    }
+                    // If the x,y position of the click is in the bottom middle
+                    if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
+                            && Gdx.input.justTouched()) {
+                        runner.shoot();
+                    }
+                }
             }
         }
     }
@@ -178,7 +233,7 @@ public class PlayState extends State {
      */
     @Override
     public void update(float dt) {//dt is delta time
-        if (!music.isPlaying()) {
+        if (!music.isPlaying() && musicPlay) {
             currentSongNum++;
             if (currentSongNum > songs.length - 1) {
                 currentSongNum = 0;
@@ -215,7 +270,7 @@ public class PlayState extends State {
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                     if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
-                            obstacleSet.get(i)[j].getPath().equals("Items\\box.png")) {
+                            obstacleSet.get(i)[j].getPath().equals(realBoxTextureName)) {
                         gsm.push(new MenuState(gsm));
                         DONE = true;
                         dObs = true;
@@ -226,8 +281,6 @@ public class PlayState extends State {
             if (dObs) {
                 dispose();
             }
-            //TODO: Change the frequency with which new lines appear
-            int lineFreq = lineFrequency();
         }
 
     }
@@ -252,8 +305,13 @@ public class PlayState extends State {
             }
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
-        scoreFont.draw(sb, "" + score, Fartlek.WIDTH/35, (Fartlek.HEIGHT - (Fartlek.HEIGHT/70)));
-        sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
+        scoreFont.draw(sb, "Score: " + score, Fartlek.WIDTH / 35, (Fartlek.HEIGHT - (Fartlek.HEIGHT / 70)));
+        sb.draw(pauseBtn.getTexture(), pauseBtn.getPosition().x, pauseBtn.getPosition().y, pauseBtn.getRectangle().width,
+                pauseBtn.getRectangle().height);
+        if (pause) {
+            sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, playBtn.getRectangle().width,
+                    playBtn.getRectangle().height);
+        }
         sb.end();
     }
 
@@ -262,7 +320,8 @@ public class PlayState extends State {
      */
     @Override
     public void dispose() {
-        exitBtn.dispose();
+        pauseBtn.dispose();
+        playBtn.dispose();
         runner.dispose();
         music.stop();
         music.dispose();

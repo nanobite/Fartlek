@@ -14,12 +14,12 @@ public abstract class Obstacle {
     protected Rectangle rectangle;
     protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
     public int obstacleSpeed = -8;
+
     /* constructor
 	path, name of texture
 	x, x position
 	y, pretty much just to animate it
 	*/
-
     protected Obstacle(String path, float x, float y) {
         this.path = path;
         texture = new Texture(path); //there can be multiple textures for obstacles
