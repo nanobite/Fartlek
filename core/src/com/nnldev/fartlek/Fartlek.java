@@ -26,6 +26,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
     public static boolean soundEnabled;
+    public static boolean soundFXEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
     public static boolean ACCELEROMETER_AVAILABLE;
@@ -46,6 +47,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public void create() {
         //fpsLogger = new FPSLogger();
         soundEnabled = true;
+        soundFXEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         //r,g,b,alpha
