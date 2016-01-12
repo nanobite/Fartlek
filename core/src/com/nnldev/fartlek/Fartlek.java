@@ -1,5 +1,5 @@
 /**
- * @author Nano
+ * @author Nano,Nick, Lazar
  * Main class for the Fartlek game
  */
 package com.nnldev.fartlek;
