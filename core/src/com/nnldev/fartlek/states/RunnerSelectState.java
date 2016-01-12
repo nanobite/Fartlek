@@ -75,5 +75,7 @@ public class RunnerSelectState extends State {
     @Override
     public void dispose() {
         exitBtn.dispose();
+        stephenBtn.dispose();
+        tr8rBtn.dispose();
     }
 }
