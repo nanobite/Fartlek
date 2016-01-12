@@ -7,10 +7,11 @@ import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
 
 /**
- * Created by Nano on 02/01/2016.
+ * Nano, Nick
  */
 public class RunnerSelectState extends State {
     private Button exitBtn;
+    private Button stephenBtn;//character stephen
 
     /**
      *
@@ -19,6 +20,7 @@ public class RunnerSelectState extends State {
     public RunnerSelectState(GameStateManager gsm) {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        stephenBtn = new Button("Buttons\\stephenIcon.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.7), true);
     }
 
     /**
@@ -27,9 +29,14 @@ public class RunnerSelectState extends State {
     @Override
     protected void handleInput() {
         if(Gdx.input.justTouched()){
-            if(exitBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){
+            if(exitBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//exit button clicked
                 gsm.push(new MenuState(gsm));
                 dispose();
+            }
+            if(stephenBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//stephen character selected button clicked
+                //add code to change button texture to make it "pressed looking"
+                PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
+                PLAYER_ANIMATION_FRAMES = 8;
             }
         }
     }
@@ -51,6 +58,7 @@ public class RunnerSelectState extends State {
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(exitBtn.getTexture(),exitBtn.getPosition().x,exitBtn.getPosition().y);
+        sb.draw(stephenBtn.getTexture(),stephenBtn.getPosition().x,stephenBtn.getPosition().y);
         sb.end();
     }
 
