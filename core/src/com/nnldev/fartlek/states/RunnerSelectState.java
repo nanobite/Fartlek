@@ -12,6 +12,7 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 public class RunnerSelectState extends State {
     private Button exitBtn;
     private Button stephenBtn;//character stephen
+    private Button tr8rBtn; //spinning guy
 
     /**
      *
@@ -21,6 +22,7 @@ public class RunnerSelectState extends State {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         stephenBtn = new Button("Buttons\\stephenIcon.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.7), true);
+        tr8rBtn = new Button("Buttons\\sphereAnim.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
     }
 
     /**
@@ -37,6 +39,10 @@ public class RunnerSelectState extends State {
                 //add code to change button texture to make it "pressed looking"
                 PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
                 PLAYER_ANIMATION_FRAMES = 8;
+            }else if(tr8rBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//spinning guy character selected button clicked
+                //add code to change button texture to make it "pressed looking"
+                PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
+                PLAYER_ANIMATION_FRAMES = 9;
             }
         }
     }
@@ -59,6 +65,7 @@ public class RunnerSelectState extends State {
         sb.begin();
         sb.draw(exitBtn.getTexture(),exitBtn.getPosition().x,exitBtn.getPosition().y);
         sb.draw(stephenBtn.getTexture(),stephenBtn.getPosition().x,stephenBtn.getPosition().y);
+        sb.draw(tr8rBtn.getTexture(),tr8r.getPosition().x,tr8r.getPosition().y);
         sb.end();
     }
 
