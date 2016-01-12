@@ -22,7 +22,7 @@ public class RunnerSelectState extends State {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         stephenBtn = new Button("Buttons\\stephenIcon.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.7), true);
-        tr8rBtn = new Button("Buttons\\sphereAnim.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
+        tr8rBtn = new Button("Buttons\\c2.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
     }
 
     /**
