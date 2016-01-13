@@ -44,7 +44,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static int SCORE_HIGH;
     public static ArrayList<Integer> SCORES;
     public static String PLAYER_ANIMATION_NAME;
-    public static int PLAYER_ANIMATION_FRAMES;
+    public static int PLAYER_ANIMATION_FRAMES;\
+    public static String SCENE_BACKGROUND;
     private FPSLogger fpsLogger;
 
     /**
@@ -55,6 +56,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         fpsLogger = new FPSLogger();
         PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
         PLAYER_ANIMATION_FRAMES = 9;
+        SCENE_BACKGROUND = "Scene\\bckg.png";
         SCORES = new ArrayList<Integer>();
         soundEnabled = true;
         batch = new SpriteBatch();
