@@ -48,8 +48,9 @@ public class PlayState extends State {
     private int tileHeight;
     private int tiles = 3;
     private BitmapFont scoreFont;
+    private BitmapFont deadFont;
     private FreeTypeFontGenerator generator;
-    private boolean dObs;
+    private boolean dead;
     private boolean pause;
     private boolean justPaused;
     private boolean justUnpaused;
@@ -92,10 +93,14 @@ public class PlayState extends State {
         justUnpaused = false;
         musicPlay = false;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/vp.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator.FreeTypeFontParameter sParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 38;
         parameter.color = Color.BLACK;
-        scoreFont = generator.generateFont(parameter);
+        FreeTypeFontGenerator.FreeTypeFontParameter dParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 46;
+        parameter.color = Color.BLACK;
+        scoreFont = generator.generateFont(sParameter);
+        deadFont = generator.generateFont(dParameter)
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
         for (int i = 1; i < tiles; i++) {
@@ -152,6 +157,9 @@ public class PlayState extends State {
         music.setVolume(0.5f);
         if (Fartlek.soundEnabled)
             music.play();
+    }
+    
+    public void gameOver() {
     }
 
 
@@ -271,15 +279,13 @@ public class PlayState extends State {
                 for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                     if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
                             obstacleSet.get(i)[j].getPath().equals(realBoxTextureName)) {
-                        gsm.push(new MenuState(gsm));
+                        //gsm.push(new MenuState(gsm));
                         DONE = true;
-                        dObs = true;
-                        break;
+                        dead = true;
+                        gameOver();
+                        j = Obstacle.OBS_PER_ROW;
                     }
                 }
-            }
-            if (dObs) {
-                dispose();
             }
         }
 
@@ -311,6 +317,9 @@ public class PlayState extends State {
         if (pause) {
             sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, playBtn.getRectangle().width,
                     playBtn.getRectangle().height);
+        }
+        if (dead) {
+            deadFont.draw(sb, "GAME OVER", Fartlek.WIDTH / 3, Fartlek.HEIGHT / 3);
         }
         sb.end();
     }
