@@ -3,10 +3,15 @@ package com.nnldev.fartlek.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-
+//created by Nick, 15/01/2016
 public class Enemy extends Obstacle{
   //variables
-  public Enemy(String path,float x,float y){
+  private int health;
+  private boolean dead = false;
+  //constructor
+  public Enemy(String path,float x,float y,int health){
+    super(path,x,y);
+    this.health = health
   }
   @Override
   public void update(float dt) {
@@ -17,9 +22,41 @@ public class Enemy extends Obstacle{
       dispose();
     }
   }
+  //changes texture and changes state to dead
+  public void die(){
+    //change texture to the dead version
+    String newPath = path.substring(0,path.length()-3);
+    newPath = newPath+"Dead.png";
+    super.texture = new Texture(newPath);
+    dead = true;
+  }
+  //returns dead state
+  public boolean getDead(){
+    return dead;
+  }
+/**
+ * Gets the health of the enemy
+ * @return The health of the enemy
+ */
+  public int getHealth() {
+    return health;
+  }
+  /**
+ * Sets the health of the enemy
+ * @param health
+ */
+  public void setHealth(int health) {
+    this.health = health;
+  }
+  /**
+ * @param texture The texture which the obstacle will be set to
+ */
+  @Override
+  public void setTexture(Texture texture) {
+    super.texture = texture;
+  }
    /**
    * Gets the position of the enemy
-   *
    * @return the position of the enemy
    */
   @Override
@@ -28,7 +65,6 @@ public class Enemy extends Obstacle{
   }
   /**
   * Sets the position of the enemy
-  *
   * @param position The position you would like to set the
   *                 obstacle's position to.
   */
@@ -38,7 +74,6 @@ public class Enemy extends Obstacle{
   }
   /**
  * Sets the x coordinate of the enemy
- *
  * @param x The x coordinate of the obstacle's position
  */
   @Override
@@ -47,7 +82,6 @@ public class Enemy extends Obstacle{
   }
   /**
   * Returns the x position of the obstacle
-  *
   * @return the x position of the obstacle
   */
   public float getXPosition() {
@@ -55,7 +89,6 @@ public class Enemy extends Obstacle{
   }
   /**
   * Sets the y position of the enemy
-  *
   * @param y The y coordinate of the obstacle's position
   */
   @Override
@@ -63,9 +96,8 @@ public class Enemy extends Obstacle{
     super.position.y = y;
   }
   /**
- * Gets the y position of the box
- *
- * @return The y positionf of the box
+ * Gets the y position of the enemy
+ * @return The y positionf of the enemy
  */
   @Override
   public float getYPosition() {
@@ -73,7 +105,6 @@ public class Enemy extends Obstacle{
   }
   /**
  * Gets the velocity of the enemy
- *
  * @return
  */
   @Override
@@ -82,7 +113,6 @@ public class Enemy extends Obstacle{
   }
   /**
  * Sets the velocities of the obstacle
- *
  * @param velocity The velocities of theo obstacle
  */
   @Override
@@ -91,7 +121,6 @@ public class Enemy extends Obstacle{
   }
   /**
   * Gets the path of the obstacle
-  *
   * @return
   */
   @Override
@@ -108,19 +137,11 @@ public class Enemy extends Obstacle{
   }
   /**
  * Gets the texture of the enemy
- *
  * @return
  */
   @Override
   public Texture getTexture() {
     return texture;
-  }
-  /**
- * @param texture The texture which the obstacle will be set to
- */
-  @Override
-  public void setTexture(Texture texture) {
-    super.texture = texture;
   }
   /**
  * @return
@@ -136,22 +157,6 @@ public class Enemy extends Obstacle{
   @Override
   public void setRectangle(Rectangle rectangle) {
     this.rectangle = rectangle;
-  }
-  /**
- * Gets the health of the enemy
- *
- * @return The health of the enemy
- */
-  public int getHealth() {
-    return health;
-  }
-  /**
- * Sets the health of the enemy
- *
- * @param health
- */
-  public void setHealth(int health) {
-    this.health = health;
   }
   /**
    * Disposes of the enemy's texture
@@ -176,7 +181,6 @@ public class Enemy extends Obstacle{
   }
   /**
  * Returns a string representation of the enemy
- *
  * @return The string representation of the enemy
  */
   @Override
