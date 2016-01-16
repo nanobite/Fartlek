@@ -22,9 +22,8 @@ public class Runner {
     private Animation playerAnimation;
     private int health;
     private float horizontalSpeed;
-    private float horizontalDeceleration = 0.5f;
     private final int RUNNER_Y = 160;
-    private final float ANIM_CYCLE_TIME = 0.25f;
+    private final float ANIM_CYCLE_TIME = 0.3f;
     private Sound moveSound;
     private float soundTimer;
     private boolean soundPlayable;

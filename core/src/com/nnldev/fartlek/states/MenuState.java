@@ -17,7 +17,7 @@ public class MenuState extends State {
     private Button infoBtn;
     private Button settingsBtn;
     private Button runnerBtn;
-    private Sound startGameSound;
+    public static Sound startGameSound;
 
     /**
      * Makes a new menu state
