@@ -73,13 +73,13 @@ public class Runner {
         }
         playerAnimation.update(dt);
         if (velocity.x > 0) {
-            velocity.x -= horizontalDeceleration;
+            position.x += velocity.x;
         } else if (velocity.x < 0) {
-            velocity.x += horizontalDeceleration;
+            position.x += velocity.x;
         } else {
             velocity.x = 0;
         }
-        position.x += velocity.x;
+        velocity.x = 0;
         position.y += velocity.y;
         rectangle.y = position.y;
         rectangle.x = position.x;
@@ -93,7 +93,9 @@ public class Runner {
      * Moves the character left
      */
     public void left() {
-        playMoveSound();
+        if (Fartlek.soundFXEnabled) {
+            playMoveSound();
+        }
         velocity.x = -horizontalSpeed;
     }
 
@@ -101,7 +103,9 @@ public class Runner {
      * Moves the character right
      */
     public void right() {
-        playMoveSound();
+        if (Fartlek.soundFXEnabled) {
+            playMoveSound();
+        }
         velocity.x = horizontalSpeed;
     }
 

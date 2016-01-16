@@ -26,9 +26,9 @@ public class SettingsState extends State {
             musicBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         }
         if (Fartlek.soundFXEnabled) {
-            soundFXBtn = new Button("Button\\sound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
+            soundFXBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
         } else {
-            soundFXBtn = new Button("Button\\nosound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
+            soundFXBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
         }
     }
 
