@@ -52,7 +52,7 @@ public class PlayState extends State {
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
-    public static String tileTextureName = "Scene\\bckg1.png";
+    public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
 
     public enum Phase {
         RUNNING, PAUSE, DEAD
