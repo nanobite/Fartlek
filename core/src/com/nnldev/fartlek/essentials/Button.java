@@ -135,6 +135,10 @@ public class Button {
      * Disposes of the picture of the button
      */
     public void dispose() {
-        texture.dispose();
+        try{
+            texture.dispose();
+        }catch(Exception e){
+            System.out.println("Unable to dispose of button texture.");
+        }
     }
 }

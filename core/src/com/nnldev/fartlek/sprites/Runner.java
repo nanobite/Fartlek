@@ -81,13 +81,6 @@ public class Runner {
             soundPlayable = true;
         }
         playerAnimation.update(dt);
-        if (velocity.x > 0) {
-            velocity.x -= horizontalDeceleration;
-        } else if (velocity.x < 0) {
-            velocity.x += horizontalDeceleration;
-        } else {
-            velocity.x = 0;
-        }
         position.x += velocity.x;
         position.y += velocity.y;
         rectangle.y = position.y;
@@ -105,7 +98,7 @@ public class Runner {
         if (Fartlek.soundFXEnabled) {
             playMoveSound();
         }
-        velocity.x = -horizontalSpeed;
+        setX(position.x-horizontalSpeed);
     }
 
     /**
@@ -115,7 +108,7 @@ public class Runner {
         if (Fartlek.soundFXEnabled) {
             playMoveSound();
         }
-        velocity.x = horizontalSpeed;
+        setX(position.x+horizontalSpeed);
     }
 
     /**
@@ -154,6 +147,25 @@ public class Runner {
         this.position = position;
         rectangle.setPosition(position.x, position.y);
     }
+
+    /**
+     *
+     * @return
+     */
+    public float getX(){
+        return position.x;
+    }
+
+    /**
+     *
+     * @param x
+     */
+
+    public void setX(float x){
+        position.x=x;
+        rectangle.setX(x);
+    }
+
 
     /**
      * Returns the current texture for the player.
