@@ -21,8 +21,8 @@ public class Runner {
     private Rectangle rectangle;
     private Animation playerAnimation;
     private int health;
-    private float horizontalDeceleration = 0.5f;
     private float horizontalSpeed;
+    private float horizontalDeceleration = 0.5f;
     private final int RUNNER_Y = 160;
     private final float ANIM_CYCLE_TIME = 0.25f;
     private Sound moveSound;
@@ -48,9 +48,12 @@ public class Runner {
     public Runner(String path, int animFrames) {
         this();
         texture = new Texture(path);
+        velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
         rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
+        horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
+        moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
     }
 
     /**
@@ -78,13 +81,6 @@ public class Runner {
             soundPlayable = true;
         }
         playerAnimation.update(dt);
-        if (velocity.x > 0) {
-            velocity.x -= horizontalDeceleration;
-        } else if (velocity.x < 0) {
-            velocity.x += horizontalDeceleration;
-        } else {
-            velocity.x = 0;
-        }
         position.x += velocity.x;
         position.y += velocity.y;
         rectangle.y = position.y;
@@ -99,16 +95,20 @@ public class Runner {
      * Moves the character left
      */
     public void left() {
-        playMoveSound();
-        velocity.x = -horizontalSpeed;
+        if (Fartlek.soundFXEnabled) {
+            playMoveSound();
+        }
+        setX(position.x-horizontalSpeed);
     }
 
     /**
      * Moves the character right
      */
     public void right() {
-        playMoveSound();
-        velocity.x = horizontalSpeed;
+        if (Fartlek.soundFXEnabled) {
+            playMoveSound();
+        }
+        setX(position.x+horizontalSpeed);
     }
 
     /**
@@ -147,6 +147,25 @@ public class Runner {
         this.position = position;
         rectangle.setPosition(position.x, position.y);
     }
+
+    /**
+     *
+     * @return
+     */
+    public float getX(){
+        return position.x;
+    }
+
+    /**
+     *
+     * @param x
+     */
+
+    public void setX(float x){
+        position.x=x;
+        rectangle.setX(x);
+    }
+
 
     /**
      * Returns the current texture for the player.

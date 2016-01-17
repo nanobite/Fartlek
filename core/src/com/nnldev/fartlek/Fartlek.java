@@ -1,5 +1,5 @@
 /**
- * @author Nano
+ * @author Nano,Nick, Lazar
  * Main class for the Fartlek game
  */
 package com.nnldev.fartlek;
@@ -30,6 +30,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
     public static boolean soundEnabled;
+    public static boolean soundFXEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
     public static boolean ACCELEROMETER_AVAILABLE;
@@ -45,18 +46,26 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static ArrayList<Integer> SCORES;
     public static String PLAYER_ANIMATION_NAME;
     public static int PLAYER_ANIMATION_FRAMES;
+    public static String SCENE_BACKGROUND;
     private FPSLogger fpsLogger;
-
+    public static String[] songs = {"Music\\gocart.mp3","Music\\exitthepremises.mp3","Music\\latinindustries.mp3"};
+    public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\forestmap.png"};
+    public static int currentSongNum;
+    public static int currentSceneNum;
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
+        currentSongNum = 0;
+        currentSceneNum = 0;
         fpsLogger = new FPSLogger();
         PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
         PLAYER_ANIMATION_FRAMES = 9;
+        SCENE_BACKGROUND = "Scene\\bckg.png";
         SCORES = new ArrayList<Integer>();
         soundEnabled = true;
+        soundFXEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         Gdx.gl.glClearColor(0.f, 0.f, 0.f, 1);
@@ -70,7 +79,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             nativeOrientation = Gdx.input.getNativeOrientation();
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
-        border = new Texture("Extra\\border.png");
+        border = new Texture("Extras&Logo\\border.png");
     }
 
     /**

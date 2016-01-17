@@ -12,6 +12,7 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 public class SettingsState extends State {
     private Button exitBtn;
     private Button musicBtn;
+    private Button soundFXBtn;
 
     /**
      * @param gsm
@@ -23,6 +24,11 @@ public class SettingsState extends State {
             musicBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         } else {
             musicBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
+        }
+        if (Fartlek.soundFXEnabled) {
+            soundFXBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
+        } else {
+            soundFXBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
         }
     }
 
@@ -45,6 +51,15 @@ public class SettingsState extends State {
                     musicBtn.setTexture("Buttons\\sound.png");
                 }
             }
+            if (soundFXBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                if (soundFXBtn.getPath().equals("Buttons\\sound.png")) {
+                    Fartlek.soundFXEnabled = false;
+                    soundFXBtn.setTexture("Buttons\\nosound.png");
+                } else {
+                    Fartlek.soundFXEnabled = true;
+                    soundFXBtn.setTexture("Buttons\\sound.png");
+                }
+            }
         }
     }
 
@@ -64,6 +79,7 @@ public class SettingsState extends State {
         sb.begin();
         sb.draw(exitBtn.getTexture(), exitBtn.getPosition().x, exitBtn.getPosition().y);
         sb.draw(musicBtn.getTexture(), musicBtn.getPosition().x, musicBtn.getPosition().y);
+        sb.draw(soundFXBtn.getTexture(), soundFXBtn.getPosition().x, soundFXBtn.getPosition().y);
         sb.end();
     }
 
@@ -74,5 +90,6 @@ public class SettingsState extends State {
     public void dispose() {
         exitBtn.dispose();
         musicBtn.dispose();
+        soundFXBtn.dispose();
     }
 }
