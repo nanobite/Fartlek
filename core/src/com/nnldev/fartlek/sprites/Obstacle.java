@@ -7,13 +7,13 @@ import com.nnldev.fartlek.Fartlek;
 
 
 public abstract class Obstacle {
-    public static final int OBS_PER_ROW = 5;
     protected Texture texture;
     protected Vector3 velocity;
     protected Vector3 position;
     protected Rectangle rectangle;
     protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
     public int obstacleSpeed = -8;
+    public static final float OBSTACLE_WIDTH = (Fartlek.WIDTH) / 5.5f;
 
     /* constructor
 	path, name of texture
@@ -25,7 +25,7 @@ public abstract class Obstacle {
         texture = new Texture(path); //there can be multiple textures for obstacles
         position = new Vector3(x, y, 0); // position
         velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
-        rectangle = new Rectangle(x, y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
+        rectangle = new Rectangle(x, y, OBSTACLE_WIDTH, OBSTACLE_WIDTH);
     }
 
     /**

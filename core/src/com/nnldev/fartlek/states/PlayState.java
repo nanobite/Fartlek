@@ -43,7 +43,8 @@ public class PlayState extends State {
     private String tileTextureName;
     private int score;
     private boolean DONE;
-    private int tiles = 3;
+    private int tiles;
+    private int prevY;
     private BitmapFont scoreFont;
     private BitmapFont deadFont;
     private FreeTypeFontGenerator generator;
@@ -63,7 +64,7 @@ public class PlayState extends State {
         super(gsm);
         DONE = false;
         emptyBoxTextureName = "Items\\emptybox.png";
-        realBoxTextureName = "Items\\box.png";
+        boxTextureName = "Items\\box.png";
         tileTextureName = "Scene\\tile1.png";
         pauseExitPath = "Buttons\\pause.png";
         pauseBtn = new Button(pauseExitPath, (float) (Fartlek.WIDTH * 0.86), (float) (Fartlek.HEIGHT * 0.92), false);
@@ -94,13 +95,19 @@ public class PlayState extends State {
         dParameter.color = Color.BLACK;
         scoreFont = generator.generateFont(sParameter);
         deadFont = generator.generateFont(dParameter);
+        tiles = 3;
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
         obstacleSet = new ArrayList<Obstacle[]>();
-        newObstacles();
+        obstacleSet.add(new Obstacle[1]);
+        obstacleSet.get(0)[0] = new Box(boxTextureName, (float) (Math.random() * Fartlek.WIDTH), Fartlek.HEIGHT * 2, 100);
+        prevY = 0;
+        for (int i = 0; i < 6; i++) {
+            newObstacles();
+        }
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
     }
@@ -113,31 +120,35 @@ public class PlayState extends State {
     }
 
     public void newObstacles() {
-        obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-        int[] obLine = generateObLine();
-        for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
-            if (obLine[i] == 0) {
-                boxTextureName = emptyBoxTextureName;
-            } else {
-                boxTextureName = realBoxTextureName;
+            //TODO: Weighted chance for 1 per row versus 2 per row
+            obstacleSet.add(new Obstacle[1]);
+            float[] xPos = generateObXPos(1);
+            for (int j = 0; j < obstacleSet.get(obstacleSet.size() - 1).length; j++) {
+                obstacleSet.get(obstacleSet.size() - 1)[j] = new Box(boxTextureName, xPos[j], generateObYPos(prevY), 100);
             }
-            obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(boxTextureName, (Fartlek.WIDTH / 4.88f) * i,
-                    Fartlek.HEIGHT, 100);
-        }
+            prevY = obstacleSet.size() - 1;
     }
 
-    public int[] generateObLine() {
-        int[] line = {1, 1, 1, 1, 1};
-        int zeros = (int) ((Math.random() * 4) + 1);
-        for (int i = 0; i < zeros; i++) {
-            int spot = (int) (Math.random() * 5);
-            while (line[spot] == 0) {
-                spot = (int) (Math.random() * 5);
+
+    public float[] generateObXPos(int num) {
+        float[] xPos = new float[num];
+        xPos[0] = -Obstacle.OBSTACLE_WIDTH;
+        float x = xPos[0];
+        for (int i = 0; i < num; i++) {
+            while (((xPos[i] + Obstacle.OBSTACLE_WIDTH) >= x) && ((x + Obstacle.OBSTACLE_WIDTH) >= xPos[i])) {
+                xPos[i] = (float) (Math.random() * Fartlek.WIDTH);
             }
-            line[spot] = 0;
+            x = xPos[i];
         }
-        return line;
+        return xPos;
     }
+
+    public float generateObYPos(int prevY) {
+        float yPos = obstacleSet.get(prevY)[0].getYPosition();
+        yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + Obstacle.OBSTACLE_WIDTH;
+        return yPos;
+    }
+
 
     /**
      * Starts playing a song
@@ -196,9 +207,9 @@ public class PlayState extends State {
                 }
             } else {
                 if (restartBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    dispose();
                     MenuState.startGameSound.play(0.75f);
                     gsm.push(new PlayState(gsm));
-                    dispose();
                 }
             }
         }
@@ -252,14 +263,15 @@ public class PlayState extends State {
                 }
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                for (int j = 0; j < 1; j++) {
                     obstacleSet.get(i)[j].update(dt);
                 }
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+                for (int j = 0; j < 1; j++) {
                     if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
-                        obstacleSet.remove(i);
+                        obstacleSet.remove(0);
+                        prevY -= 1;
                         newObstacles();
                         score++;
                         break;
@@ -267,13 +279,12 @@ public class PlayState extends State {
                 }
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
-                            obstacleSet.get(i)[j].getPath().equals(realBoxTextureName)) {
+                for (int j = 0; j < 1; j++) {
+                    if (runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) {
                         DONE = true;
                         dead = true;
                         gameOver();
-                        j = Obstacle.OBS_PER_ROW;
+                        j = 1;
                     }
                 }
             }
@@ -295,7 +306,7 @@ public class PlayState extends State {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
-            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+            for (int j = 0; j < 1; j++) {
                 sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
                         obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
             }
@@ -332,7 +343,7 @@ public class PlayState extends State {
             scene.dispose();
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
-            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
+            for (int j = 0; j < 1; j++) {
                 obstacleSet.get(i)[j].dispose();
             }
         }
