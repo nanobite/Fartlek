@@ -18,6 +18,9 @@ import com.badlogic.gdx.Input.Orientation;
 
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.states.MenuState;
+import com.purplebrain.adbuddiz.sdk.AdBuddiz;
+
+import static com.badlogic.gdx.Application.ApplicationType.*;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static final int WIDTH = 480, HEIGHT = 800;
@@ -45,6 +48,23 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void create() {
+        switch(Gdx.app.getType()) {
+            case Desktop:
+                System.out.println("Desktop");
+                break;
+            case Android:
+                AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
+                break;
+            case HeadlessDesktop:
+                break;
+            case Applet:
+                break;
+            case WebGL:
+                break;
+            case iOS:
+                break;
+        }
+
         //fpsLogger = new FPSLogger();
         soundEnabled = true;
         batch = new SpriteBatch();
@@ -74,7 +94,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             cam.setToOrtho(false, WIDTH, HEIGHT);
         } else {
             //Works fine on desktop
-            if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            if (Gdx.app.getType() == Desktop) {
                 cam.setToOrtho(false, WIDTH, scrnHeight);
                 cam.translate(0, -(scrnHeight - HEIGHT) / 2, 0);
             } else {
