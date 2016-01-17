@@ -123,122 +123,94 @@ public class Box extends Obstacle {
         return super.getVelocity();
     }
 
-    /**
-     * Sets the velocities of the obstacle
-     *
-     * @param velocity The velocities of theo obstacle
-     */
-    @Override
-    public void setVelocity(Vector3 velocity) {
-        super.setVelocity(velocity);
-    }
+	@Override
+	public String getPath() {
+		return super.getPath();
+	}
 
-    /**
-     * Gets the path of the obstacle
-     *
-     * @return
-     */
-    @Override
-    public String getPath() {
-        return super.getPath();
-    }
+	@Override
+	public void setPath(String texturePath) {
+		// TODO Auto-generated method stub
+		super.setPath(texturePath);
+	}
 
-    /**
-     * @param texturePath
-     * @deprecated There is no situation where this should be used
-     */
-    @Override
-    public void setPath(String texturePath) {
-        // TODO Auto-generated method stub
-        super.setPath(texturePath);
-    }
+	/**
+	 * Gets the texture of the box
+	 *
+	 * @return
+	 */
+	@Override
+	public Texture getTexture() {
+		return texture;
+	}
 
-    /**
-     * Gets the texture of the box
-     *
-     * @return
-     */
-    @Override
-    public Texture getTexture() {
-        return texture;
-    }
+	/**
+	 * @param texture
+	 *            The texture which the obstacle will be set to
+	 */
+	@Override
+	public void setTexture(Texture texture) {
+		super.texture = texture;
+	}
 
-    /**
-     * @param texture The texture which the obstacle will be set to
-     */
-    @Override
-    public void setTexture(Texture texture) {
-        super.texture = texture;
-    }
+	/**
+	 * @return
+	 */
+	@Override
+	public Rectangle getRectangle() {
+		return super.rectangle;
+	}
 
-    /**
-     * @return
-     */
-    @Override
-    public Rectangle getRectangle() {
-        return super.rectangle;
-    }
+	/**
+	 * @param rectangle
+	 *            The rectangle for whome the bounds of this obstacle shall be
+	 *            set to
+	 */
+	@Override
+	public void setRectangle(Rectangle rectangle) {
+		this.rectangle = rectangle;
+	}
 
-    /**
-     * @param rectangle The rectangle for whome the bounds of this obstacle shall be
-     *                  set to
-     */
-    @Override
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
-    }
+	/**
+	 * Gets the health of the box
+	 *
+	 * @return The health of the box
+	 */
+	public int getHealth() {
+		return health;
+	}
 
-    /**
-     * Gets the health of the box
-     *
-     * @return The health of the box
-     */
-    public int getHealth() {
-        return health;
-    }
+	/**
+	 * Sets the health of the box
+	 *
+	 * @param health
+	 */
+	public void setHealth(int health) {
+		this.health = health;
+	}
 
-    /**
-     * Sets the health of the box
-     *
-     * @param health
-     */
-    public void setHealth(int health) {
-        this.health = health;
-    }
+	/**
+	 * Disposes of the box's texture
+	 */
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
-    /**
-     * Disposes of the box's texture
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
+	@Override
+	public boolean equals(Obstacle obstacle) {
+		if ((obstacle.path.equals(this.path))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    /**
-     * Checks if two boxes are equal or not
-     *
-     * @param obstacle something
-     * @return
-     */
-    @Override
-    public boolean equals(Obstacle obstacle) {
-        if ((obstacle.path.equals(this.path))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns a string representation of the box
-     *
-     * @return The string representation of the box
-     */
-    @Override
-    public String toString() {
-        return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
-                + velocity.x + "\tY=" + velocity.y + "\tZ=" + velocity.z + "\nWidth: " + rectangle.getWidth()
-                + "\tHeight: " + rectangle.getHeight() + "\nHealth: " + health;
-    }
+	@Override
+	public String toString() {
+		return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
+				+ velocity.x + "\tY=" + velocity.y + "\tZ=" + velocity.z + "\nWidth: " + rectangle.getWidth()
+				+ "\tHeight: " + rectangle.getHeight() + "\nHealth: " + health;
+	}
 
 }

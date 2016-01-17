@@ -1,5 +1,5 @@
 /**
- * @author Nano
+ * @author Nano,Nick, Lazar
  * Main class for the Fartlek game
  */
 package com.nnldev.fartlek;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,11 +17,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.Input.Orientation;
 
+import com.nnldev.fartlek.essentials.Animation;
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.states.MenuState;
-import com.purplebrain.adbuddiz.sdk.AdBuddiz;
 
-import static com.badlogic.gdx.Application.ApplicationType.*;
+import java.util.ArrayList;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static final int WIDTH = 480, HEIGHT = 800;
@@ -29,48 +30,45 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
     public static boolean soundEnabled;
+    public static boolean soundFXEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
     public static boolean ACCELEROMETER_AVAILABLE;
     public int ORIENTATION;
     public Orientation nativeOrientation;
     public Vector3 ACCEL;
-    public String characterSprite = "Characters\\ship1Anim.png";
-    public int characterSpriteNum = 3;
     private SpriteBatch batch;
     private GameStateManager gsm;
     private float accDelta;
     public Texture border;
-    //private FPSLogger fpsLogger;
-
+    public static int SCORE;
+    public static int SCORE_HIGH;
+    public static ArrayList<Integer> SCORES;
+    public static String PLAYER_ANIMATION_NAME;
+    public static int PLAYER_ANIMATION_FRAMES;
+    public static String SCENE_BACKGROUND;
+    private FPSLogger fpsLogger;
+    public static String[] songs = {"Music\\gocart.mp3","Music\\exitthepremises.mp3","Music\\latinindustries.mp3"};
+    public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\forestmap.png"};
+    public static int currentSongNum;
+    public static int currentSceneNum;
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
-        switch(Gdx.app.getType()) {
-            case Desktop:
-                System.out.println("Desktop");
-                break;
-            case Android:
-                AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
-                break;
-            case HeadlessDesktop:
-                break;
-            case Applet:
-                break;
-            case WebGL:
-                break;
-            case iOS:
-                break;
-        }
-
-        //fpsLogger = new FPSLogger();
+        currentSongNum = 0;
+        currentSceneNum = 0;
+        fpsLogger = new FPSLogger();
+        PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
+        PLAYER_ANIMATION_FRAMES = 9;
+        SCENE_BACKGROUND = "Scene\\bckg.png";
+        SCORES = new ArrayList<Integer>();
         soundEnabled = true;
+        soundFXEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
-        //r,g,b,alpha
-        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+        Gdx.gl.glClearColor(0.f, 0.f, 0.f, 1);
         mousePos = new Vector3();
         cam = new OrthographicCamera();
         scrnHeight = Gdx.graphics.getHeight();
@@ -81,7 +79,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             nativeOrientation = Gdx.input.getNativeOrientation();
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
-        border = new Texture("Extra\\border.png");
+        border = new Texture("Extras&Logo\\border.png");
     }
 
     /**
@@ -93,13 +91,12 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
         } else {
-            //Works fine on desktop
-            if (Gdx.app.getType() == Desktop) {
+            if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 cam.setToOrtho(false, WIDTH, scrnHeight);
                 cam.translate(0, -(scrnHeight - HEIGHT) / 2, 0);
             } else {
-                cam.setToOrtho(false, WIDTH, HEIGHT+(HEIGHT/16));
-                cam.translate(0, -(((border.getHeight()-HEIGHT)/32)), 0);
+                cam.setToOrtho(false, WIDTH, HEIGHT + (HEIGHT / 16));
+                cam.translate(0, -(((border.getHeight() - HEIGHT) / 32)), 0);
             }
         }
         cam.update();
