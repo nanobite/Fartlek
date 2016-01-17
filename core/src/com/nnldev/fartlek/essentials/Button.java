@@ -26,11 +26,10 @@ public class Button {
      */
     public Button(String path, float x, float y, boolean centre) {
         this.path = path;
+        texture = new Texture(path);
         if (centre) {
-            texture = new Texture(path);
             position = new Vector3(x - (texture.getWidth() / 2), y - (texture.getHeight() / 2), 0);
         } else {
-            texture = new Texture(path);
             position = new Vector3(x, y, 0);
         }
         rectangle = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());

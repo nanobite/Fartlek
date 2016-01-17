@@ -11,7 +11,7 @@ public class Enemy extends Obstacle{
   //constructor
   public Enemy(String path,float x,float y,int health){
     super(path,x,y);
-    this.health = health
+    this.health = health;
   }
   @Override
   public void update(float dt) {
@@ -68,7 +68,7 @@ public class Enemy extends Obstacle{
   * @param position The position you would like to set the
   *                 obstacle's position to.
   */
-  Override
+  @Override
   public void setPosition(Vector3 position) {
     super.position = position;
   }

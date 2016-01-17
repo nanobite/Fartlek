@@ -19,6 +19,7 @@ public class RunnerSelectState extends State {
     private Button scene1;
     private Button scene2;
     private Button scene3;
+    private String blankBtn = "Extras&Logo\\smalllogo.png";
     /**
      *
      * @param gsm
@@ -27,11 +28,11 @@ public class RunnerSelectState extends State {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         stephenBtn = new Button("Buttons\\stephenIcon.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.7), true);
-        tr8rBtn = new Button("Characters\\c2.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
-        character3 = new Button("Characters\\c2.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.3), true);
-        scene1 = new Button("Characters\\c2.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.7), true);
-        scene2 = new Button("Characters\\c2.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.5), true);
-        scene3 = new Button("Characters\\c2.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.3), true);
+        tr8rBtn = new Button(blankBtn, (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
+        character3 = new Button(blankBtn, (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.3), true);
+        scene1 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.7), true);
+        scene2 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.5), true);
+        scene3 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.3), true);
     }
 
     /**
@@ -54,17 +55,20 @@ public class RunnerSelectState extends State {
                 Fartlek.PLAYER_ANIMATION_FRAMES = 9;
             }else if(character3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//character 3 selected button clicked
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
-                Fartlek.PLAYER_ANIMATION_FRAMES = 9;
+                Fartlek.PLAYER_ANIMATION_NAME = "Characters\\shipAnim.png";
+                Fartlek.PLAYER_ANIMATION_FRAMES = 3;
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//scene1 selected button clicked
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\file.png";
+                Fartlek.currentSceneNum = 0;
+                Fartlek.currentSongNum = 1;
             }else if(scene2.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//scene2 selected button clicked
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\file.png";
+                Fartlek.currentSceneNum = 1;
+                Fartlek.currentSongNum = 2;
             }else if(scene3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//scene3 selected button clicked
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\file.png";
+                Fartlek.currentSceneNum = 2;
+                Fartlek.currentSongNum = 0;
             }
         }
     }
