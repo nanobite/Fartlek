@@ -44,7 +44,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static int SCORE_HIGH;
     public static ArrayList<Integer> SCORES;
     public static String PLAYER_ANIMATION_NAME;
-    public static int PLAYER_ANIMATION_FRAMES;\
+    public static int PLAYER_ANIMATION_FRAMES;
     public static String SCENE_BACKGROUND;
     private FPSLogger fpsLogger;
 
