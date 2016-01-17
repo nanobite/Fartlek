@@ -49,7 +49,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String SCENE_BACKGROUND;
     private FPSLogger fpsLogger;
     public static String[] songs = {"Music\\gocart.mp3","Music\\exitthepremises.mp3","Music\\latinindustries.mp3"};
-    public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\techback.png"};
+    public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\forestmap.png"};
     public static int currentSongNum;
     public static int currentSceneNum;
     /**

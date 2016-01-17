@@ -30,9 +30,9 @@ public class RunnerSelectState extends State {
         stephenBtn = new Button("Buttons\\stephenIcon.png", (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.7), true);
         tr8rBtn = new Button(blankBtn, (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.5), true);
         character3 = new Button(blankBtn, (float) (Fartlek.WIDTH/4), (float) (Fartlek.HEIGHT*0.3), true);
-        scene1 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.7), true);
-        scene2 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.5), true);
-        scene3 = new Button(blankBtn, (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.3), true);
+        scene1 = new Button("Buttons\\dirtmapbtn.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.7), true);
+        scene2 = new Button("Buttons\\stonemapbtn.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.5), true);
+        scene3 = new Button("Buttons\\forestmapbtn.png", (float) (Fartlek.WIDTH*3/4), (float) (Fartlek.HEIGHT*0.3), true);
     }
 
     /**
@@ -55,8 +55,8 @@ public class RunnerSelectState extends State {
                 Fartlek.PLAYER_ANIMATION_FRAMES = 9;
             }else if(character3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//character 3 selected button clicked
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.PLAYER_ANIMATION_NAME = "Characters\\shipAnim.png";
-                Fartlek.PLAYER_ANIMATION_FRAMES = 3;
+                Fartlek.PLAYER_ANIMATION_NAME = "Characters\\carl.png";
+                Fartlek.PLAYER_ANIMATION_FRAMES = 14;
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//scene1 selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.currentSceneNum = 0;
