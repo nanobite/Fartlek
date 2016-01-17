@@ -46,8 +46,6 @@ public class PlayState extends State {
     private BitmapFont scoreFont;
     private BitmapFont deadFont;
     private FreeTypeFontGenerator generator;
-    private boolean justUnpaused;
-    private boolean musicRepeat;
 
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
@@ -77,8 +75,6 @@ public class PlayState extends State {
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         score = 0;
         musicPos = 0f;
-        justUnpaused = false;
-        musicRepeat = true;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/vp.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter sParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         sParameter.size = 38;
@@ -148,7 +144,6 @@ public class PlayState extends State {
 
     public void gameOver() {
         music.stop();
-        musicRepeat = false;
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
     }
 
@@ -172,10 +167,8 @@ public class PlayState extends State {
                     if (playBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         pauseBtn.setTexture("Buttons\\pausebtn.png");
                         PLAYSTATE_PHASE = Phase.RUNNING;
-                        justUnpaused = true;
                         music.play();
                         music.setPosition(musicPos);
-                        musicRepeat = true;
                         DONE = false;
                     }
                 } else {
@@ -184,10 +177,8 @@ public class PlayState extends State {
                         PLAYSTATE_PHASE = Phase.PAUSE;
                         musicPos = music.getPosition();
                         music.pause();
-                        musicRepeat = false;
                         DONE = true;
                         pauseBtn.setTexture("Buttons\\exitbtn.png");
-                        DONE = true;
                     }
                 }
                 if (PLAYSTATE_PHASE == Phase.DEAD) {
