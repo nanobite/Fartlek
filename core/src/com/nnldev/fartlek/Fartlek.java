@@ -30,6 +30,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 mousePos;
     public static OrthographicCamera cam;
     public static boolean soundEnabled;
+    public static boolean soundFXEnabled;
     public static int scrnHeight;
     public static int scrnVertBezel;
     public static boolean ACCELEROMETER_AVAILABLE;
@@ -57,6 +58,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         PLAYER_ANIMATION_FRAMES = 9;
         SCORES = new ArrayList<Integer>();
         soundEnabled = true;
+        soundFXEnabled = true;
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         Gdx.gl.glClearColor(0.f, 0.f, 0.f, 1);
