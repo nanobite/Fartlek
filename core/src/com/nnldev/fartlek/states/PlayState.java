@@ -144,7 +144,10 @@ public class PlayState extends State {
     }
 
     public void gameOver() {
-        Fartlek.SHOW_AD = true;
+        int showAds =(int)((Math.random()*3)+1);
+        if(showAds == 1){
+            Fartlek.SHOW_AD = true;
+        }
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
     }

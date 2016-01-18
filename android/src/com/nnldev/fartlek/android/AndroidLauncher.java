@@ -23,30 +23,41 @@ public class AndroidLauncher extends AndroidApplication {
         manageAds.start();
     }
 
+    /**
+     * Shows an ad on every resume.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         showAd();
     }
 
+    /**
+     * Shows an ad
+     */
     public void showAd() {
         AdBuddiz.showAd(this);
+        Fartlek.SHOW_AD = false;
     }
 
     /**
      * I love libgdx but I hate that I have to make creative solutions to some problems.
      */
     public class ManageAds extends Thread {
+        /**
+         * Constructor for the thread.
+         */
         ManageAds() {
         }
+        /**
+         * Runs the thread
+         */
         public void run(){
             while(true){
                 if (Fartlek.SHOW_AD) {
                     AdBuddiz.showAd(AndroidLauncher.this);
-                    Fartlek.SHOW_AD = false;
                 }
             }
-
         }
     }
 }
