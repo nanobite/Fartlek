@@ -283,7 +283,8 @@ public class PlayState extends State {
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
             sb.draw(obstacleSet.get(i).getTexture(), obstacleSet.get(i).getPosition().x,
-                    obstacleSet.get(i).getPosition().y, Obstacle.OBSTACLE_WIDTH, Obstacle.OBSTACLE_WIDTH);
+                    obstacleSet.get(i).getPosition().y,  obstacleSet.get(i).getRectangle().width,  
+                    obstacleSet.get(i).getRectangle().height);
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
