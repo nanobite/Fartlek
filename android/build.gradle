@@ -112,7 +112,3 @@ idea {
         }
     }
 }
-
-dependencies {
-    compile project(':AdBuddiz-3.1.9')
-}

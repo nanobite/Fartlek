@@ -4,6 +4,7 @@
  */
 package com.nnldev.fartlek.states;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -143,6 +144,10 @@ public class PlayState extends State {
     }
 
     public void gameOver() {
+        int showAds =(int)((Math.random()*3)+1);
+        if(showAds == 1){
+            Fartlek.SHOW_AD = true;
+        }
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
     }

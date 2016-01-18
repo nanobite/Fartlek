@@ -52,6 +52,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\forestmap.png"};
     public static int currentSongNum;
     public static int currentSceneNum;
+    public static boolean SHOW_AD;
     /**
      * The method where everything is created
      */
