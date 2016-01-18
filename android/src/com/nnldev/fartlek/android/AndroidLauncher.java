@@ -19,8 +19,34 @@ public class AndroidLauncher extends AndroidApplication {
         AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
         AdBuddiz.showAd(this);
+        ManageAds manageAds = new ManageAds();
+        manageAds.start();
     }
-    public void showAd(){
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showAd();
+    }
+
+    public void showAd() {
         AdBuddiz.showAd(this);
+    }
+
+    /**
+     * I love libgdx but I hate that I have to make creative solutions to some problems.
+     */
+    public class ManageAds extends Thread {
+        ManageAds() {
+        }
+        public void run(){
+            while(true){
+                if (Fartlek.SHOW_AD) {
+                    AdBuddiz.showAd(AndroidLauncher.this);
+                    Fartlek.SHOW_AD = false;
+                }
+            }
+
+        }
     }
 }
