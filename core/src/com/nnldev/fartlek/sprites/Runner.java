@@ -18,7 +18,7 @@ public class Runner {
     private Vector3 position;
     private Vector3 velocity;
     private Texture texture;
-    private Rectangle rectangle;
+    private Rectangle[] rectangle;
     private Animation playerAnimation;
     private int health;
     private float horizontalDeceleration = 0.5f;
@@ -45,11 +45,12 @@ public class Runner {
      * @param animFrames The number of frames in the picture t oallow for animation of
      *                   the runner
      */
-    public Runner(String path, int animFrames) {
+    public Runner(String path, int animFrames,Rectangle[] rectangles) {
         this();
         texture = new Texture(path);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
-        rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
+        rectangle = rectangles;
+        //rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
     }
 
@@ -87,12 +88,17 @@ public class Runner {
         }
         position.x += velocity.x;
         position.y += velocity.y;
-        rectangle.y = position.y;
-        rectangle.x = position.x;
+        //changes all rectangles locations
+        for(Rectangle rect: rectangle){
+            rect.y+=velocity.y;
+            rect.x+=velocity.x;
+        }
+        //rectangle.y = position.y;
+        //rectangle.x = position.x;
         if (position.x < 0)
             position.x = 0;
-        if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
-            position.x = Fartlek.WIDTH - rectangle.getWidth();
+        if (position.x + rectangle[0].getWidth() > Fartlek.WIDTH)
+            position.x = Fartlek.WIDTH - rectangle[0].getWidth();
     }
 
     /**
@@ -116,7 +122,7 @@ public class Runner {
      *
      * @return
      */
-    public Rectangle getRectangle() {
+    public Rectangle[] getRectangle() {
         return rectangle;
     }
 
@@ -125,7 +131,7 @@ public class Runner {
      *
      * @param rectangle
      */
-    public void setRectangle(Rectangle rectangle) {
+    public void setRectangle(Rectangle rectangle[]) {
         this.rectangle = rectangle;
     }
 
@@ -145,7 +151,9 @@ public class Runner {
      */
     public void setPosition(Vector3 position) {
         this.position = position;
-        rectangle.setPosition(position.x, position.y);
+        for(Rectangle rect: rectangle){
+            rect.setPosition(position.x, position.y);
+        }
     }
 
     /**
