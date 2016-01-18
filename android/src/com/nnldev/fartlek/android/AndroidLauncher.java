@@ -60,4 +60,28 @@ public class AndroidLauncher extends AndroidApplication {
             }
         }
     }
+    public class ManageAchievements extends Thread{
+        ManageAchievements(){
+            
+        }
+        public void run(){
+            while(true){
+                if(Fartlek.Achievement!=Fartlek.Achievements.NONE){
+                    switch(Fartlek.achievement){
+                        case 5Run:
+                            break;
+                        case 10Run:
+                            break;
+                        case 25Run:
+                            break;
+                        case 50Run:
+                            break;
+                        case 100Run:
+                            break;
+                        case 10Death
+                    }
+                }
+            }
+        }
+    }
 }
