@@ -13,7 +13,6 @@ public abstract class Obstacle {
     protected Rectangle rectangle;
     protected String path; //name of obstacle image, used to compare and make sure there aren't duplicate obstacles
     public int obstacleSpeed = -8;
-    public static final float OBSTACLE_WIDTH = (Fartlek.WIDTH) / 5.5f;
 
     /* constructor
 	path, name of texture
@@ -24,8 +23,12 @@ public abstract class Obstacle {
         this.path = path;
         texture = new Texture(path); //there can be multiple textures for obstacles
         position = new Vector3(x, y, 0); // position
-        velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
-        rectangle = new Rectangle(x, y, OBSTACLE_WIDTH, OBSTACLE_WIDTH);
+        velocity = new Vector3(0, obstacleSpeed, 0);
+        
+    }
+    protected Obstacle(String path, float x, float y, float width, float height) {
+        this(path, x, y);
+        rectangle = new Rectangle(x, y, width, height);
     }
 
     /**
