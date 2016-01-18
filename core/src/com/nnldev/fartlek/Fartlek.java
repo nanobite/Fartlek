@@ -8,6 +8,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,7 +47,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String PLAYER_ANIMATION_NAME;
     public static int PLAYER_ANIMATION_FRAMES;
     public static String SCENE_BACKGROUND;
-    public static Rectangle[] HIT_BOXES;
+    public static Rectangle[] HIT_BOXES={new Rectangle(215, 160, 25, 25)};
     private FPSLogger fpsLogger;
 
     /**
@@ -58,8 +59,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
         PLAYER_ANIMATION_FRAMES = 9;
         SCENE_BACKGROUND = "Scene\\bckg.png";
-        Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png")).getWidth()/2), 160, (new Texture("Items\\box.png")).getWidth()/2, (new Texture("Items\\box.png")).getHeight()/2);
-        HIT_BOXES = {rectangle};
+        //Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png")).getWidth()/2), 160, (new Texture("Items\\box.png")).getWidth()/2, (new Texture("Items\\box.png")).getHeight()/2);
+        //HIT_BOXES = {rectangle};
         SCORES = new ArrayList<Integer>();
         soundEnabled = true;
         batch = new SpriteBatch();

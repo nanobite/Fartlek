@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.*;
 import com.nnldev.fartlek.sprites.*;

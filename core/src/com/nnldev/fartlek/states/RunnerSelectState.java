@@ -1,10 +1,12 @@
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Nano, Nick
@@ -48,6 +50,11 @@ public class RunnerSelectState extends State {
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
                 Fartlek.PLAYER_ANIMATION_FRAMES = 8;
+                Texture texture = new Texture("Characters\\stephen.png");
+                Rectangle rect1 =new Rectangle(240-(texture.getWidth()/16), 160+texture.getHeight()*(1/3), texture.getWidth(), texture.getHeight()*(1/3));
+                Rectangle rect2 =new Rectangle(240-(texture.getWidth()/48), 160, texture.getWidth()*(1/3), texture.getHeight());
+                Rectangle[] rectangles = {rect1,rect2};
+                Fartlek.HIT_BOXES=rectangles;
             }else if(tr8rBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//spinning guy character selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";

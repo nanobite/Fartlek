@@ -97,6 +97,7 @@ public class Runner {
         //rectangle.x = position.x;
         if (position.x < 0)
             position.x = 0;
+            //problem here, hitbox keeps moving
         if (position.x + rectangle[0].getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle[0].getWidth();
     }
