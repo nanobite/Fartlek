@@ -58,7 +58,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
         PLAYER_ANIMATION_FRAMES = 9;
         SCENE_BACKGROUND = "Scene\\bckg.png";
-        Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png"))/2), 160, (new Texture("Items\\box.png"))/2, (new Texture("`Items\\box.png"))/2);
+        Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png"))/2), 160, (new Texture("Items\\box.png"))/2, (new Texture("Items\\box.png"))/2);
         HIT_BOXES = {rectangle};
         SCORES = new ArrayList<Integer>();
         soundEnabled = true;
