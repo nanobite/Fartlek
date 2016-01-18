@@ -34,7 +34,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -92,9 +91,15 @@ project(":core") {
 
 
     dependencies {
+        compile 'com.purplebrain.adbuddiz.sdk:AdBuddiz-Java:3.+'
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    }
+    repositories {
+        maven {
+            url 'http://repository.adbuddiz.com/maven'
+        }
     }
 }
 

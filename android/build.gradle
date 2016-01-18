@@ -1,8 +1,10 @@
 android {
     buildToolsVersion "23.0.2"
     compileSdkVersion 23
-    defaultConfig{
+    defaultConfig {
         multiDexEnabled true
+        minSdkVersion 8
+        targetSdkVersion 23
     }
     sourceSets {
         main {
@@ -15,6 +17,17 @@ android {
             jniLibs.srcDirs = ['libs']
         }
         instrumentTest.setRoot('tests')
+    }
+    productFlavors {
+    }
+}
+dependencies {
+    compile 'com.purplebrain.adbuddiz.sdk:AdBuddiz-Java:3.+'
+}
+
+repositories {
+    maven {
+        url 'http://repository.adbuddiz.com/maven'
     }
 }
 // called every time gradle gets executed, takes the native dependencies of
