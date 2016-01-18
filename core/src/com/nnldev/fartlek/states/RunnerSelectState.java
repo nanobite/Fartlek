@@ -49,6 +49,8 @@ public class RunnerSelectState extends State {
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
                 Fartlek.PLAYER_ANIMATION_FRAMES = 8;
+                //horizonal bar
+                rectangle1 = new Rectangle(240-((new Texture("Characters\\stephen.png")).getWidth()/8), 160+((new Texture("Characters\\stephen.png")).getHeight()/3), ((new Texture("Characters\\stephen.png")).getWidth()/8), ((new Texture("Characters\\stephen.png")).getHeight()/3));
             }else if(tr8rBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//spinning guy character selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
