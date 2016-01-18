@@ -50,7 +50,7 @@ public class PlayState extends State {
         DONE = false;
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES);
+        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,Fartlek.HIT_BOXES);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -228,8 +228,14 @@ public class PlayState extends State {
                 }
                 for (int i = 0; i < obstacleSet.size(); i++) {
                     for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                        if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
+                        boolean hit = false;
+                        for(Rectangle rect: runner.getRectangle()){
+                            if ((rect.overlaps(obstacleSet.get(i)[j].getRectangle())) &&
                                 !obstacleSet.get(i)[j].getEmpty()) {
+                                hit = true;
+                            }
+                        }
+                        if (hit) {
                             gsm.push(new MenuState(gsm));
                             DONE = true;
                             dispose();
