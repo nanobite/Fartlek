@@ -70,7 +70,7 @@ public class PlayState extends State {
         pauseExitPath = "Buttons\\pausebtn.png";
         pauseBtn = new Button(pauseExitPath, (float) (Fartlek.WIDTH * 0.86), (float) (Fartlek.HEIGHT * 0.92), true);
         playBtn = new Button("Buttons\\play.png", (Fartlek.WIDTH / 2), (Fartlek.HEIGHT / 2), true);
-        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES);
+        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,Fartlek.PLAYER_RECT_BUFFER);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -106,7 +106,7 @@ public class PlayState extends State {
 
     public void newObstacles() {
         obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-        int[] obLine = generateObLine();
+        int[] obLine = generateObLine((int) ((Math.random() * 4) + 1),5);
         for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
             if (obLine[i] == 0) {
                 boxTextureName = emptyBoxTextureName;
@@ -117,9 +117,11 @@ public class PlayState extends State {
         }
     }
 
-    public int[] generateObLine() {
-        int[] line = {1, 1, 1, 1, 1};
-        int zeros = (int) ((Math.random() * 4) + 1);
+    public int[] generateObLine(int zeros, int len) {
+        int[] line =new int[len];
+        for(int i=0;i<len;i++){
+            line[i] = 1;
+        }
         for (int i = 0; i < zeros; i++) {
             int spot = (int) (Math.random() * 5);
             while (line[spot] == 0) {

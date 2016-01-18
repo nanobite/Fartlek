@@ -49,14 +49,17 @@ public class RunnerSelectState extends State {
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
                 Fartlek.PLAYER_ANIMATION_FRAMES = 8;
+                Fartlek.PLAYER_RECT_BUFFER = 0.05f;
             }else if(tr8rBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//spinning guy character selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
                 Fartlek.PLAYER_ANIMATION_FRAMES = 9;
+                Fartlek.PLAYER_RECT_BUFFER = 0.05f;
             }else if(character3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//character 3 selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\carl.png";
                 Fartlek.PLAYER_ANIMATION_FRAMES = 14;
+                Fartlek.PLAYER_RECT_BUFFER = 0.1f;
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//scene1 selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.currentSceneNum = 0;

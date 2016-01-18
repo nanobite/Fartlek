@@ -53,6 +53,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static int currentSongNum;
     public static int currentSceneNum;
     public static boolean SHOW_AD;
+    public static float PLAYER_RECT_BUFFER = 0.05f;
     /**
      * The method where everything is created
      */
