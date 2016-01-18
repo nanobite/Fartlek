@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class Box extends Obstacle {
 	private int health;
+	public static final float BOX_WIDTH = (Fartlek.WIDTH) / 5.5f;
 
 	/**
 	 * Creates a
@@ -19,7 +20,8 @@ public class Box extends Obstacle {
 	 * @param health
 	 */
 	public Box(String path, float x, float y, int health) {
-		super(path, x, y);
+		super(path, x, y, BOX_WIDTH, BOX_WIDTH);
+		///this.health = health; -tentative
 	}
 
 	/**
