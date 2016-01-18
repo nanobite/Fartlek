@@ -19,6 +19,8 @@ public class Runner {
     private Vector3 velocity;
     private Texture texture;
     private Rectangle rectangle;
+    public ArrayList<Bullet> bullets;
+    public boolean shoot;
     private Animation playerAnimation;
     private int health;
     private float horizontalSpeed;
@@ -44,6 +46,7 @@ public class Runner {
         horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
+        bullets = new ArrayList<Bullet>();
     }
 
     /**
@@ -86,6 +89,11 @@ public class Runner {
             position.x = 0;
         if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle.getWidth();
+        if (shoot) {
+            for (int i = 0; i < bullets.size(); i++) {
+                bullets.get(i).update(dt);
+            }
+        }
     }
 
     /**
@@ -184,6 +192,8 @@ public class Runner {
      * Adds a new bullet to the bullet timer
      */
     public void shoot() {
+        bullets.add(new Bullet("Buttons\\bullet.png", getPosition().x));
+        shoot = true;
     }
 
     public void dispose() {

@@ -19,16 +19,16 @@ public class SettingsState extends State {
      */
     public SettingsState(GameStateManager gsm) {
         super(gsm);
-        exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
         if (Fartlek.soundEnabled) {
             musicBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         } else {
             musicBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3, Fartlek.HEIGHT * 2 / 3, true);
         }
         if (Fartlek.soundFXEnabled) {
-            soundFXBtn = new Button("Buttons\\sound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
+            soundFXBtn = new Button("Buttons\\soundfx.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
         } else {
-            soundFXBtn = new Button("Buttons\\nosound.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
+            soundFXBtn = new Button("Buttons\\nosoundfx.png", Fartlek.WIDTH / 3 * 2, Fartlek.HEIGHT * 2 / 3, true);
         }
     }
 
@@ -52,12 +52,12 @@ public class SettingsState extends State {
                 }
             }
             if (soundFXBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                if (soundFXBtn.getPath().equals("Buttons\\sound.png")) {
+                if (soundFXBtn.getPath().equals("Buttons\\soundfx.png")) {
                     Fartlek.soundFXEnabled = false;
-                    soundFXBtn.setTexture("Buttons\\nosound.png");
+                    soundFXBtn.setTexture("Buttons\\nosoundfx.png");
                 } else {
                     Fartlek.soundFXEnabled = true;
-                    soundFXBtn.setTexture("Buttons\\sound.png");
+                    soundFXBtn.setTexture("Buttons\\soundfx.png");
                 }
             }
         }
