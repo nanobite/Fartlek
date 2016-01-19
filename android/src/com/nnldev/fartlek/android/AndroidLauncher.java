@@ -18,9 +18,15 @@ public class AndroidLauncher extends AndroidApplication {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
-        AdBuddiz.showAd(this);
+        showAd();
         ManageAds manageAds = new ManageAds();
         manageAds.start();
+    }
+
+    public void showAd() {
+        AdBuddiz.showAd(this);
+        System.out.println("Ad Shown");
+        Fartlek.SHOW_AD = false;
     }
 
     /**
@@ -33,14 +39,6 @@ public class AndroidLauncher extends AndroidApplication {
     }
 
     /**
-     * Shows an ad
-     */
-    public void showAd() {
-        AdBuddiz.showAd(this);
-        Fartlek.SHOW_AD = false;
-    }
-
-    /**
      * I love libgdx but I hate that I have to make creative solutions to some problems.
      */
     public class ManageAds extends Thread {
@@ -49,37 +47,14 @@ public class AndroidLauncher extends AndroidApplication {
          */
         ManageAds() {
         }
+
         /**
          * Runs the thread
          */
-        public void run(){
-            while(true){
+        public void run() {
+            while (true) {
                 if (Fartlek.SHOW_AD) {
-                    AdBuddiz.showAd(AndroidLauncher.this);
-                }
-            }
-        }
-    }
-    public class ManageAchievements extends Thread{
-        ManageAchievements(){
-            
-        }
-        public void run(){
-            while(true){
-                if(Fartlek.Achievement!=Fartlek.Achievements.NONE){
-                    switch(Fartlek.achievement){
-                        case 5Run:
-                            break;
-                        case 10Run:
-                            break;
-                        case 25Run:
-                            break;
-                        case 50Run:
-                            break;
-                        case 100Run:
-                            break;
-                        case 10Death
-                    }
+                    showAd();
                 }
             }
         }

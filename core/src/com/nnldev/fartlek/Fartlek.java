@@ -53,17 +53,12 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static int currentSongNum;
     public static int currentSceneNum;
     public static boolean SHOW_AD;
-    public Achievements achievement;
-    public enum Achievements{
-        NONE,5Run, 25Run,50Run, 100Run, 10Run
-    }
+    public static float PLAYER_RECT_BUFFER = 0.05f;
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
-        SHOW_AD = false;
-        achievement = Achievements.NONE;
         currentSongNum = 0;
         currentSceneNum = 0;
         fpsLogger = new FPSLogger();

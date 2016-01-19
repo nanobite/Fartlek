@@ -28,6 +28,7 @@ public class Runner {
     private Sound moveSound;
     private float soundTimer;
     private boolean soundPlayable;
+    private float rectBuffer = 0.05f;
 
     public Runner() {
         velocity = new Vector3(0, 0, 0);
@@ -50,10 +51,14 @@ public class Runner {
         texture = new Texture(path);
         velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
-        rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
+        rectangle = new Rectangle(position.x+(texture.getWidth() / animFrames)*(rectBuffer), position.y+(texture.getHeight())*(rectBuffer), (texture.getWidth() / animFrames)*(1-(2*rectBuffer)), (texture.getHeight())*(1-(2*rectBuffer)));
         horizontalSpeed = 8;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
+    }
+    public Runner(String path, int animFrames,float rectBuffer){
+        this(path,animFrames);
+        this.rectBuffer = rectBuffer;
     }
 
     /**
@@ -62,7 +67,6 @@ public class Runner {
     private void playMoveSound() {
         if (soundPlayable) {
             moveSound.stop();
-            moveSound.play(0.1f);
             soundPlayable = false;
         }
 
