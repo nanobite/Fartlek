@@ -3,7 +3,7 @@ android {
     compileSdkVersion 23
     defaultConfig {
         multiDexEnabled true
-        minSdkVersion 8
+        minSdkVersion 10
         targetSdkVersion 23
     }
     sourceSets {

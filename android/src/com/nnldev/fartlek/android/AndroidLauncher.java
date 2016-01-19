@@ -16,7 +16,7 @@ public class AndroidLauncher extends AndroidApplication {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Fartlek(), config);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
+        AdBuddiz.setPublisherKey("3`8e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
         showAd();
         ManageAds manageAds = new ManageAds();
