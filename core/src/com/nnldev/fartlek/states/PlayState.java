@@ -39,8 +39,6 @@ public class PlayState extends State {
     private float musicPos;
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle> obstacleSet;
-    private String boxTextureName;
-    private String enemyTextureName;
     private int obTypeChoose;
     private String tileTextureName;
     private int score;
@@ -59,7 +57,6 @@ public class PlayState extends State {
     private int collatCount;
     private boolean drawCollat;
     public static int killerID;
-    private boolean collatScore;
     private boolean justUnpaused;
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
@@ -72,9 +69,7 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         DONE = false;
-        boxTextureName = "Items\\box.png";
         tileTextureName = "Scene\\tile1.png";
-        enemyTextureName = "Enemies\\trump.png";
         pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
         pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924),
                 (float) (pauseBtn.getTexture().getWidth() * 1.01), (float) (pauseBtn.getTexture().getHeight() * 1.01));
@@ -124,7 +119,6 @@ public class PlayState extends State {
         collatCount = 0;
         drawCollat = false;
         killerID = -1;
-        collatScore = false;
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
     }
@@ -140,9 +134,9 @@ public class PlayState extends State {
         for (int i = 0; i < amt; i++) {
             obTypeChoose = (int) (Math.random() * 2);
             if (obTypeChoose == 1) {
-                obstacleSet.add(new Box(boxTextureName, generateObXPos(), generateObYPos(prevY), 100));
+                obstacleSet.add(new Box(Fartlek.BOX_TEXTURE, generateObXPos(), generateObYPos(prevY), 100));
             } else {
-                obstacleSet.add(new Enemy(enemyTextureName, generateObXPos(), generateObYPos(prevY), 100));
+                obstacleSet.add(new Enemy(Fartlek.ENEMY_TEXTURE, generateObXPos(), generateObYPos(prevY), 100));
             }
             prevY++;
         }
@@ -312,6 +306,7 @@ public class PlayState extends State {
                             }
                         } else {
                             runner.bullets.remove(j);
+                            killerID = -1;
                         }
                     }
                 }
