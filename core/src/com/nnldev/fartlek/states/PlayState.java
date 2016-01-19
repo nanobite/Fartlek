@@ -34,7 +34,6 @@ public class PlayState extends State {
     public static int currentSongNum;
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
-
     public enum Phase {
         RUNNING, PAUSE
     }
@@ -51,7 +50,12 @@ public class PlayState extends State {
         DONE = false;
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
-        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,Fartlek.HIT_BOXES);
+        //makes the hitboxes
+        Rectangle rect1 =new Rectangle(240-(texture.getWidth()/16), 160+texture.getHeight()*(1/3), texture.getWidth(), texture.getHeight()*(1/3));
+        Rectangle rect2 =new Rectangle(240-(texture.getWidth()/48), 160, texture.getWidth()*(1/3), texture.getHeight());
+        Rectangle[] rectangles = {rect1,rect2};
+        //creates runner
+        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,rectangles);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -227,7 +231,7 @@ public class PlayState extends State {
                         }
                     }
                 }
-                for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int i = 0; i < obstacleSet.size(); i++) {//collision detection
                     for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                         boolean hit = false;
                         for(Rectangle rect: runner.getRectangle()){
