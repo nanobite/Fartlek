@@ -50,7 +50,8 @@ public class PlayState extends State {
     private boolean dead;
     private boolean pause;
     private boolean justUnpaused;
-    public static String[] songs = {"Music\\song1.mp3"};
+    public static String[] songs = {"Music\\exitthepremises" +
+            ".mp3"};
     public static int currentSongNum;
 
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
