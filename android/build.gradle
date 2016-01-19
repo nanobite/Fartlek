@@ -1,5 +1,5 @@
 android {
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.0'
     compileSdkVersion 23
     defaultConfig {
         multiDexEnabled true
@@ -20,9 +20,12 @@ android {
     }
     productFlavors {
     }
+    buildTypes {
+    }
 }
 dependencies {
     compile 'com.purplebrain.adbuddiz.sdk:AdBuddiz-Java:3.+'
+    compile 'com.android.support:support-v4:23.1.1'
 }
 
 repositories {
