@@ -38,6 +38,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     private GameStateManager gsm;
     private float accDelta;
     public Texture border;
+    public static String BOX_TEXTURE;
+    public static String ENEMY_TEXTURE;
     //private FPSLogger fpsLogger;
 
     /**
@@ -63,6 +65,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
         border = new Texture("Extra\\border.png");
+        BOX_TEXTURE = "";//default
+        ENEMY_TEXTURE = "";//default
     }
 
     /**
