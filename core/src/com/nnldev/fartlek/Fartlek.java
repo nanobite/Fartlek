@@ -47,7 +47,6 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String PLAYER_ANIMATION_NAME;
     public static int PLAYER_ANIMATION_FRAMES;
     public static String SCENE_BACKGROUND;
-    public static Rectangle[] HIT_BOXES={new Rectangle(215, 160, 25, 25)};
     private FPSLogger fpsLogger;
 
     /**
