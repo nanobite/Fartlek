@@ -65,8 +65,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
         border = new Texture("Extra\\border.png");
-        BOX_TEXTURE = "";//default
-        ENEMY_TEXTURE = "";//default
+        BOX_TEXTURE = "Items\\box.png";//default
+        ENEMY_TEXTURE = "Enemies\\trump.png";//default
     }
 
     /**
