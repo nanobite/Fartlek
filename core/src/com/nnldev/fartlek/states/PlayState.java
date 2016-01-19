@@ -32,7 +32,6 @@ public class PlayState extends State {
     private Rectangle pauseRect;
     private Rectangle playRect;
     private Runner runner;
-    private Bullet bullet;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
     private TouchSector bottomMiddle;
@@ -50,11 +49,17 @@ public class PlayState extends State {
     private int prevY;
     private BitmapFont scoreFont;
     private BitmapFont deadFont;
+    private BitmapFont collatFont;
     private float scoreFontX;
     private float scoreFontY;
+    private float collatFontY;
     private FreeTypeFontGenerator generator;
     private boolean dead;
     private boolean pause;
+    private int collatCount;
+    private boolean drawCollat;
+    public static int killerID;
+    private boolean collatScore;
     private boolean justUnpaused;
     public static String[] songs = {"Music\\song1.mp3"};
     public static int currentSongNum;
@@ -69,7 +74,7 @@ public class PlayState extends State {
         DONE = false;
         boxTextureName = "Items\\box.png";
         tileTextureName = "Scene\\tile1.png";
-        enemyTextureName = "Enemies\\trump.gif";
+        enemyTextureName = "Enemies\\trump.png";
         pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
         pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924),
                 (float) (pauseBtn.getTexture().getWidth() * 1.01), (float) (pauseBtn.getTexture().getHeight() * 1.01));
@@ -96,10 +101,15 @@ public class PlayState extends State {
         FreeTypeFontGenerator.FreeTypeFontParameter dParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         dParameter.size = 50;
         dParameter.color = Color.BLACK;
+        FreeTypeFontGenerator.FreeTypeFontParameter cParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        cParameter.size = 22;
+        cParameter.color = Color.RED;
         scoreFont = generator.generateFont(sParameter);
         deadFont = generator.generateFont(dParameter);
+        collatFont = generator.generateFont(cParameter);
         scoreFontX = Fartlek.WIDTH / 35;
         scoreFontY = (Fartlek.HEIGHT - (Fartlek.HEIGHT / 60));
+        collatFontY = 700;
         tiles = 3;
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
@@ -111,6 +121,10 @@ public class PlayState extends State {
         obTypeChoose = 0;
         prevY = 0;
         newObstacles(4);
+        collatCount = 0;
+        drawCollat = false;
+        killerID = -1;
+        collatScore = false;
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
     }
@@ -194,7 +208,7 @@ public class PlayState extends State {
                 if (!dead) {
                     if (!pause) {
                         // If the x,y position of the click is in the pause button
-                        if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             pause = true;
                             musicPos = music.getPosition();
                             music.stop();
@@ -202,13 +216,13 @@ public class PlayState extends State {
                             pauseBtn.setTexture("Buttons\\exitbtn.png");
                         }
                     } else {
-                        if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             DONE = true;
                             dispose();
                             gsm.push(new MenuState(gsm));
                         }
                         // If the x,y position of the click is in the play button
-                        if (playBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                        if (playBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             pause = false;
                             justUnpaused = true;
                             music.play();
@@ -218,12 +232,12 @@ public class PlayState extends State {
                         }
                     }
                 } else {
-                    if (restartBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    if (restartBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
                         MenuState.startGameSound.play(0.75f);
                         gsm.push(new PlayState(gsm));
                     }
-                    if (quitBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    if (quitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
                         gsm.push(new MenuState(gsm));
                     }
@@ -287,12 +301,29 @@ public class PlayState extends State {
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.bullets.size(); j++) {
-                    if ((runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle()))
-                    && (obstacleSet.get(i).getPath().equals(enemyTextureName))) {
-                        obstacleSet.get(i).dispose();
-                        obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
+                    if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
+                        if (obstacleSet.get(i).getPath().equals(enemyTextureName)) {
+                            obstacleSet.get(i).dispose();
+                            obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
+                            score += 5;
+                            runner.bullets.get(j).kills++;
+                            if (killerID == -1) {
+                                killerID = j;
+                            }
+                        } else {
+                            runner.bullets.remove(j);
+                        }
                     }
                 }
+            }
+            for (int i = 0; i < runner.bullets.size(); i++) {
+                if (i == killerID) {
+                    collatCount = runner.bullets.get(i).kills;
+                    drawCollat = true;
+                }
+            }
+            if (collatCount > 1) {
+
             }
         }
 
@@ -323,6 +354,14 @@ public class PlayState extends State {
             }
         }
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
+        if (drawCollat) {
+            collatFont.draw(sb, "" + collatCount, Fartlek.WIDTH / 2, collatFontY);
+            collatFontY++;
+            if (collatFontY > Fartlek.HEIGHT) {
+                drawCollat = false;
+                collatFontY = 700;
+            }
+        }
         if (dead) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
             sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,

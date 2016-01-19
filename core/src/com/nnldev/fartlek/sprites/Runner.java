@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Animation;
+import com.nnldev.fartlek.states.PlayState;
 
 import java.util.ArrayList;
 
@@ -102,8 +103,9 @@ public class Runner {
         if (shoot) {
             for (int i = 0; i < bullets.size(); i++) {
                 bullets.get(i).update(dt);
-                if (bullets.get(i).update(dt)) {
+                if (bullets.get(i).done) {
                     bullets.remove(i);
+                    PlayState.killerID = -1;
                 }
             }
         }

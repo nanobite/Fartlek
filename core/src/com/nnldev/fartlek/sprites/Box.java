@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
 /**
- * Created by Nano on 12/12/2015.
+ * Created by Lazar on 12/12/2015.
  */
 public class Box extends Obstacle {
 	private int health;

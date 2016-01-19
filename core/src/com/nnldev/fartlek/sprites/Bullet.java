@@ -17,7 +17,8 @@ public class Bullet {
     private String path;
     private Rectangle rectangle;
     private float verticalSpeed;
-    public final int damage = 50;
+    public int kills;
+    public boolean done;
 
     /**
      * Main constuctor for bullet
@@ -26,6 +27,8 @@ public class Bullet {
     public Bullet() {
         position = new Vector3(0, 160, 0);
         verticalSpeed = 16;
+        kills = 0;
+        done = false;
     }
 
     /**
@@ -43,15 +46,14 @@ public class Bullet {
         rectangle = new Rectangle(x, getYPosition(), 32, 32);
     }
 
-    public boolean update(float dt) {
+    public void update(float dt) {
         setYPosition(position.y + velocity.y);
         rectangle.setY(position.y + velocity.y);
         if (position.y > Fartlek.HEIGHT) {
             velocity.set(0, 0, 0);
             dispose();
-            return true;
+            done = true;
         }
-        return false;
     }
 
     public void render(SpriteBatch sb) {
