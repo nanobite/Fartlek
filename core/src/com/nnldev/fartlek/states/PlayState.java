@@ -126,14 +126,14 @@ public class PlayState extends State {
 
     public float generateObXPos() {
         float xPos = -1;
-        while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Obstacle.OBSTACLE_WIDTH))) {
+        while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Box.BOX_WIDTH))) {
             xPos = (float) (Math.random() * Fartlek.WIDTH);
         }
         return xPos;
     }
 
     public float generateObYPos(int prevY) {
-        float yPos = obstacleSet.get(prevY).getYPosition() + Obstacle.OBSTACLE_WIDTH;
+        float yPos = obstacleSet.get(prevY).getYPosition() + Box.BOX_WIDTH;
         yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + (runner.getRectangle().height / 2);
         return yPos;
     }
@@ -155,9 +155,20 @@ public class PlayState extends State {
     public void gameOver() {
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 4, Fartlek.HEIGHT / 5 * 2, false);
+        Rectangle restartRect = new Rectangle(restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,
+                Fartlek.WIDTH / 6);
+        restartBtn.setRectangle(restartRect);
         quitBtn = new Button("Buttons\\exitbtn.png", Fartlek.WIDTH - ((Fartlek.WIDTH / 4) + (Fartlek.WIDTH / 6)),
                 Fartlek.HEIGHT / 5 * 2, false);
+        Rectangle quitRect = new Rectangle(quitBtn.getPosition().x, quitBtn.getPosition().y, Fartlek.WIDTH / 6, Fartlek.WIDTH / 6);
+        quitBtn.setRectangle((quitRect));
         scoreFontX = (float) (Fartlek.WIDTH * 0.32);
+        StringBuilder sb = new StringBuilder();
+        sb.append(score);
+        String sScore = sb.toString();
+        if (sScore.length() > 1) {
+            scoreFontX -= 9 * (sScore.length() - 1);
+        }
         scoreFontY = (Fartlek.HEIGHT / 5) * 3;
     }
 
@@ -252,7 +263,7 @@ public class PlayState extends State {
             for (int i = 0; i < obstacleSet.size(); i++) {
                 if ((obstacleSet.get(i).getPosition().y + obstacleSet.get(i).getRectangle().height) < 0) {
                     obstacleSet.remove(0);
-                    prevY -= 1;
+                    prevY--;
                     newObstacles(1);
                     score++;
                 }
@@ -264,6 +275,17 @@ public class PlayState extends State {
                     gameOver();
                 }
             }
+            /*
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                for (int j = 0; j < runner.bullets.size(); j++) {
+                    if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
+                        obstacleSet.get(i).dispose();
+                        obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
+                        break;
+                    }
+                }
+            }
+            */
         }
 
     }
@@ -283,10 +305,15 @@ public class PlayState extends State {
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
             sb.draw(obstacleSet.get(i).getTexture(), obstacleSet.get(i).getPosition().x,
-                    obstacleSet.get(i).getPosition().y,  obstacleSet.get(i).getRectangle().width,  
+                    obstacleSet.get(i).getPosition().y, obstacleSet.get(i).getRectangle().width,
                     obstacleSet.get(i).getRectangle().height);
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
+        if (runner.shoot) {
+            for (int i = 0; i < runner.bullets.size(); i++) {
+                runner.bullets.get(i).render(sb);
+            }
+        }
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
         if (dead) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
@@ -302,11 +329,7 @@ public class PlayState extends State {
                         playBtn.getRectangle().height);
             }
         }
-        if (runner.shoot) {
-            for (int i = 0; i < runner.bullets.size(); i++) {
-                runner.bullets.get(i).render(sb);
-            }
-        }
+
         sb.end();
     }
 
@@ -322,6 +345,12 @@ public class PlayState extends State {
             quitBtn.dispose();
         }
         runner.dispose();
+        if (runner.bullets.size() > 0) {
+            for (int i = 0; i < runner.bullets.size(); i++) {
+                runner.bullets.get(i).dispose();
+            }
+            runner.bullets.clear();
+        }
         music.stop();
         music.dispose();
         generator.dispose();

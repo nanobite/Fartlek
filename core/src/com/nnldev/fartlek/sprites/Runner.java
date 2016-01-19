@@ -21,6 +21,8 @@ public class Runner {
     private Rectangle rectangle;
     public ArrayList<Bullet> bullets;
     public boolean shoot;
+    public boolean reloaded;
+    public float shotTimer;
     private Animation playerAnimation;
     private int health;
     private float horizontalSpeed;
@@ -47,6 +49,9 @@ public class Runner {
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
         bullets = new ArrayList<Bullet>();
+        shoot = false;
+        reloaded = false;
+        shotTimer = 0;
     }
 
     /**
@@ -89,9 +94,17 @@ public class Runner {
             position.x = 0;
         if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle.getWidth();
+        shotTimer += dt;
+        if (shotTimer >= 1) {
+            shotTimer = 0;
+            reloaded = true;
+        }
         if (shoot) {
             for (int i = 0; i < bullets.size(); i++) {
                 bullets.get(i).update(dt);
+                if (bullets.get(i).update(dt)) {
+                    bullets.remove(i);
+                }
             }
         }
     }
@@ -192,8 +205,11 @@ public class Runner {
      * Adds a new bullet to the bullet timer
      */
     public void shoot() {
-        bullets.add(new Bullet("Buttons\\bullet.png", getPosition().x));
-        shoot = true;
+        if (reloaded) {
+            bullets.add(new Bullet("Items\\bullet.png", getPosition().x));
+            shoot = true;
+            reloaded = false;
+        }
     }
 
     public void dispose() {

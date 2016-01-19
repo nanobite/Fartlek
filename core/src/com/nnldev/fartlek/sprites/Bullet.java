@@ -2,15 +2,14 @@ package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
-import com.nnldev.fartlek.essentials.Animation;
 
-/**
- * Created by Nano on 20/12/2015.
- */
+//Created by Lazar
+//01/17/2016
+//Bullet class, used to create bullet objects for the runner to shoot
+
 public class Bullet {
     private Vector3 position;
     private Vector3 velocity;
@@ -19,31 +18,43 @@ public class Bullet {
     private Rectangle rectangle;
     private float verticalSpeed;
 
+    /**
+     * Main constuctor for bullet
+     * Sets a basic position and its speed
+     */
     public Bullet() {
         position = new Vector3(0, 160, 0);
-        verticalSpeed = 8;
+        verticalSpeed = 16;
     }
 
+    /**
+     * Second constructor for Bullet
+     * Sets texture, x position, velocity and its rectangle hitbox
+     * @param path the string that is the path to the bullets image
+     * @param x the x position of the runner at the current point, used to determine where the bullet will be shot from
+     */
     public Bullet(String path, float x) {
         this();
         this.path = path;
         texture = new Texture(path);
         setXPosition(x);
         velocity = new Vector3(0, verticalSpeed, 0);
-        rectangle = new Rectangle(x, getYPosition(), texture.getWidth() / 6, texture.getHeight() / 6);
+        rectangle = new Rectangle(x, getYPosition(), 32, 32);
     }
 
-    public void update(float dt) {
+    public boolean update(float dt) {
         setYPosition(position.y + velocity.y);
         rectangle.setY(position.y + velocity.y);
         if (position.y > Fartlek.HEIGHT) {
             velocity.set(0, 0, 0);
             dispose();
+            return true;
         }
+        return false;
     }
 
     public void render(SpriteBatch sb) {
-        sb.draw(texture, getXPosition(), getYPosition(), texture.getWidth() / 6, texture.getHeight() / 6);
+        sb.draw(texture, getXPosition(), getYPosition(), 32, 32);
     }
 
     public Texture getTexture() {

@@ -3,6 +3,7 @@ package com.nnldev.fartlek.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.nnldev.fartlek.Fartlek;
 
 /**
  * Created by Nano on 12/12/2015.
