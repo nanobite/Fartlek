@@ -1,14 +1,12 @@
 /**
- * @author Nano, Nick
+ * @author Nano
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -28,7 +26,9 @@ public class PlayState extends State {
     private Button pauseBtn;
     private Button playBtn;
     private Button restartBtn;
-    private String pauseExitPath;
+    private Button quitBtn;
+    private Rectangle pauseRect;
+    private Rectangle playRect;
     private Runner runner;
     private TouchSector bottomLeft;
     private TouchSector bottomRight;
@@ -36,17 +36,22 @@ public class PlayState extends State {
     private Music music;
     private float musicPos;
     private ArrayList<Scene> sceneTiles;
-    private Box emptyBox = new Box("Items\\emptybox.png", 0, 0, 0, true);
-    private ArrayList<Obstacle[]> obstacleSet;
-    private String emptyBoxTextureName = "Items\\emptybox.png";
-    private String realBoxTextureName;
+    private ArrayList<Obstacle> obstacleSet;
     private String boxTextureName;
     private int score;
     private boolean DONE;
-    private int tiles = 3;
+    private int tiles;
+    private int prevY;
     private BitmapFont scoreFont;
     private BitmapFont deadFont;
+    private float scoreFontX;
+    private float scoreFontY;
     private FreeTypeFontGenerator generator;
+    private boolean dead;
+    private boolean pause;
+    private boolean justUnpaused;
+    public static String[] songs = {"Music\\song1.mp3"};
+    public static int currentSongNum;
 
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
@@ -65,17 +70,27 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         DONE = false;
-        realBoxTextureName = "Items\\woodbox.png";
-        tileTextureName = Fartlek.scenes[Fartlek.currentSceneNum];
-        pauseExitPath = "Buttons\\pausebtn.png";
-        pauseBtn = new Button(pauseExitPath, (float) (Fartlek.WIDTH * 0.86), (float) (Fartlek.HEIGHT * 0.92), true);
-        playBtn = new Button("Buttons\\play.png", (Fartlek.WIDTH / 2), (Fartlek.HEIGHT / 2), true);
-        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,Fartlek.PLAYER_RECT_BUFFER);
+        boxTextureName = "Items\\woodbox.png";
+        tileTextureName = "Scene\\forestmap.png";
+        pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
+        pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924),
+                (float) (pauseBtn.getTexture().getWidth() * 1.01), (float) (pauseBtn.getTexture().getHeight() * 1.01));
+        pauseBtn.setTexture("Buttons\\pause.png");
+        playBtn = new Button("Buttons\\play.png", (Fartlek.WIDTH / 2 - Fartlek.WIDTH / 6),
+                (Fartlek.HEIGHT / 2 - Fartlek.HEIGHT / 8), false);
+        playRect = new Rectangle(playBtn.getPosition().x, playBtn.getPosition().y,
+                (Fartlek.WIDTH / 3), (Fartlek.HEIGHT / 4));
+        pauseBtn.setRectangle(pauseRect);
+        playBtn.setRectangle(playRect);
+        runner = new Runner("Characters\\stephen.png", 8);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         score = 0;
+        dead = false;
+        pause = false;
         musicPos = 0f;
+        justUnpaused = false;
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/vp.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter sParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         sParameter.size = 38;
@@ -85,16 +100,20 @@ public class PlayState extends State {
         dParameter.color = Color.BLACK;
         scoreFont = generator.generateFont(sParameter);
         deadFont = generator.generateFont(dParameter);
+        scoreFontX = Fartlek.WIDTH / 35;
+        scoreFontY = (Fartlek.HEIGHT - (Fartlek.HEIGHT / 60));
+        tiles = 3;
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
-        obstacleSet = new ArrayList<Obstacle[]>();
-        newObstacles();
-        startMusic(Fartlek.songs[Fartlek.currentSongNum]);
-        PLAYSTATE_PHASE = Phase.RUNNING;
-        Fartlek.SCORE = 0;
+        obstacleSet = new ArrayList<Obstacle>();
+        obstacleSet.add(new Box(boxTextureName, generateObXPos(), Fartlek.HEIGHT * 2, 100));
+        prevY = 0;
+        newObstacles(4);
+        currentSongNum = 0;
+        startMusic(songs[currentSongNum]);
     }
 
     /**
@@ -104,32 +123,25 @@ public class PlayState extends State {
         sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
 
-    public void newObstacles() {
-        obstacleSet.add(new Obstacle[Obstacle.OBS_PER_ROW]);
-        int[] obLine = generateObLine((int) ((Math.random() * 4) + 1),5);
-        for (int i = 0; i < obstacleSet.get(obstacleSet.size() - 1).length; i++) {
-            if (obLine[i] == 0) {
-                boxTextureName = emptyBoxTextureName;
-            } else {
-                boxTextureName = realBoxTextureName;
-            }
-            obstacleSet.get(obstacleSet.size() - 1)[i] = new Box(boxTextureName, 20 + (i * 90), Fartlek.HEIGHT, 100);
+    public void newObstacles(int amt) {
+        for (int i = 0; i < amt; i++) {
+            obstacleSet.add(new Box(boxTextureName, generateObXPos(), generateObYPos(prevY), 100));
+            prevY++;
         }
     }
 
-    public int[] generateObLine(int zeros, int len) {
-        int[] line =new int[len];
-        for(int i=0;i<len;i++){
-            line[i] = 1;
+    public float generateObXPos() {
+        float xPos = -1;
+        while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Box.BOX_WIDTH))) {
+            xPos = (float) (Math.random() * Fartlek.WIDTH);
         }
-        for (int i = 0; i < zeros; i++) {
-            int spot = (int) (Math.random() * 5);
-            while (line[spot] == 0) {
-                spot = (int) (Math.random() * 5);
-            }
-            line[spot] = 0;
-        }
-        return line;
+        return xPos;
+    }
+
+    public float generateObYPos(int prevY) {
+        float yPos = obstacleSet.get(prevY).getYPosition() + Box.BOX_WIDTH;
+        yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + (runner.getRectangle().height / 2);
+        return yPos;
     }
 
     /**
@@ -141,17 +153,18 @@ public class PlayState extends State {
         music = Gdx.audio.newMusic(Gdx.files.internal(song));
         music.setLooping(true);
         music.setVolume(0.5f);
-        if (Fartlek.soundEnabled)
+        if (Fartlek.soundEnabled) {
             music.play();
+        }
     }
 
     public void gameOver() {
-        int showAds =(int)((Math.random()*3)+1);
-        if(showAds == 1){
-            Fartlek.SHOW_AD = true;
-        }
         music.stop();
-        restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2, true);
+        restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 4, Fartlek.HEIGHT / 5 * 2, false);
+        quitBtn = new Button("Buttons\\exitbtn.png", Fartlek.WIDTH - ((Fartlek.WIDTH / 4) + (Fartlek.WIDTH / 6)),
+                Fartlek.HEIGHT / 5 * 2, false);
+        scoreFontX = (float) (Fartlek.WIDTH * 0.32);
+        scoreFontY = (Fartlek.HEIGHT / 5) * 3;
     }
 
 
@@ -239,32 +252,23 @@ public class PlayState extends State {
                 }
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    obstacleSet.get(i)[j].update(dt);
+                obstacleSet.get(i).update(dt);
+            }
+            for (int i = 0; i < obstacleSet.size(); i++) {
+                if ((obstacleSet.get(i).getPosition().y + obstacleSet.get(i).getRectangle().height) < 0) {
+                    obstacleSet.remove(0);
+                    prevY -= 1;
+                    newObstacles(1);
+                    score++;
                 }
             }
             for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if ((obstacleSet.get(i)[j].getPosition().y + obstacleSet.get(i)[j].getRectangle().height) < 0) {
-                        obstacleSet.remove(i);
-                        newObstacles();
-                        score++;
-                        break;
-                    }
+                if (runner.getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
+                    DONE = true;
+                    dead = true;
+                    gameOver();
                 }
             }
-            for (int i = 0; i < obstacleSet.size(); i++) {
-                for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                    if ((runner.getRectangle().overlaps(obstacleSet.get(i)[j].getRectangle())) &&
-                            obstacleSet.get(i)[j].getPath().equals(realBoxTextureName)) {
-                        DONE = true;
-                        PLAYSTATE_PHASE = Phase.DEAD;
-                        gameOver();
-                        j = Obstacle.OBS_PER_ROW;
-                    }
-                }
-            }
-
         }
 
     }
@@ -283,21 +287,29 @@ public class PlayState extends State {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
-            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
-                        obstacleSet.get(i)[j].getPosition().y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
-            }
+            sb.draw(obstacleSet.get(i).getTexture(), obstacleSet.get(i).getPosition().x,
+                    obstacleSet.get(i).getPosition().y,  obstacleSet.get(i).getRectangle().width,  
+                    obstacleSet.get(i).getRectangle().height);
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
-        scoreFont.draw(sb, "Score: " + score, Fartlek.WIDTH / 35, (Fartlek.HEIGHT - (Fartlek.HEIGHT / 70)));
-        if (PLAYSTATE_PHASE == Phase.DEAD) {
-            deadFont.draw(sb, "GAME OVER", Fartlek.WIDTH / 5, (Fartlek.HEIGHT / 3) * 2);
-            sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, restartBtn.getRectangle().width,
-                    restartBtn.getRectangle().height);
+        scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
+        if (dead) {
+            deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
+            sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,
+                    Fartlek.WIDTH / 6);
+            sb.draw(quitBtn.getTexture(), quitBtn.getPosition().x, quitBtn.getPosition().y, Fartlek.WIDTH / 6,
+                    Fartlek.WIDTH / 6);
         } else {
-            sb.draw(pauseBtn.getTexture(), pauseBtn.getPosition().x, pauseBtn.getPosition().y);
-            if (PLAYSTATE_PHASE == Phase.PAUSE) {
-                sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y);
+            sb.draw(pauseBtn.getTexture(), pauseBtn.getPosition().x, pauseBtn.getPosition().y, pauseBtn.getRectangle().width,
+                    pauseBtn.getRectangle().height);
+            if (pause) {
+                sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, playBtn.getRectangle().width,
+                        playBtn.getRectangle().height);
+            }
+        }
+        if (runner.shoot) {
+            for (int i = 0; i < runner.bullets.size(); i++) {
+                runner.bullets.get(i).render(sb);
             }
         }
         sb.end();
@@ -310,26 +322,19 @@ public class PlayState extends State {
     public void dispose() {
         pauseBtn.dispose();
         playBtn.dispose();
-        Fartlek.SCORES.add(Fartlek.SCORE);
-        if (Fartlek.SCORE > Fartlek.SCORE_HIGH) {
-            Fartlek.SCORE_HIGH = Fartlek.SCORE;
+        if (dead) {
+            restartBtn.dispose();
+            quitBtn.dispose();
         }
-        System.out.println("Score: " + Fartlek.SCORE);
-        pauseBtn.dispose();
         runner.dispose();
         music.stop();
-        if (PLAYSTATE_PHASE == Phase.DEAD) {
-            restartBtn.dispose();
-        }
         music.dispose();
         generator.dispose();
         for (Scene scene : sceneTiles) {
             scene.dispose();
         }
         for (int i = 0; i < obstacleSet.size(); i++) {
-            for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
-                obstacleSet.get(i)[j].dispose();
-            }
+            obstacleSet.get(i).dispose();
         }
         sceneTiles.clear();
         obstacleSet.clear();
