@@ -47,6 +47,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String PLAYER_ANIMATION_NAME;
     public static int PLAYER_ANIMATION_FRAMES;
     public static String SCENE_BACKGROUND;
+    public static String BOX_TEXTURE;
+    public static String ENEMY_TEXTURE;
     private FPSLogger fpsLogger;
 
     /**
@@ -55,8 +57,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     @Override
     public void create() {
         fpsLogger = new FPSLogger();
-        PLAYER_ANIMATION_NAME = "Characters\\sphereAnim.png";
-        PLAYER_ANIMATION_FRAMES = 9;
+        PLAYER_ANIMATION_NAME = "Characters\\shipAnim.png";
+        PLAYER_ANIMATION_FRAMES = 3;
         SCENE_BACKGROUND = "Scene\\bckg.png";
         //Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png")).getWidth()/2), 160, (new Texture("Items\\box.png")).getWidth()/2, (new Texture("Items\\box.png")).getHeight()/2);
         //HIT_BOXES = {rectangle};
