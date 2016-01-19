@@ -15,6 +15,7 @@ import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.essentials.TouchSector;
 import com.nnldev.fartlek.sprites.Bullet;
+import com.nnldev.fartlek.sprites.Enemy;
 import com.nnldev.fartlek.sprites.Scene;
 import com.nnldev.fartlek.sprites.Box;
 import com.nnldev.fartlek.sprites.Obstacle;
@@ -40,6 +41,8 @@ public class PlayState extends State {
     private ArrayList<Scene> sceneTiles;
     private ArrayList<Obstacle> obstacleSet;
     private String boxTextureName;
+    private String enemyTextureName;
+    private int obTypeChoose;
     private String tileTextureName;
     private int score;
     private boolean DONE;
@@ -66,6 +69,7 @@ public class PlayState extends State {
         DONE = false;
         boxTextureName = "Items\\box.png";
         tileTextureName = "Scene\\tile1.png";
+        enemyTextureName = "Enemies\\trump.gif";
         pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
         pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924),
                 (float) (pauseBtn.getTexture().getWidth() * 1.01), (float) (pauseBtn.getTexture().getHeight() * 1.01));
@@ -104,6 +108,7 @@ public class PlayState extends State {
         }
         obstacleSet = new ArrayList<Obstacle>();
         obstacleSet.add(new Box(boxTextureName, generateObXPos(), Fartlek.HEIGHT * 2, 100));
+        obTypeChoose = 0;
         prevY = 0;
         newObstacles(4);
         currentSongNum = 0;
@@ -119,7 +124,12 @@ public class PlayState extends State {
 
     public void newObstacles(int amt) {
         for (int i = 0; i < amt; i++) {
-            obstacleSet.add(new Box(boxTextureName, generateObXPos(), generateObYPos(prevY), 100));
+            obTypeChoose = (int) (Math.random() * 2);
+            if (obTypeChoose == 1) {
+                obstacleSet.add(new Box(boxTextureName, generateObXPos(), generateObYPos(prevY), 100));
+            } else {
+                obstacleSet.add(new Enemy(enemyTextureName, generateObXPos(), generateObYPos(prevY), 100));
+            }
             prevY++;
         }
     }
@@ -275,17 +285,15 @@ public class PlayState extends State {
                     gameOver();
                 }
             }
-            /*
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.bullets.size(); j++) {
-                    if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
+                    if ((runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle()))
+                    && (obstacleSet.get(i).getPath().equals(enemyTextureName))) {
                         obstacleSet.get(i).dispose();
                         obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
-                        break;
                     }
                 }
             }
-            */
         }
 
     }

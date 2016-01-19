@@ -17,6 +17,7 @@ public class Bullet {
     private String path;
     private Rectangle rectangle;
     private float verticalSpeed;
+    public final int damage = 50;
 
     /**
      * Main constuctor for bullet
