@@ -12,13 +12,13 @@ import com.nnldev.fartlek.essentials.Animation;
 import java.util.ArrayList;
 
 /**
- * Created by Nano on 11/12/2015.
+ * Nano, Nick
  */
 public class Runner {
     private Vector3 position;
     private Vector3 velocity;
     private Texture texture;
-    private Rectangle[] rectangle;
+    private Rectangle[] rectangle;//hitboxes
     private Animation playerAnimation;
     private int health;
     private float horizontalDeceleration = 0.5f;
@@ -49,7 +49,7 @@ public class Runner {
         this();
         texture = new Texture(path);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
-        rectangle = rectangles;
+        rectangle = rectangles;//rectangles are made in the playstate
         //rectangle = new Rectangle(position.x, position.y, texture.getWidth() / animFrames, texture.getHeight());
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
     }
@@ -89,12 +89,10 @@ public class Runner {
         position.x += velocity.x;
         position.y += velocity.y;
         //changes all rectangles locations
-        for(Rectangle rect: rectangle){
-            rect.y+=velocity.y;
-            rect.x+=velocity.x;
-        }
-        //rectangle.y = position.y;
-        //rectangle.x = position.x;
+        rectangle[0].y = position.y+22;//22 is about a third of the runner size
+        rectangle[0].x = position.x;
+        rectangle[1].y = position.y;
+        rectangle[1].x = position.x+22;
         if (position.x < 0)
             position.x = 0;
             //problem here, hitbox keeps moving
