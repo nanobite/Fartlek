@@ -42,7 +42,7 @@ public class Runner {
      * Makes a new runner
      *
      * @param path       The path for the runner's pic
-     * @param animFrames The number of frames in the picture t oallow for animation of
+     * @param animFrames The number of frames in the picture to allow for animation of
      *                   the runner
      */
     public Runner(String path, int animFrames,Rectangle[] rectangles) {

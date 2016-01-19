@@ -51,8 +51,10 @@ public class PlayState extends State {
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
         //makes the hitboxes
-        Rectangle rect1 =new Rectangle(240-(texture.getWidth()/16), 160+texture.getHeight()*(1/3), texture.getWidth(), texture.getHeight()*(1/3));
-        Rectangle rect2 =new Rectangle(240-(texture.getWidth()/48), 160, texture.getWidth()*(1/3), texture.getHeight());
+        Texture texture = new Texture(Fartlek.PLAYER_ANIMATION_NAME);
+        //rect one is the horizontal one
+        Rectangle rect1 =new Rectangle(240-(texture.getWidth()/16), 160+texture.getHeight()*(1/3), texture.getWidth()/Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight()*(1/3));
+        Rectangle rect2 =new Rectangle(240-(texture.getWidth()/48), 160, (texture.getWidth()/Fartlek.PLAYER_ANIMATION_FRAMES)*(1/3), texture.getHeight());
         Rectangle[] rectangles = {rect1,rect2};
         //creates runner
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,rectangles);
@@ -238,8 +240,12 @@ public class PlayState extends State {
                             if ((rect.overlaps(obstacleSet.get(i)[j].getRectangle())) &&
                                 !obstacleSet.get(i)[j].getEmpty()) {
                                 hit = true;
+                                System.out.println("Rect: "+rect.getX()+" Width: "+rect.getWidth());
+                                System.out.println("Runner: "+runner.getPosition().x);
                             }
+                            System.out.println("1");
                         }
+                        System.out.println("2");
                         if (hit) {
                             gsm.push(new MenuState(gsm));
                             DONE = true;
@@ -263,9 +269,11 @@ public class PlayState extends State {
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
+        //draws background
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
+        //draws obstacles
         for (int i = 0; i < obstacleSet.size(); i++) {
             for (int j = 0; j < Obstacle.OBS_PER_ROW; j++) {
                 sb.draw(obstacleSet.get(i)[j].getTexture(), obstacleSet.get(i)[j].getPosition().x,
