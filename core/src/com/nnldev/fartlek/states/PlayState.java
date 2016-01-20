@@ -98,7 +98,7 @@ public class PlayState extends State {
         dParameter.size = 50;
         dParameter.color = Color.BLACK;
         FreeTypeFontGenerator.FreeTypeFontParameter cParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        cParameter.size = 22;
+        cParameter.size = 28;
         cParameter.color = Color.RED;
         scoreFont = generator.generateFont(sParameter);
         deadFont = generator.generateFont(dParameter);

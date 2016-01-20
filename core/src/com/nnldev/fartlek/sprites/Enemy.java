@@ -114,24 +114,26 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     *
-     * @return
+     * gets the path to the sprite image
+     * @return the path
      */
     @Override
     public String getPath() {
         return super.getPath();
     }
 
+    /**
+     * sets the path
+     * @param texturePath the path being used
+     */
     @Override
     public void setPath(String texturePath) {
-        // TODO Auto-generated method stub
         super.setPath(texturePath);
     }
 
     /**
-     * Gets the texture of the box
-     *
-     * @return
+     * gets the texture of the box
+     * @return the texture
      */
     @Override
     public Texture getTexture() {
@@ -139,8 +141,8 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     * @param texture
-     *            The texture which the obstacle will be set to
+     * sets the texture
+     * @param texture The texture which the obstacle will be set to
      */
     @Override
     public void setTexture(Texture texture) {
@@ -148,7 +150,8 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     * @return
+     * gets the rectangle
+     * @return the rectangle
      */
     @Override
     public Rectangle getRectangle() {
@@ -156,8 +159,8 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     * @param rectangle
-     *            The rectangle for whome the bounds of this obstacle shall be
+     * sets rectangle
+     * @param rectangle The rectangle for whome the bounds of this obstacle shall be
      *            set to
      */
     @Override

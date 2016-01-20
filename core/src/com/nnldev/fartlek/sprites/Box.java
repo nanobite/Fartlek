@@ -23,7 +23,7 @@ public class Box extends Obstacle {
 	 */
 	public Box(String path, float x, float y, int health) {
 		super(path, x, y, BOX_WIDTH, BOX_WIDTH);
-		///this.health = health; -tentative
+		this.health = health;
 	}
 
 	/**
