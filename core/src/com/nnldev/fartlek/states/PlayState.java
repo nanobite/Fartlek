@@ -74,7 +74,10 @@ public class PlayState extends State {
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
     public static float startYRotation, yRotationDiff;
-
+    /**
+     * All the phases of the game
+     * 
+     */
     public enum Phase {
         RUNNING, PAUSE, DEAD
     }
@@ -131,6 +134,7 @@ public class PlayState extends State {
         tiles = 3;
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
+        //Adds a bunch of scene tiles
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
@@ -166,7 +170,10 @@ public class PlayState extends State {
     public void resetSceneTile(int index) {
         sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
-
+    /**
+     * Makes new obstacles
+     * @param amt The amount of obstacles to make
+     */
     public void newObstacles(int amt) {
         for (int i = 0; i < amt; i++) {
             obTypeChoose = (int) (Math.random() * 2);
@@ -178,7 +185,10 @@ public class PlayState extends State {
             prevY++;
         }
     }
-
+    /**
+     * Generates a random x position for the obstacle
+     * @return returns a random float value for the x position of an obstacle
+     */
     public float generateObXPos() {
         float xPos = -1;
         while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Box.BOX_WIDTH))) {
@@ -186,7 +196,10 @@ public class PlayState extends State {
         }
         return xPos;
     }
-
+    /**
+     * Generates a random y position for the obstacle
+     * @return returns a random float value for the y position of an obstacle
+     */
     public float generateObYPos(int prevY) {
         float yPos = obstacleSet.get(prevY).getYPosition() + Box.BOX_WIDTH;
         yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + (runner.getRectangle()[0].getWidth() / 2);
@@ -201,12 +214,14 @@ public class PlayState extends State {
     public void startMusic(String song) {
         music = Gdx.audio.newMusic(Gdx.files.internal(song));
         music.setLooping(true);
-        music.setVolume(0.5f);
+        music.setVolume(0.6f);
         if (Fartlek.soundEnabled) {
             music.play();
         }
     }
-
+    /**
+     * A game over method which handles what occurs when the player loses
+     */
     public void gameOver() {
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 4, Fartlek.HEIGHT / 5 * 2, false);
@@ -224,9 +239,13 @@ public class PlayState extends State {
      */
     @Override
     protected void handleInput() {
+        //Checks if the screen was touched
         if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
+            //If it was pressed only once, not pressed and held
             if (Gdx.input.justTouched()) {
+                //If the game is paused it will handle more functionality
                 if (PLAYSTATE_PHASE == Phase.PAUSE) {
+                    //If the mouse position is on the pause button
                     if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             gsm.push(new MenuState(gsm));
@@ -252,6 +271,7 @@ public class PlayState extends State {
                         pauseBtn.setTexture("Buttons\\exitbtn.png");
                     }
                 }
+                //If the player is dead
                 if (PLAYSTATE_PHASE == Phase.DEAD) {
                     if (restartBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
@@ -262,10 +282,8 @@ public class PlayState extends State {
                         gsm.push(new MenuState(gsm));
                     }
                 }
-
             }
-
-
+            //IF the player is dead
             if (PLAYSTATE_PHASE == Phase.RUNNING) {
                 // If the x,y position of the click is in the bottom left
                 if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
@@ -295,9 +313,17 @@ public class PlayState extends State {
     public void update(float dt) {//dt is delta time
         handleInput();
         yRotationDiff = Fartlek.rotations.y - startYRotation;
+        //IF the player is runnning
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
             if (Fartlek.GYRO_ON) {
-                runner.move((float) ((int) (yRotationDiff / 5)));
+                //runner.move((float) ((int) (yRotationDiff / 5)));
+                if(Math.abs(float) ((int) (yRotationDiff / 5))>5){
+                    if((float) ((int) (yRotationDiff / 5))>0){
+                    runner.left();
+                }else{
+                    runner.right();
+                }
+                }
             }
             runner.update(dt);
             // Loops through all the tiles and updates their positions
@@ -330,9 +356,11 @@ public class PlayState extends State {
                 }
 
             }
+            //For every obstacle
             for (int i = 0; i < obstacleSet.size(); i++) {
+                //For every buller
                 for (int j = 0; j < runner.bullets.size(); j++) {
-
+                    //If there is a coliision the obstacle disapears and the player gets a kill
                     if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
                         if (obstacleSet.get(i).getPath().equals(Fartlek.ENEMY_TEXTURE)) {
                             obstacleSet.get(i).dispose();
@@ -359,7 +387,6 @@ public class PlayState extends State {
 
             }
         }
-
     }
 
     /**
