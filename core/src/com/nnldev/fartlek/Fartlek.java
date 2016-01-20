@@ -1,5 +1,5 @@
 /**
- * @author Nano,Nick, Lazar
+ * @author Nano, Nick, Lazar
  * Main class for the Fartlek game
  */
 package com.nnldev.fartlek;
@@ -21,7 +21,12 @@ import com.badlogic.gdx.Input.Orientation;
 import com.nnldev.fartlek.essentials.Animation;
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.states.MenuState;
+import com.nnldev.fartlek.states.PlayState;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
@@ -51,8 +56,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static String BOX_TEXTURE;
     public static String ENEMY_TEXTURE;
     private FPSLogger fpsLogger;
-    public static String[] songs = {"Music\\gocart.mp3","Music\\exitthepremises.mp3","Music\\latinindustries.mp3"};
-    public static String[] scenes = {"Scene\\dirtybackgrnd.png","Scene\\stoneback.png","Scene\\forestmap.png"};
+    public static String[] songs = {"Music\\gocart.mp3", "Music\\exitthepremises.mp3", "Music\\latinindustries.mp3"};
+    public static String[] scenes = {"Scene\\dirtybackgrnd.png", "Scene\\stoneback.png", "Scene\\forestmap.png"};
     public static int currentSongNum;
     public static int currentSceneNum;
     public static boolean SHOW_AD;
@@ -60,11 +65,20 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static Vector3 rotations;
     public static float HorizontalPlayerBuffer;
     public static boolean GYRO_ON;
+    public static boolean showAchievements;
+    public enum Achievements{
+        One,Two,Three,Four,Five,None
+    }
+    public static Achievements achievement;
+
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
+        SCORES = new ArrayList<Integer>();
+        showAchievements = false;
+        achievement = Achievements.None;
         GYRO_ON = false;
         HorizontalPlayerBuffer = 30;
         currentSongNum = 0;
@@ -75,7 +89,6 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         SCENE_BACKGROUND = "Scene\\bckg.png";
         //Rectangle rectangle = new Rectangle(240-((new Texture("Items\\box.png")).getWidth()/2), 160, (new Texture("Items\\box.png")).getWidth()/2, (new Texture("Items\\box.png")).getHeight()/2);
         //HIT_BOXES = {rectangle};
-        SCORES = new ArrayList<Integer>();
         soundEnabled = true;
         soundFXEnabled = true;
         batch = new SpriteBatch();
@@ -101,12 +114,13 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      * The method which loops continuously and where all the events are handled.
      */
     float tempCounter;
+
     @Override
     public void render() {
-        tempCounter+=Gdx.graphics.getDeltaTime();
-        if(tempCounter>=0.75f){
+        tempCounter += Gdx.graphics.getDeltaTime();
+        if (tempCounter >= 0.75f) {
             tempCounter = 0;
-            System.out.println("Rotations( X: "+rotations.x+" Y:"+rotations.y+" Z:"+rotations.z+")");
+            System.out.println("Rotations( X: " + rotations.x + " Y:" + rotations.y + " Z:" + rotations.z + ")");
         }
         rotations.set((float) Gdx.input.getPitch(), (float) Gdx.input.getRoll(), (float) Gdx.input.getAzimuth());
 
@@ -267,5 +281,42 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    /**
+     * Quik sorts
+     *
+     * @param arr
+     * @param left
+     * @param right
+     * @return
+     */
+    int partition(ArrayList<Integer> arr, int left, int right) {
+        int i = left, j = right;
+        int tmp;
+        int pivot = arr.get((left + right) / 2);
+        while (i <= j) {
+            while (arr.get(i) < pivot)
+                i++;
+            while (arr.get(j) > pivot)
+                j--;
+            if (i <= j) {
+                tmp = arr.get(i);
+                arr.set(i, arr.get(j));
+                arr.set(j, tmp);
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }
+
+
+    private void quickSort(ArrayList<Integer> arr, int left, int right) {
+        int index = partition(arr, left, right);
+        if (left < index - 1)
+            quickSort(arr, left, index - 1);
+        if (index < right)
+            quickSort(arr, index, right);
     }
 }

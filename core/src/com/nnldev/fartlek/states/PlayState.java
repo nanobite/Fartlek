@@ -23,6 +23,12 @@ import com.nnldev.fartlek.sprites.Obstacle;
 import com.nnldev.fartlek.sprites.Runner;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayState extends State {
@@ -67,7 +73,7 @@ public class PlayState extends State {
 
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
-    public static float startYRotation,yRotationDiff;
+    public static float startYRotation, yRotationDiff;
 
     public enum Phase {
         RUNNING, PAUSE, DEAD
@@ -104,7 +110,6 @@ public class PlayState extends State {
         playBtn.setRectangle(playRect);
         runner = new Runner("Characters\\stephen.png", 8, rectangles);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
-        pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
 
         score = 0;
@@ -210,6 +215,7 @@ public class PlayState extends State {
         scoreFontX = (float) (Fartlek.WIDTH * 0.32);
         scoreFontY = (Fartlek.HEIGHT / 5) * 3;
         PLAYSTATE_PHASE = Phase.DEAD;
+        Fartlek.SCORES.add(score);
     }
 
 
@@ -230,7 +236,7 @@ public class PlayState extends State {
                     }
                     // If the x,y position of the click is in the play button
                     if (playBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
-                        pauseBtn.setTexture("Buttons\\pausebtn.png");
+                        pauseBtn.setTexture("Buttons\\pause.png");
                         PLAYSTATE_PHASE = Phase.RUNNING;
                         music.play();
                         music.setPosition(musicPos);
@@ -288,11 +294,10 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {//dt is delta time
         handleInput();
-        yRotationDiff = Fartlek.rotations.y-startYRotation;
-
+        yRotationDiff = Fartlek.rotations.y - startYRotation;
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
-            if(Fartlek.GYRO_ON){
-                runner.move(yRotationDiff/10);
+            if (Fartlek.GYRO_ON) {
+                runner.move((float) ((int) (yRotationDiff / 5)));
             }
             runner.update(dt);
             // Loops through all the tiles and updates their positions
@@ -413,6 +418,8 @@ public class PlayState extends State {
      */
     @Override
     public void dispose() {
+        String scores;
+
         pauseBtn.dispose();
         playBtn.dispose();
         if (dead) {
@@ -432,4 +439,34 @@ public class PlayState extends State {
         sceneTiles.clear();
         obstacleSet.clear();
     }
+
+    int partition(ArrayList<Integer> arr, int left, int right) {
+        int i = left, j = right;
+        int tmp;
+        int pivot = arr.get((left + right) / 2);
+        while (i <= j) {
+            while (arr.get(i) < pivot)
+                i++;
+            while (arr.get(j) > pivot)
+                j--;
+            if (i <= j) {
+                tmp = arr.get(i);
+                arr.set(i, arr.get(j));
+                arr.set(j, tmp);
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }
+
+
+    private void quickSort(ArrayList<Integer> arr, int left, int right) {
+        int index = partition(arr, left, right);
+        if (left < index - 1)
+            quickSort(arr, left, index - 1);
+        if (index < right)
+            quickSort(arr, index, right);
+    }
+
 }
