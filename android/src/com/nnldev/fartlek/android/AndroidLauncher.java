@@ -12,18 +12,14 @@ import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.nnldev.fartlek.Fartlek;
 import com.purplebrain.adbuddiz.sdk.AdBuddiz;
 
-public class AndroidLauncher extends AndroidApplication implements ActionResolver, GameHelper.GameHelperListener {
-    private GameHelper gameHelper;
+public class AndroidLauncher extends AndroidApplication {
 
     public AndroidLauncher() {
-        gameHelper = new GameHelper(this, 0);
-        gameHelper.enableDebugLog(true);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameHelper.setup(this);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Fartlek(), config);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -39,19 +35,16 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     @Override
     public void onStart() {
         super.onStart();
-        gameHelper.onStart(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        gameHelper.onStop();
     }
 
     @Override
     public void onActivityResult(int request, int response, Intent data) {
         super.onActivityResult(request, response, data);
-        gameHelper.onActivityResult(request, response, data);
     }
 
 
@@ -68,48 +61,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     protected void onResume() {
         super.onResume();
         showAd();
-    }
-
-    @Override
-    public boolean getSignedInGPGS() {
-        return gameHelper.isSignedIn();
-    }
-
-    @Override
-    public void loginGPGS() {
-        try {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    gameHelper.beginUserInitiatedSignIn();
-                }
-            });
-        } catch (final Exception ex) {
-        }
-    }
-
-    @Override
-    public void unlockAchievementGPGS(String achievementId) {
-
-    }
-
-    @Override
-    public void getLeaderboardGPGS() {
-    }
-
-    @Override
-    public void getAchievementsGPGS() {
-    }
-
-    @Override
-    public void onSignInFailed() {
-    }
-
-    @Override
-    public void onSignInSucceeded() {
-    }
-
-    @Override
-    public void submitScoreGPGS(int score) {
     }
 
 

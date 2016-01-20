@@ -382,6 +382,9 @@ public class PlayState extends State {
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
+        if(PLAYSTATE_PHASE==Phase.PAUSE){
+            sb.draw(playBtn.getTexture(),playBtn.getPosition().x,playBtn.getPosition().y,200,200);
+        }
         if (PLAYSTATE_PHASE == Phase.DEAD) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
             sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,

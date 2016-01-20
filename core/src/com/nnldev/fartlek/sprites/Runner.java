@@ -70,7 +70,7 @@ public class Runner {
     private void playMoveSound() {
         if (soundPlayable) {
             moveSound.stop();
-            moveSound.play(0.1f);
+            //moveSound.play(0.0f);
             soundPlayable = false;
         }
 
