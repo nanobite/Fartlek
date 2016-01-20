@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Animation;
+import com.nnldev.fartlek.states.PlayState;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
  * Nano, Nick
  */
 public class Runner {
+    public boolean reloaded;
+    private boolean startCounting;
     private Vector3 position;
     private Vector3 velocity;
     private Texture texture;
@@ -31,6 +34,7 @@ public class Runner {
     private Sound moveSound;
     private float soundTimer;
     private boolean soundPlayable;
+    public float shotTimer;
 
     public Runner() {
         velocity = new Vector3(0, 0, 0);
@@ -39,6 +43,9 @@ public class Runner {
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
         health = 100;
         horizontalSpeed = 9;
+        shotTimer = 0;
+        startCounting = true;
+        bullets = new ArrayList<Bullet>();
     }
 
     /**
@@ -48,7 +55,7 @@ public class Runner {
      * @param animFrames The number of frames in the picture to allow for animation of
      *                   the runner
      */
-    public Runner(String path, int animFrames,Rectangle[] rectangles) {
+    public Runner(String path, int animFrames, Rectangle[] rectangles) {
         this();
         texture = new Texture(path);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
@@ -89,16 +96,33 @@ public class Runner {
         } else {
             velocity.x = 0;
         }
+        if (startCounting) {
+            shotTimer += dt;
+        }
+        if (shotTimer >= 1) {
+            shotTimer = 0;
+            reloaded = true;
+            startCounting = false;
+        }
+        if (shoot) {
+            for (int i = 0; i < bullets.size(); i++) {
+                bullets.get(i).update(dt);
+                if (bullets.get(i).done) {
+                    bullets.remove(i);
+                    PlayState.killerID = -1;
+                }
+            }
+        }
         position.x += velocity.x;
         position.y += velocity.y;
         //changes all rectangles locations
-        rectangle[0].y = position.y+22;//22 is about a third of the runner size
+        rectangle[0].y = position.y + 22;//22 is about a third of the runner size
         rectangle[0].x = position.x;
         rectangle[1].y = position.y;
-        rectangle[1].x = position.x+22;
+        rectangle[1].x = position.x + 22;
         if (position.x < 0)
             position.x = 0;
-            //problem here, hitbox keeps moving
+        //problem here, hitbox keeps moving
         if (position.x + rectangle[0].getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle[0].getWidth();
     }
@@ -153,7 +177,7 @@ public class Runner {
      */
     public void setPosition(Vector3 position) {
         this.position = position;
-        for(Rectangle rect: rectangle){
+        for (Rectangle rect : rectangle) {
             rect.setPosition(position.x, position.y);
         }
     }
@@ -171,7 +195,7 @@ public class Runner {
 
     public void setX(float x) {
         position.x = x;
-        for(Rectangle rect: rectangle){
+        for (Rectangle rect : rectangle) {
             rect.setPosition(position.x, position.y);
         }
     }
@@ -217,8 +241,14 @@ public class Runner {
      * Adds a new bullet to the bullet timer
      */
     public void shoot() {
-        bullets.add(new Bullet("Buttons\\bullet.png", getPosition().x));
-        shoot = true;
+
+        if (reloaded) {
+            System.out.println("Shoot");
+            bullets.add(new Bullet("Items\\bullet.png", getPosition().x));
+            shoot = true;
+            reloaded = false;
+            startCounting = true;
+        }
     }
 
     public void dispose() {

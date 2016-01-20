@@ -55,7 +55,7 @@ public class RunnerSelectState extends State {
             }else if(character3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//carl
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\carlAnim.png";
-                Fartlek.PLAYER_ANIMATION_FRAMES = 9;
+                Fartlek.PLAYER_ANIMATION_FRAMES = 14;
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//stone map
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.SCENE_BACKGROUND = "Scene\\tile1.png";

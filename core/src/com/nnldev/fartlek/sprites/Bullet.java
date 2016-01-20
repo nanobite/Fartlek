@@ -7,54 +7,111 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
-/**
- * Nick
- */
 public class Bullet {
     private Vector3 position;
     private Vector3 velocity;
     private Texture texture;
     private String path;
     private Rectangle rectangle;
-    private int bulSpeed=5;
-    public Bullet(String path,float x,float y){
-        this.path = path;
-        texture = new Texture(path); //there can be multiple textures for the bullet perhaps
-        position = new Vector3(x, y, 0); // position
-        velocity = new Vector3(0, bulSpeed, 0); //obsolete for now
-        rectangle = new Rectangle(x, y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f); //idk about this for now - Nick
+    private float verticalSpeed;
+    public int kills;
+    public boolean done;
+
+    /**
+     * Main constuctor for bullet
+     * Sets a basic position and its speed
+     */
+    public Bullet() {
+        position = new Vector3(0, 160, 0);
+        verticalSpeed = 16;
+        kills = 0;
+        done = false;
     }
-    public void update(float dt){
-        setY(position.y+velocity.y);
+
+    /**
+     * Second constructor for Bullet
+     * Sets texture, x position, velocity and its rectangle hitbox
+     *
+     * @param path the string that is the path to the bullets image
+     * @param x    the x position of the runner at the current point, used to determine where the bullet will be shot from
+     */
+    public Bullet(String path, float x) {
+        this();
+        this.path = path;
+        texture = new Texture(path);
+        setXPosition(x);
+        velocity = new Vector3(0, verticalSpeed, 0);
+        rectangle = new Rectangle(x, getYPosition(), 32, 32);
+    }
+
+    public void update(float dt) {
+        setYPosition(position.y + velocity.y);
         rectangle.setY(position.y + velocity.y);
-        if (position.y + rectangle.getHeight() > Fartlek.HEIGHT) {
+        if (position.y > Fartlek.HEIGHT) {
             velocity.set(0, 0, 0);
             dispose();
+            done = true;
         }
     }
-    public void setX(float x){
+
+    public void render(SpriteBatch sb) {
+        sb.draw(texture, getXPosition(), getYPosition(), 32, 32);
+    }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
+
+    public Vector3 getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector3 position) {
+        this.position = position;
+    }
+
+    public void setXPosition(float x) {
         position.x = x;
     }
-    public float getX(){
+
+    public float getXPosition() {
         return position.x;
     }
-    public void setY(float y){
-        position.y=y;
-    }
-    public float getY(){
-        return position.y;
-    }
-    public void dispose(){
-        texture.dispose();
-    }
-    public void render(SpriteBatch sb){//idk about this - Nick
+
+    public void setYPosition(float y) {
+        position.y = y;
 
     }
-    //String representation of bullet
-    @Override
-    public String toString(){
-        return "Path: " + path + "\nCoordinates: (" + getX() + "," + getY() + ")" + "\nVelocities: X="
-                + velocity.x + "\tY=" + velocity.y + "\tZ=" + velocity.z + "\nWidth: " + rectangle.getWidth()
-                + "\tHeight: " + rectangle.getHeight();
+
+    public float getYPosition() {
+        return position.y;
+    }
+
+    public Vector3 getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(Vector3 velocity) {
+        this.velocity = velocity;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String texturePath) {
+        path = texturePath;
+    }
+
+    public void dispose() {
+        texture.dispose();
     }
 }
