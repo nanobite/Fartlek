@@ -1,3 +1,7 @@
+/**
+ * Created by Nano on 11/12/2015.
+ */
+
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.Gdx;
@@ -12,9 +16,6 @@ import com.nnldev.fartlek.states.PlayState;
 
 import java.util.ArrayList;
 
-/**
- * Created by Nano on 11/12/2015.
- */
 public class Runner {
     private Vector3 position;
     private Vector3 velocity;
@@ -26,7 +27,6 @@ public class Runner {
     private boolean startCounting;
     public float shotTimer;
     private Animation playerAnimation;
-    private int health;
     private float horizontalSpeed;
     private final int RUNNER_Y = 160;
     private final float ANIM_CYCLE_TIME = 0.3f;
@@ -76,12 +76,15 @@ public class Runner {
      *           was updated
      */
     public void update(float dt) {
+        //timer for when sound effect for movement happens
         soundTimer += dt;
         if (soundTimer >= 0.3f) {
             soundTimer = 0;
             soundPlayable = true;
         }
+        //calls its update method
         playerAnimation.update(dt);
+        //moves the runner
         if (velocity.x > 0) {
             position.x += velocity.x;
         } else if (velocity.x < 0) {
@@ -93,10 +96,12 @@ public class Runner {
         position.y += velocity.y;
         rectangle.y = position.y;
         rectangle.x = position.x;
+        //prevents it from going out of bounds
         if (position.x < 0)
             position.x = 0;
         if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle.getWidth();
+        //if bullet has been shot, starts counting for the reload
         if (startCounting) {
             shotTimer += dt;
         }
@@ -105,11 +110,15 @@ public class Runner {
             reloaded = true;
             startCounting = false;
         }
+        //if shoot has been called, update all bullets
         if (shoot) {
             for (int i = 0; i < bullets.size(); i++) {
                 bullets.get(i).update(dt);
                 if (bullets.get(i).done) {
+                    //if its passed the screen
                     bullets.remove(i);
+                    //resets the index in the array of bullets at which the bullet who was 'killing' was located at
+                    //allows for kills from a new bullet
                     PlayState.killerID = -1;
                 }
             }
@@ -220,6 +229,9 @@ public class Runner {
         }
     }
 
+    /**
+     * Disposes of the runners texture
+     */
     public void dispose() {
         texture.dispose();
         moveSound.dispose();

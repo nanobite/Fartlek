@@ -1,3 +1,6 @@
+//Lazar Vukoje
+//Jan 07 2016
+//Abstract class, the blueprint for obstacles and enemies
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;

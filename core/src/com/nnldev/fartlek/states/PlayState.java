@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 
 public class PlayState extends State {
+    //lots of variables
     private Button pauseBtn;
     private Button playBtn;
     private Button restartBtn;
@@ -126,11 +127,16 @@ public class PlayState extends State {
 
     /**
      * Makes a new row of tiles
+     * @param index the index of the tile being reset to the top
      */
     public void resetSceneTile(int index) {
         sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
 
+    /**
+     * makes new obstacles
+     * @param amt the amount of obstacles being created
+     */
     public void newObstacles(int amt) {
         for (int i = 0; i < amt; i++) {
             obTypeChoose = (int) (Math.random() * 2);
@@ -143,6 +149,10 @@ public class PlayState extends State {
         }
     }
 
+    /**
+     * generates the x position of the obstacle being created above
+     * @return the x positon
+     */
     public float generateObXPos() {
         float xPos = -1;
         while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Box.BOX_WIDTH))) {
@@ -151,7 +161,13 @@ public class PlayState extends State {
         return xPos;
     }
 
+    /**
+     * generates the y position of the obstacle being created above
+     * @param prevY the index of the previous obstacle
+     * @return
+     */
     public float generateObYPos(int prevY) {
+        //finds y value of obstacle at prevY and creates a random y value above it
         float yPos = obstacleSet.get(prevY).getYPosition() + Box.BOX_WIDTH;
         yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + (runner.getRectangle().height / 2);
         return yPos;
@@ -171,7 +187,11 @@ public class PlayState extends State {
         }
     }
 
+    /**
+     * game over method, when player loses
+     */
     public void gameOver() {
+        //stops music, creates restart and quit buttons, moves the score text to the middle of the screen
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 4, Fartlek.HEIGHT / 5 * 2, false);
         Rectangle restartRect = new Rectangle(restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,
@@ -211,6 +231,7 @@ public class PlayState extends State {
                             pauseBtn.setTexture("Buttons\\exitbtn.png");
                         }
                     } else {
+                        //If the x,y position of the click is in the exit button (pause button with different sprite for exit)
                         if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             DONE = true;
                             dispose();
@@ -227,11 +248,13 @@ public class PlayState extends State {
                         }
                     }
                 } else {
+                    // If the x,y position of the click is in the restart button
                     if (restartBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
                         MenuState.startGameSound.play(0.75f);
                         gsm.push(new PlayState(gsm));
                     }
+                    // If the x,y position of the click is in the quit button
                     if (quitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
                         gsm.push(new MenuState(gsm));
@@ -276,6 +299,7 @@ public class PlayState extends State {
                     resetSceneTile(i);
                 }
             }
+            //loops through obstacles three times and updates them, creates new ones, and checks if runner collided
             for (int i = 0; i < obstacleSet.size(); i++) {
                 obstacleSet.get(i).update(dt);
             }
@@ -294,10 +318,12 @@ public class PlayState extends State {
                     gameOver();
                 }
             }
+            //loops through obstacle and searches bullet for a collision with either enemy or box
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.bullets.size(); j++) {
                     if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
                         if (obstacleSet.get(i).getPath().equals(Fartlek.ENEMY_TEXTURE)) {
+                            //get rid of the obstacle, increment score, increment bullets killcount, set that bullet as the 'killer'
                             obstacleSet.get(i).dispose();
                             obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
                             score += 5;
@@ -306,20 +332,19 @@ public class PlayState extends State {
                                 killerID = j;
                             }
                         } else {
+                            //remove the bullet if it hit the box and reset 'killer' index
                             runner.bullets.remove(j);
                             killerID = -1;
                         }
                     }
                 }
             }
+            //searches bullets for the 'killer' so it can display that bullets kill count to the screen
             for (int i = 0; i < runner.bullets.size(); i++) {
                 if (i == killerID) {
                     collatCount = runner.bullets.get(i).kills;
                     drawCollat = true;
                 }
-            }
-            if (collatCount > 1) {
-
             }
         }
 
@@ -333,6 +358,7 @@ public class PlayState extends State {
      */
     @Override
     public void render(SpriteBatch sb) {
+        //draws scene, obstacles, runner, score, bullet killcount score, game over buttons and text, pause/play/exit
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
         for (Scene tile : sceneTiles) {

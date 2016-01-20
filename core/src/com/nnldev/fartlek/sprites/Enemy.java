@@ -34,7 +34,7 @@ public class Enemy extends Obstacle {
     @Override
     public void update(float dt) {
         //sets the new y position by adding the velocity to its position in Obstacle
-        setYPosition(super.position.y+super.velocity.y);
+        setYPosition(super.position.y + super.velocity.y);
         //does the same for its rectangle, as that is its hit box
         super.rectangle.setY(super.position.y+super.velocity.y);
         if (super.position.y + rectangle.getHeight() < 0) {
@@ -70,7 +70,7 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     * gets x posiiton
+     * gets x position
      * @return the x position
      */
     public float getXPosition() {
@@ -160,8 +160,7 @@ public class Enemy extends Obstacle {
 
     /**
      * sets rectangle
-     * @param rectangle The rectangle for whome the bounds of this obstacle shall be
-     *            set to
+     * @param rectangle The rectangle for whom the bounds of this obstacle shall be set to
      */
     @Override
     public void setRectangle(Rectangle rectangle) {
@@ -185,13 +184,18 @@ public class Enemy extends Obstacle {
     }
 
     /**
-     * Disposes of the box's texture
+     * Disposes of the enemies texture
      */
     @Override
     public void dispose() {
         super.dispose();
     }
 
+    /**
+     * checks if an enemy is equal to another
+     * @param obstacle the obstacle being compared
+     * @return true or false
+     */
     @Override
     public boolean equals(Obstacle obstacle) {
         if ((obstacle.path.equals(this.path))) {
@@ -201,6 +205,10 @@ public class Enemy extends Obstacle {
         }
     }
 
+    /**
+     * Sends all info about the enemy as a string
+     * @return the string
+     */
     @Override
     public String toString() {
         return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
