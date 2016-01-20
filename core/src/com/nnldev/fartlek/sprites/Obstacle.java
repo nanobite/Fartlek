@@ -24,7 +24,7 @@ public abstract class Obstacle {
      */
     protected Obstacle(String path, float x, float y) {
         this.path = path;
-        texture = new Texture(path); //there can be multiple textures for obstacles
+        texture = new Texture(path);
         position = new Vector3(x, y, 0); // position
         velocity = new Vector3(0, obstacleSpeed, 0);
         

@@ -89,6 +89,8 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         }
         border = new Texture("Extras&Logo\\border.png");
         rotations = new Vector3();
+        BOX_TEXTURE = "Items\\woodbox.png";//default
+        ENEMY_TEXTURE = "Enemies\\snake.png";//default
     }
 
     /**

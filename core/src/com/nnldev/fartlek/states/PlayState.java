@@ -16,6 +16,7 @@ import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
 import com.nnldev.fartlek.essentials.TouchSector;
+import com.nnldev.fartlek.sprites.Enemy;
 import com.nnldev.fartlek.sprites.Scene;
 import com.nnldev.fartlek.sprites.Box;
 import com.nnldev.fartlek.sprites.Obstacle;
@@ -55,6 +56,7 @@ public class PlayState extends State {
     private boolean justUnpaused;
     private BitmapFont collatFont;
     private float collatFontY;
+    private int obTypeChoose;
 
     private int collatCount;
     private boolean drawCollat;
@@ -80,6 +82,7 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         PLAYSTATE_PHASE = Phase.RUNNING;
+        obTypeChoose = 0;
         DONE = false;
         Texture texture = new Texture(Fartlek.PLAYER_ANIMATION_NAME);
         //rect one is the horizontal one
@@ -102,9 +105,7 @@ public class PlayState extends State {
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
-        bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
-        bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
+
         score = 0;
         dead = false;
         pause = false;
@@ -127,15 +128,13 @@ public class PlayState extends State {
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
-        obstacleSet = new ArrayList<Obstacle>();
-        obstacleSet.add(new Box(boxTextureName, generateObXPos(), Fartlek.HEIGHT * 2, 100));
+
         prevY = 0;
-        newObstacles(4);
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
         PLAYSTATE_PHASE = Phase.RUNNING;
         Fartlek.SCORE = 0;
-        newObstacles(4);
+
         collatCount = 0;
         drawCollat = false;
         killerID = -1;
@@ -144,7 +143,13 @@ public class PlayState extends State {
         cParameter.color = Color.RED;
         collatFont = generator.generateFont(cParameter);
         collatFontY = 700;
-
+        obTypeChoose = 0;
+        obstacleSet = new ArrayList<Obstacle>();
+        obstacleSet.add(new Box(boxTextureName, generateObXPos(), Fartlek.HEIGHT * 2, 100));
+        newObstacles(4);
+        bottomLeft = new TouchSector(0, 150, Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2);
+        bottomRight = new TouchSector((Fartlek.WIDTH) / 2, 150, Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2);
+        bottomMiddle = new TouchSector(0, 0, Fartlek.WIDTH, 149);
     }
 
     /**
@@ -156,7 +161,12 @@ public class PlayState extends State {
 
     public void newObstacles(int amt) {
         for (int i = 0; i < amt; i++) {
-            obstacleSet.add(new Box(boxTextureName, generateObXPos(), generateObYPos(prevY), 100));
+            obTypeChoose = (int) (Math.random() * 2);
+            if (obTypeChoose == 1) {
+                obstacleSet.add(new Box(Fartlek.BOX_TEXTURE, generateObXPos(), generateObYPos(prevY), 100));
+            } else {
+                obstacleSet.add(new Enemy(Fartlek.ENEMY_TEXTURE, generateObXPos(), generateObYPos(prevY), 100));
+            }
             prevY++;
         }
     }
