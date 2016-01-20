@@ -70,6 +70,7 @@ public class PlayState extends State {
      */
     public PlayState(GameStateManager gsm) {
         super(gsm);
+        PLAYSTATE_PHASE = Phase.RUNNING;
         DONE = false;
         boxTextureName = "Items\\woodbox.png";
         tileTextureName = "Scene\\forestmap.png";
@@ -166,6 +167,7 @@ public class PlayState extends State {
                 Fartlek.HEIGHT / 5 * 2, false);
         scoreFontX = (float) (Fartlek.WIDTH * 0.32);
         scoreFontY = (Fartlek.HEIGHT / 5) * 3;
+        PLAYSTATE_PHASE = Phase.DEAD;
     }
 
 
@@ -203,9 +205,13 @@ public class PlayState extends State {
                     }
                 }
                 if (PLAYSTATE_PHASE == Phase.DEAD) {
-                    if (restartBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                    if (restartBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
                         gsm.push(new PlayState(gsm));
+                    }
+                    if(quitBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){
+                        dispose();
+                        gsm.push(new MenuState(gsm));
                     }
                 }
 
@@ -294,7 +300,7 @@ public class PlayState extends State {
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
-        if (dead) {
+        if (PLAYSTATE_PHASE==Phase.DEAD) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
             sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,
                     Fartlek.WIDTH / 6);
