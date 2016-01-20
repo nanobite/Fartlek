@@ -1,5 +1,5 @@
 /**
- * @author Nano
+ * @author Nano, Nick
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
@@ -7,9 +7,11 @@ package com.nnldev.fartlek.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
@@ -23,6 +25,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 
 public class PlayState extends State {
+    private Button exitBtn;
     private Button pauseBtn;
     private Button playBtn;
     private Button restartBtn;
@@ -72,6 +75,10 @@ public class PlayState extends State {
         super(gsm);
         PLAYSTATE_PHASE = Phase.RUNNING;
         DONE = false;
+        //rect one is the horizontal one
+        Rectangle rect1 =new Rectangle(240-(texture.getWidth()/16), 160+texture.getHeight()*(1/3), texture.getWidth()/Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight()*(1/3));
+        Rectangle rect2 =new Rectangle(240-(texture.getWidth()/48), 160, (texture.getWidth()/Fartlek.PLAYER_ANIMATION_FRAMES)*(1/3), texture.getHeight());
+        Rectangle[] rectangles = {rect1,rect2};
         boxTextureName = "Items\\woodbox.png";
         tileTextureName = "Scene\\forestmap.png";
         pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
@@ -84,7 +91,13 @@ public class PlayState extends State {
                 (Fartlek.WIDTH / 3), (Fartlek.HEIGHT / 4));
         pauseBtn.setRectangle(pauseRect);
         playBtn.setRectangle(playRect);
-        runner = new Runner("Characters\\stephen.png", 8);
+        runner = new Runner("Characters\\stephen.png", 8,rectangles);
+        exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
+        pauseBtn = new Button("Buttons\\pausebtn.png", (float) (30), (float) (Fartlek.HEIGHT - 30), true);
+        //makes the hitboxes
+        Texture texture = new Texture(Fartlek.PLAYER_ANIMATION_NAME);
+        //creates runner
+        runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES,rectangles);
         bottomLeft = new TouchSector(0, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((2 * Fartlek.WIDTH) / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(Fartlek.WIDTH / 3, 0, Fartlek.WIDTH / 3, Fartlek.HEIGHT / 2);
@@ -116,6 +129,8 @@ public class PlayState extends State {
         newObstacles(4);
         currentSongNum = 0;
         startMusic(songs[currentSongNum]);
+        PLAYSTATE_PHASE = Phase.RUNNING;
+        Fartlek.SCORE = 0;
     }
 
     /**
