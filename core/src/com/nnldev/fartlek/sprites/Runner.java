@@ -23,6 +23,7 @@ public class Runner {
     public ArrayList<Bullet> bullets;
     public boolean shoot;
     public boolean reloaded;
+    private boolean startCounting;
     public float shotTimer;
     private Animation playerAnimation;
     private int health;
@@ -52,6 +53,7 @@ public class Runner {
         bullets = new ArrayList<Bullet>();
         shoot = false;
         reloaded = false;
+        startCounting = true;
         shotTimer = 0;
     }
 
@@ -95,10 +97,13 @@ public class Runner {
             position.x = 0;
         if (position.x + rectangle.getWidth() > Fartlek.WIDTH)
             position.x = Fartlek.WIDTH - rectangle.getWidth();
-        shotTimer += dt;
+        if (startCounting) {
+            shotTimer += dt;
+        }
         if (shotTimer >= 1) {
             shotTimer = 0;
             reloaded = true;
+            startCounting = false;
         }
         if (shoot) {
             for (int i = 0; i < bullets.size(); i++) {
@@ -211,6 +216,7 @@ public class Runner {
             bullets.add(new Bullet("Items\\bullet.png", getPosition().x));
             shoot = true;
             reloaded = false;
+            startCounting = true;
         }
     }
 

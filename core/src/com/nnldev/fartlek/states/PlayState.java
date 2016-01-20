@@ -1,5 +1,6 @@
 /**
  * @author Nano
+ * Dec 15
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
@@ -112,7 +113,7 @@ public class PlayState extends State {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
         obstacleSet = new ArrayList<Obstacle>();
-        obstacleSet.add(new Box(boxTextureName, generateObXPos(), Fartlek.HEIGHT * 2, 100));
+        obstacleSet.add(new Box(Fartlek.BOX_TEXTURE, generateObXPos(), Fartlek.HEIGHT * 2, 100));
         obTypeChoose = 0;
         prevY = 0;
         newObstacles(4);
@@ -296,7 +297,7 @@ public class PlayState extends State {
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.bullets.size(); j++) {
                     if (runner.bullets.get(j).getRectangle().overlaps(obstacleSet.get(i).getRectangle())) {
-                        if (obstacleSet.get(i).getPath().equals(enemyTextureName)) {
+                        if (obstacleSet.get(i).getPath().equals(Fartlek.ENEMY_TEXTURE)) {
                             obstacleSet.get(i).dispose();
                             obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
                             score += 5;

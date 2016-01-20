@@ -1,3 +1,7 @@
+//Lazar Vukoje
+//Jan 07 2016
+//Concrete class used to create obstacles from obstacle abstract class
+
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -5,9 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
-/**
- * Created by Lazar on 12/12/2015.
- */
 public class Box extends Obstacle {
 	private int health;
 	public static final float BOX_WIDTH = (Fartlek.WIDTH) / 5.5f;

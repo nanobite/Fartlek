@@ -1,3 +1,7 @@
+//Lazar Vukoje
+//Jan 17 2016
+//Concrete class used to create bullet objects for the runner to shoot
+
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -5,10 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
-
-//Created by Lazar
-//01/17/2016
-//Bullet class, used to create bullet objects for the runner to shoot
 
 public class Bullet {
     private Vector3 position;
