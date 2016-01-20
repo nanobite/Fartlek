@@ -7,7 +7,6 @@ import com.nnldev.fartlek.Fartlek;
 
 
 public abstract class Obstacle {
-    public static final int OBS_PER_ROW = 5;
     protected Texture texture;
     protected Vector3 velocity;
     protected Vector3 position;
@@ -25,10 +24,14 @@ public abstract class Obstacle {
      */
     protected Obstacle(String path, float x, float y) {
         this.path = path;
-        texture = new Texture(path); //there can be multiple textures for obstacles
+        texture = new Texture(path);
         position = new Vector3(x, y, 0); // position
-        velocity = new Vector3(0, obstacleSpeed, 0); //obsolete for now
-        rectangle = new Rectangle(x, y, (Fartlek.WIDTH) / 5.5f, (Fartlek.WIDTH) / 5.5f);
+        velocity = new Vector3(0, obstacleSpeed, 0);
+        
+    }
+    protected Obstacle(String path, float x, float y, float width, float height) {
+        this(path, x, y);
+        rectangle = new Rectangle(x, y, width, height);
     }
 
     /**

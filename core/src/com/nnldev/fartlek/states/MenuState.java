@@ -13,10 +13,10 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 
 public class MenuState extends State {
     private Button playBtn;
-
     private Button infoBtn;
     private Button settingsBtn;
     private Button runnerBtn;
+    private Button topLocalScores;
     public static Sound startGameSound;
 
     /**
@@ -30,6 +30,7 @@ public class MenuState extends State {
         infoBtn = new Button("Buttons\\infobtn.png", Fartlek.WIDTH / 2 - 120, Fartlek.HEIGHT / 2 - 100, true);
         settingsBtn = new Button("Buttons\\settings.png", Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2 - 150, true);
         runnerBtn = new Button("Buttons\\runnericon.png", Fartlek.WIDTH / 2 + 120, Fartlek.HEIGHT / 2 - 100, true);
+        topLocalScores = new Button("Buttons\\scoreboard.png", Fartlek.WIDTH / 2 - 120, Fartlek.HEIGHT / 2 - 250, true);
         startGameSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\startgamenoise.ogg"));
     }
 
@@ -54,6 +55,10 @@ public class MenuState extends State {
             if (playBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 startGameSound.play(0.75f);
                 gsm.push(new PlayState(gsm));
+                dispose();
+            }
+            if (topLocalScores.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                gsm.push(new ScoreState(gsm));
                 dispose();
             }
 

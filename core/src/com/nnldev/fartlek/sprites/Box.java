@@ -3,125 +3,92 @@ package com.nnldev.fartlek.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.nnldev.fartlek.Fartlek;
 
 /**
  * Created by Nano on 12/12/2015.
  */
 public class Box extends Obstacle {
-    private int health;
+	private int health;
+	public static final float BOX_WIDTH = (Fartlek.WIDTH) / 5.5f;
 
-    /**
-     * Creates a new box obstacle which has a health
-     *
-     * @param path   The path of the box
-     * @param x      The x coordinate of the box
-     * @param y      The y coordinate of the box
-     * @param health The health of the box
-     */
-    public Box(String path, float x, float y, int health) {
-        super(path, x, y);
-        this.health = health;
-    }
+	/**
+	 * Creates a
+	 *
+	 * @param path
+	 * @param x
+	 * @param y
+	 * @param health
+	 */
+	public Box(String path, float x, float y, int health) {
+		super(path, x, y, BOX_WIDTH, BOX_WIDTH);
+		///this.health = health; -tentative
+	}
 
-    /**
-     * Creates a new box obstacle which has a health and an empty status
-     *
-     * @param path   The path of the box
-     * @param x      The x coordinate of the box
-     * @param y      The y coordinate of the box
-     * @param health The health of the box
-     * @param empty  Whether or not the box is empty
-     */
-    public Box(String path, float x, float y, int health, boolean empty) {
-        super(path, x, y, empty);
-        this.health = health;
-    }
+	/**
+	 * Updates the box
+	 *
+	 * @param dt
+	 *            The time which passed since the last update
+	 */
+	@Override
+	public void update(float dt) {
+		setYPosition(super.position.y+super.velocity.y);
+		super.rectangle.setY(super.position.y+super.velocity.y);
+		if (super.position.y + rectangle.getHeight() < 0) {
+			super.velocity.set(0, 0, 0);
+			dispose();
+		}
+	}
 
-    /**
-     * Updates the box
-     *
-     * @param dt The time which passed since the last update
-     */
-    @Override
-    public void update(float dt) {
-        setYPosition(super.position.y + super.velocity.y);
-        super.rectangle.setY(super.position.y + super.velocity.y);
-        if (super.position.y + rectangle.getHeight() < 0) {
-            super.velocity.set(0, 0, 0);
-            dispose();
-        }
-    }
+	/**
+	 * Gets the position of the box
+	 *
+	 * @return
+	 */
+	@Override
+	public Vector3 getPosition() {
+		return super.position;
+	}
 
-    /**
-     * Gets the position of the box
-     *
-     * @return the position of the box
-     */
-    @Override
-    public Vector3 getPosition() {
-        return super.position;
-    }
+	/**
+	 * Sets the position of the box
+	 *
+	 * @param position
+	 *            The Vector3 of the position you would like to set the
+	 *            obstacle's position to.
+	 */
+	@Override
+	public void setPosition(Vector3 position) { super.position = position; }
 
-    /**
-     * Sets the position of the box
-     *
-     * @param position The Vector3 of the position you would like to set the
-     *                 obstacle's position to.
-     */
-    @Override
-    public void setPosition(Vector3 position) {
-        super.position = position;
-    }
+	@Override
+	public void setXPosition(float x) {
+		super.position.x = x;
+	}
 
-    /**
-     * Sets the x coordinate of the box
-     *
-     * @param x The x coordinate of the obstacle's position
-     */
-    @Override
-    public void setXPosition(float x) {
-        super.position.x = x;
-    }
+	public float getXPosition() {
+		return position.x;
+	}
 
-    /**
-     * Returns the x position of the obstacle
-     *
-     * @return the x position of the obstacle
-     */
-    public float getXPosition() {
-        return position.x;
-    }
+	@Override
+	public void setYPosition(float y) {
+		super.position.y = y;
 
-    /**
-     * Sets the y position of the box
-     *
-     * @param y The y coordinate of the obstacle's position
-     */
-    @Override
-    public void setYPosition(float y) {
-        super.position.y = y;
+	}
 
-    }
+	public float getYPosition() {
+		return super.position.y;
+	}
 
-    /**
-     * Gets the y position of the box
-     *
-     * @return The y positionf of the box
-     */
-    @Override
-    public float getYPosition() {
-        return super.position.y;
-    }
+	@Override
+	public Vector3 getVelocity() {
+		return super.getVelocity();
+	}
 
-    /**
-     * Gets the velocity of the box
-     *
-     * @return
-     */
-    @Override
-    public Vector3 getVelocity() {
-        return super.getVelocity();
-    }
+	@Override
+	public void setVelocity(Vector3 velocity) {
+		super.setVelocity(velocity);
+	}
 
 	@Override
 	public String getPath() {
