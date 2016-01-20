@@ -22,10 +22,10 @@ public class Runner {
     public ArrayList<Bullet> bullets;
     public boolean shoot;
     private Animation playerAnimation;
-    private int health;
+    private float health;
     private float horizontalSpeed;
     private float horizontalDeceleration = 0.5f;
-    private final int RUNNER_Y = 160;
+    private final float RUNNER_Y = 160;
     private final float ANIM_CYCLE_TIME = 0.25f;
     private Sound moveSound;
     private float soundTimer;
@@ -53,14 +53,15 @@ public class Runner {
         texture = new Texture(path);
         velocity = new Vector3(0, 0, 0);
         position = new Vector3(((Fartlek.WIDTH / 2) - ((texture.getWidth() / animFrames) / 2)), RUNNER_Y, 0);
-        rectangle = new Rectangle(position.x+(texture.getWidth() / animFrames)*(rectBuffer), position.y+(texture.getHeight())*(rectBuffer), (texture.getWidth() / animFrames)*(1-(2*rectBuffer)), (texture.getHeight())*(1-(2*rectBuffer)));
-        horizontalSpeed = 8;
+        rectangle = new Rectangle(position.x + (texture.getWidth() / animFrames) * (rectBuffer), position.y + (texture.getHeight()) * (rectBuffer), (texture.getWidth() / animFrames) * (1 - (2 * rectBuffer)), (texture.getHeight()) * (1 - (2 * rectBuffer)));
+        horizontalSpeed = 8f;
         playerAnimation = new Animation(new TextureRegion(texture), animFrames, ANIM_CYCLE_TIME);
         moveSound = Gdx.audio.newSound(Gdx.files.internal("Sounds\\movesound1.ogg"));
         bullets = new ArrayList<Bullet>();
     }
-    public Runner(String path, int animFrames,float rectBuffer){
-        this(path,animFrames);
+
+    public Runner(String path, int animFrames, float rectBuffer) {
+        this(path, animFrames);
         this.rectBuffer = rectBuffer;
     }
 
@@ -102,12 +103,15 @@ public class Runner {
             }
         }
     }
-    public void setHorizontalSpeed(float speed){
+
+    public void setHorizontalSpeed(float speed) {
         horizontalSpeed = speed;
     }
-    public int getHorizontalSpeed(){
+
+    public float getHorizontalSpeed() {
         return horizontalSpeed;
     }
+
     /**
      * Moves the character left
      */
@@ -115,7 +119,7 @@ public class Runner {
         if (Fartlek.soundFXEnabled) {
             playMoveSound();
         }
-        setX(position.x-horizontalSpeed);
+        setX(position.x - horizontalSpeed);
     }
 
     /**
@@ -125,7 +129,7 @@ public class Runner {
         if (Fartlek.soundFXEnabled) {
             playMoveSound();
         }
-        setX(position.x+horizontalSpeed);
+        setX(position.x + horizontalSpeed);
     }
 
     /**
@@ -166,20 +170,18 @@ public class Runner {
     }
 
     /**
-     *
      * @return
      */
-    public float getX(){
+    public float getX() {
         return position.x;
     }
 
     /**
-     *
      * @param x
      */
 
-    public void setX(float x){
-        position.x=x;
+    public void setX(float x) {
+        position.x = x;
         rectangle.setX(x);
     }
 
