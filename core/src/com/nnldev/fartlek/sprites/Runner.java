@@ -102,7 +102,12 @@ public class Runner {
             }
         }
     }
-
+    public void setHorizontalSpeed(float speed){
+        horizontalSpeed = speed;
+    }
+    public int getHorizontalSpeed(){
+        return horizontalSpeed;
+    }
     /**
      * Moves the character left
      */

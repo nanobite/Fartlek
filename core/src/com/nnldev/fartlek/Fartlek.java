@@ -54,6 +54,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static int currentSceneNum;
     public static boolean SHOW_AD;
     public static float PLAYER_RECT_BUFFER = 0.05f;
+    public static Vector3 rotations;
     /**
      * The method where everything is created
      */
@@ -82,6 +83,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
             ACCEL = new Vector3(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
         }
         border = new Texture("Extras&Logo\\border.png");
+        rotations = new Vector3();
     }
 
     /**
@@ -89,6 +91,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void render() {
+        rotations.set((float)Gdx.input.getPitch(),(float)Gdx.input.getRoll(),(float)Gdx.input.getAzimuth());
         scrnHeight = Gdx.graphics.getHeight();
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
