@@ -67,6 +67,7 @@ public class PlayState extends State {
 
     public static String[] OBSTACLE_TEXTURES = {"Items\\emptybox.png"};
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
+    public static float startYRotation,yRotationDiff;
 
     public enum Phase {
         RUNNING, PAUSE, DEAD
@@ -150,6 +151,8 @@ public class PlayState extends State {
         bottomLeft = new TouchSector(0, 150, Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2);
         bottomRight = new TouchSector((Fartlek.WIDTH) / 2, 150, Fartlek.WIDTH / 2, Fartlek.HEIGHT / 2);
         bottomMiddle = new TouchSector(0, 0, Fartlek.WIDTH, 149);
+        startYRotation = Fartlek.rotations.y;
+        yRotationDiff = 0;
     }
 
     /**
@@ -285,8 +288,12 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {//dt is delta time
         handleInput();
+        yRotationDiff = Fartlek.rotations.y-startYRotation;
 
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
+            if(Fartlek.GYRO_ON){
+                runner.move(yRotationDiff/10);
+            }
             runner.update(dt);
             // Loops through all the tiles and updates their positions
             for (int i = 0; i < sceneTiles.size(); i++) {

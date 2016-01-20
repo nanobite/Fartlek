@@ -58,11 +58,15 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static boolean SHOW_AD;
     public static float PLAYER_RECT_BUFFER = 0.05f;
     public static Vector3 rotations;
+    public static float HorizontalPlayerBuffer;
+    public static boolean GYRO_ON;
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
+        GYRO_ON = false;
+        HorizontalPlayerBuffer = 30;
         currentSongNum = 0;
         currentSceneNum = 0;
         fpsLogger = new FPSLogger();
@@ -96,9 +100,16 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     /**
      * The method which loops continuously and where all the events are handled.
      */
+    float tempCounter;
     @Override
     public void render() {
-        rotations.set((float)Gdx.input.getPitch(),(float)Gdx.input.getRoll(),(float)Gdx.input.getAzimuth());
+        tempCounter+=Gdx.graphics.getDeltaTime();
+        if(tempCounter>=0.75f){
+            tempCounter = 0;
+            System.out.println("Rotations( X: "+rotations.x+" Y:"+rotations.y+" Z:"+rotations.z+")");
+        }
+        rotations.set((float) Gdx.input.getPitch(), (float) Gdx.input.getRoll(), (float) Gdx.input.getAzimuth());
+
         scrnHeight = Gdx.graphics.getHeight();
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
@@ -131,9 +142,10 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      * @param accDelta
      */
     public void printAccValues(float accDelta) {
-        if (accDelta >= 0.5f && ACCELEROMETER_AVAILABLE) {
+        if (accDelta >= 1f && ACCELEROMETER_AVAILABLE) {
             System.out.println("GYRO - (X: " + ACCEL.x + " Y: " + ACCEL.y + " Z: " + ACCEL.z + ")");
             accDelta = 0;
+
         }
     }
 

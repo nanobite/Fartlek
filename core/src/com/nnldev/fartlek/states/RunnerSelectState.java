@@ -44,6 +44,7 @@ public class RunnerSelectState extends State {
                 gsm.push(new MenuState(gsm));
                 dispose();
             }
+            Fartlek.HorizontalPlayerBuffer = 0;
             if(stephenBtn.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//stephen character selected button clicked
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.PLAYER_ANIMATION_NAME = "Characters\\stephen.png";
@@ -58,19 +59,20 @@ public class RunnerSelectState extends State {
                 Fartlek.PLAYER_ANIMATION_FRAMES = 14;
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//stone map
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\tile1.png";
+                Fartlek.SCENE_BACKGROUND = "Scene\\stoneback.png";
                 Fartlek.BOX_TEXTURE="";
                 Fartlek.ENEMY_TEXTURE="Enemies\\zombie.png";
             }else if(scene2.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//tech map
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\bckg.png";
+                Fartlek.SCENE_BACKGROUND = "Scene\\techback.png";
                 Fartlek.BOX_TEXTURE="";
                 Fartlek.ENEMY_TEXTURE="Enemies\\ufo.png";
             }else if(scene3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//forest map
                 //add code to change button texture to make it "pressed looking"
-                Fartlek.SCENE_BACKGROUND = "Scene\\file.png";
+                Fartlek.SCENE_BACKGROUND = "Scene\\forstmap.png";
                 Fartlek.BOX_TEXTURE="";
                 Fartlek.ENEMY_TEXTURE="Enemies\\snake.png";
+                Fartlek.HorizontalPlayerBuffer = 30;
             }
         }
     }
@@ -96,7 +98,7 @@ public class RunnerSelectState extends State {
         sb.draw(character2.getTexture(),character2.getPosition().x,character2.getPosition().y);
         sb.draw(character3.getTexture(),character3.getPosition().x,character3.getPosition().y);
         sb.draw(scene1.getTexture(),scene1.getPosition().x,scene1.getPosition().y);
-        sb.draw(scene2.getTexture(),scene2.getPosition().x,scene2.getPosition().y);
+        sb.draw(scene2.getTexture(), scene2.getPosition().x, scene2.getPosition().y);
         sb.draw(scene3.getTexture(),scene3.getPosition().x,scene3.getPosition().y);
         sb.end();
     }
