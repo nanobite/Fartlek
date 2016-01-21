@@ -1,3 +1,9 @@
+/**
+ * Fartlek Android Launcher
+ * Nano, Nick & Lazar
+ * January 20 2016
+ * Android launcher for Fartlek game
+ */
 package com.nnldev.fartlek.android;
 
 import android.content.Intent;
@@ -23,7 +29,9 @@ public class AndroidLauncher extends AndroidApplication {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Fartlek(), config);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        AdBuddiz.setPublisherKey("3`8e23cd4-a54c-4101-a470-eb9583d04395");
+        
+        AdBuddiz.setLogLevel(AdBuddizLogLevel.Info); 
+        AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
         showAd();
         ManageAds manageAds = new ManageAds();
@@ -62,6 +70,14 @@ public class AndroidLauncher extends AndroidApplication {
         super.onResume();
         showAd();
     }
+    /**
+     * Gets rid of useless stuff
+     */
+    @Override 
+    protected void onDestroy(){
+        super.onDestroy();
+        AdBuddiz.onDestroy();
+    }
 
 
     /**
@@ -80,6 +96,7 @@ public class AndroidLauncher extends AndroidApplication {
         public void run() {
             while (true) {
                 if (Fartlek.SHOW_AD) {
+                    Fartlek.SHOW_AD = false;
                     showAd();
                 }
             }
