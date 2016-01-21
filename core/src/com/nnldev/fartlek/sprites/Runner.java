@@ -249,7 +249,7 @@ public class Runner {
 
         if (reloaded) {
             System.out.println("Shoot");
-            bullets.add(new Bullet("Items\\bullet.png", getPosition().x));
+            bullets.add(new Bullet("Items\\bullet.png", (getPosition().x+(15))-(new Texture("Items\\bullet.png").getWidth()/2)));
             shoot = true;
             reloaded = false;
             startCounting = true;

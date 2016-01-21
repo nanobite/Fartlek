@@ -382,8 +382,8 @@ public class PlayState extends State {
         }
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
-        if(PLAYSTATE_PHASE==Phase.PAUSE){
-            sb.draw(playBtn.getTexture(),playBtn.getPosition().x,playBtn.getPosition().y,200,200);
+        if (PLAYSTATE_PHASE == Phase.PAUSE) {
+            sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, 200, 200);
         }
         if (PLAYSTATE_PHASE == Phase.DEAD) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
@@ -416,13 +416,42 @@ public class PlayState extends State {
         sb.end();
     }
 
+    public void addScoreToFile(int score) {
+        String out = "";
+        try {
+            FileReader fr = new FileReader("Extras&Logo\\scores.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String txt;
+            boolean eof = false;
+            while (!eof) {
+                txt = br.readLine();
+                if (txt == null) {
+                    eof = true;
+                    out += score;
+                } else {
+                    out += txt+"\n";
+                }
+            }
+            br.close();
+            fr.close();
+        } catch (Exception e) {
+        }
+        try {
+            FileWriter fw = new FileWriter("Extras&Logo\\scores.txt");
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(out);
+            bw.close();
+            fw.close();
+        } catch (Exception e) {
+        }
+    }
+
     /**
      * Disposes of objects to avoid memory leaks
      */
     @Override
     public void dispose() {
-        String scores;
-
+        addScoreToFile(score);
         pauseBtn.dispose();
         playBtn.dispose();
         if (dead) {

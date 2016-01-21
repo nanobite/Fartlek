@@ -60,17 +60,17 @@ public class RunnerSelectState extends State {
             }else if(scene1.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//stone map
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.SCENE_BACKGROUND = "Scene\\stoneback.png";
-                Fartlek.BOX_TEXTURE="";
+                Fartlek.BOX_TEXTURE="Items\\woodbox.png";
                 Fartlek.ENEMY_TEXTURE="Enemies\\zombie.png";
             }else if(scene2.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//tech map
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.SCENE_BACKGROUND = "Scene\\techback.png";
-                Fartlek.BOX_TEXTURE="";
+                Fartlek.BOX_TEXTURE="Items\\techbox.png";
                 Fartlek.ENEMY_TEXTURE="Enemies\\ufo.png";
             }else if(scene3.contains(Fartlek.mousePos.x,Fartlek.mousePos.y)){//forest map
                 //add code to change button texture to make it "pressed looking"
                 Fartlek.SCENE_BACKGROUND = "Scene\\forstmap.png";
-                Fartlek.BOX_TEXTURE="";
+                Fartlek.BOX_TEXTURE="Items\\woodbox.png";
                 Fartlek.ENEMY_TEXTURE="Enemies\\snake.png";
                 Fartlek.HorizontalPlayerBuffer = 30;
             }
