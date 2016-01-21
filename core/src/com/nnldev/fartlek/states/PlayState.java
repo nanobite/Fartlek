@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 import com.nnldev.fartlek.essentials.Button;
 import com.nnldev.fartlek.essentials.GameStateManager;
@@ -25,10 +24,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayState extends State {
@@ -96,8 +93,8 @@ public class PlayState extends State {
         Rectangle rect1 = new Rectangle(240 - (texture.getWidth() / 16), 160 + texture.getHeight() * (1 / 3), texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight() * (1 / 3));
         Rectangle rect2 = new Rectangle(240 - (texture.getWidth() / 48), 160, (texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES) * (1 / 3), texture.getHeight());
         Rectangle[] rectangles = {rect1, rect2};
-        boxTextureName = "Items\\woodbox.png";
-        tileTextureName = "Scene\\forestmap.png";
+        boxTextureName = Fartlek.BOX_TEXTURE;
+        tileTextureName = Fartlek.SCENE_BACKGROUND;
         pauseBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924), false);
         pauseRect = new Rectangle((float) (Fartlek.WIDTH * 0.874), (float) (Fartlek.HEIGHT * 0.924),
                 (float) (pauseBtn.getTexture().getWidth() * 1.01), (float) (pauseBtn.getTexture().getHeight() * 1.01));
@@ -108,7 +105,6 @@ public class PlayState extends State {
                 (Fartlek.WIDTH / 3), (Fartlek.HEIGHT / 4));
         pauseBtn.setRectangle(pauseRect);
         playBtn.setRectangle(playRect);
-        runner = new Runner("Characters\\stephen.png", 8, rectangles);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
 
@@ -224,8 +220,11 @@ public class PlayState extends State {
      */
     @Override
     protected void handleInput() {
+        //If th screen is touched
         if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
+            //if the screen is touchd once
             if (Gdx.input.justTouched()) {
+                //Switches between actionsfo the playr while running, while dead and while pausing
                 if (PLAYSTATE_PHASE == Phase.PAUSE) {
                     if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
@@ -264,8 +263,7 @@ public class PlayState extends State {
                 }
 
             }
-
-
+            //If the runner is running
             if (PLAYSTATE_PHASE == Phase.RUNNING) {
                 // If the x,y position of the click is in the bottom left
                 if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
@@ -294,24 +292,35 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {//dt is delta time
         handleInput();
-        yRotationDiff = Fartlek.rotations.y - startYRotation;
+        yRotationDiff = (Fartlek.rotations.y - startYRotation) / 5;
+        //Moves the player based on the gyro
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
             if (Fartlek.GYRO_ON) {
-                runner.move((float) ((int) (yRotationDiff / 5)));
+                if (Math.abs(yRotationDiff) > 3) {
+                    if (yRotationDiff < 0) {
+                        runner.left();
+                    } else {
+                        runner.right();
+                    }
+                }
+
             }
             runner.update(dt);
             // Loops through all the tiles and updates their positions
             for (int i = 0; i < sceneTiles.size(); i++) {
                 sceneTiles.get(i).update();
             }
+            //Resets scene the scene tile which is below the screen
             for (int i = 0; i < tiles; i++) {
                 if ((sceneTiles.get(i).getPosition().y + sceneTiles.get(i).getRectangle().height) < 0) {
                     resetSceneTile(i);
                 }
             }
+            //Updates all the obstacles
             for (int i = 0; i < obstacleSet.size(); i++) {
                 obstacleSet.get(i).update(dt);
             }
+            //Removes any un-needed obstacles
             for (int i = 0; i < obstacleSet.size(); i++) {
                 if ((obstacleSet.get(i).getPosition().y + obstacleSet.get(i).getRectangle().height) < 0) {
                     obstacleSet.remove(0);
@@ -320,6 +329,7 @@ public class PlayState extends State {
                     score++;
                 }
             }
+            //Checks for obstacle - player collision
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.getRectangle().length; j++) {
                     if (runner.getRectangle()[j].overlaps(obstacleSet.get(i).getRectangle())) {
@@ -330,6 +340,7 @@ public class PlayState extends State {
                 }
 
             }
+            //Checks for obstacle bullet collision
             for (int i = 0; i < obstacleSet.size(); i++) {
                 for (int j = 0; j < runner.bullets.size(); j++) {
 
@@ -349,6 +360,7 @@ public class PlayState extends State {
                     }
                 }
             }
+            //Checks for collateral
             for (int i = 0; i < runner.bullets.size(); i++) {
                 if (i == killerID) {
                     collatCount = runner.bullets.get(i).kills;
@@ -372,6 +384,7 @@ public class PlayState extends State {
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(Fartlek.cam.combined);
         sb.begin();
+        //Loops through all the scene tiles and renders them
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
@@ -429,7 +442,7 @@ public class PlayState extends State {
                     eof = true;
                     out += score;
                 } else {
-                    out += txt+"\n";
+                    out += txt + "\n";
                 }
             }
             br.close();
@@ -452,6 +465,9 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         addScoreToFile(score);
+        Fartlek.SCORE = score;
+        Fartlek.androidScores = "";
+        Fartlek.writeScore = true;
         pauseBtn.dispose();
         playBtn.dispose();
         if (dead) {
@@ -470,35 +486,6 @@ public class PlayState extends State {
         }
         sceneTiles.clear();
         obstacleSet.clear();
-    }
-
-    int partition(ArrayList<Integer> arr, int left, int right) {
-        int i = left, j = right;
-        int tmp;
-        int pivot = arr.get((left + right) / 2);
-        while (i <= j) {
-            while (arr.get(i) < pivot)
-                i++;
-            while (arr.get(j) > pivot)
-                j--;
-            if (i <= j) {
-                tmp = arr.get(i);
-                arr.set(i, arr.get(j));
-                arr.set(j, tmp);
-                i++;
-                j--;
-            }
-        }
-        return i;
-    }
-
-
-    private void quickSort(ArrayList<Integer> arr, int left, int right) {
-        int index = partition(arr, left, right);
-        if (left < index - 1)
-            quickSort(arr, left, index - 1);
-        if (index < right)
-            quickSort(arr, index, right);
     }
 
 }

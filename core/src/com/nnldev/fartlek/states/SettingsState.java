@@ -39,11 +39,13 @@ public class SettingsState extends State {
     }
 
     /**
-     *
+     * Hanldes usr input
      */
     @Override
     protected void handleInput() {
+        //If touched
         if (Gdx.input.justTouched()) {
+            //If a button is touched it will preform an action
             if (exitBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                 gsm.push(new MenuState(gsm));
                 dispose();
@@ -101,7 +103,7 @@ public class SettingsState extends State {
     }
 
     /**
-     *
+     * Disposes of graphics and unnecessary resources to avoid memory leaks
      */
     @Override
     public void dispose() {

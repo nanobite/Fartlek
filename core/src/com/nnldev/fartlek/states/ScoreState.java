@@ -23,6 +23,12 @@ public class ScoreState extends State {
     private FreeTypeFontGenerator generator;
     private BitmapFont infoFont;
 
+    /**
+     * Creates a new scor view state
+     *
+     * @param gsm
+     * @deprecated No longer needed, the info stat handles ths stuff now
+     */
     protected ScoreState(GameStateManager gsm) {
         super(gsm);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);

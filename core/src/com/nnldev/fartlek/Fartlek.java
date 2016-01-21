@@ -8,7 +8,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,15 +17,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.Input.Orientation;
 
-import com.nnldev.fartlek.essentials.Animation;
 import com.nnldev.fartlek.essentials.GameStateManager;
+import com.nnldev.fartlek.states.LoadState;
 import com.nnldev.fartlek.states.MenuState;
-import com.nnldev.fartlek.states.PlayState;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
@@ -66,16 +60,23 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     public static float HorizontalPlayerBuffer;
     public static boolean GYRO_ON;
     public static boolean showAchievements;
-    public enum Achievements{
-        One,Two,Three,Four,Five,None
+
+    public enum Achievements {
+        One, Two, Three, Four, Five, None
     }
+
     public static Achievements achievement;
+    public static boolean writeScore, readScore;
+    public static String androidScores;
+    public static String androidReadScores, getAndroidWriteScores;
 
     /**
      * The method where everything is created
      */
     @Override
     public void create() {
+        writeScore = false;
+        androidScores = "";
         SCORES = new ArrayList<Integer>();
         showAchievements = false;
         achievement = Achievements.None;
@@ -97,7 +98,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         mousePos = new Vector3();
         cam = new OrthographicCamera();
         scrnHeight = Gdx.graphics.getHeight();
-        gsm.push(new MenuState(gsm));
+        gsm.push(new LoadState(gsm));
         ACCELEROMETER_AVAILABLE = Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
         if (ACCELEROMETER_AVAILABLE) {
             ORIENTATION = Gdx.input.getRotation();
@@ -106,8 +107,10 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         }
         border = new Texture("Extras&Logo\\border.png");
         rotations = new Vector3();
-        BOX_TEXTURE = "Items\\woodbox.png";//default
-        ENEMY_TEXTURE = "Enemies\\snake.png";//default
+        SCENE_BACKGROUND = "Scene\\forestmap.png";
+        BOX_TEXTURE = "Items\\woodbox.png";
+        ENEMY_TEXTURE = "Enemies\\snake.png";
+        HorizontalPlayerBuffer = 30;
     }
 
     /**
@@ -115,9 +118,13 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     float tempCounter;
 
+    /**
+     * The render method were all drawing occurs
+     */
     @Override
     public void render() {
         tempCounter += Gdx.graphics.getDeltaTime();
+        //Maks it so the rotation values aren't spammed for asy of reading
         if (tempCounter >= 0.75f) {
             tempCounter = 0;
             System.out.println("Rotations( X: " + rotations.x + " Y:" + rotations.y + " Z:" + rotations.z + ")");
@@ -125,6 +132,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
         rotations.set((float) Gdx.input.getPitch(), (float) Gdx.input.getRoll(), (float) Gdx.input.getAzimuth());
 
         scrnHeight = Gdx.graphics.getHeight();
+        //Orints the screen so it works on any screen with a normal aspect ratio
         if (scrnHeight <= HEIGHT) {
             cam.setToOrtho(false, WIDTH, HEIGHT);
         } else {
