@@ -90,8 +90,8 @@ public class PlayState extends State {
         DONE = false;
         Texture texture = new Texture(Fartlek.PLAYER_ANIMATION_NAME);
         //rect one is the horizontal one
-        Rectangle rect1 = new Rectangle(240 - (texture.getWidth() / 16), 160 + texture.getHeight() * (1 / 3), texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight() * (1 / 3));
-        Rectangle rect2 = new Rectangle(240 - (texture.getWidth() / 48), 160, (texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES) * (1 / 3), texture.getHeight());
+        Rectangle rect1 = new Rectangle(240 - (texture.getWidth() / 16), 160 + ((float) texture.getHeight() * (float) (1 / 3)), texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight() * (1 / 3));
+        Rectangle rect2 = new Rectangle(240 - (texture.getWidth() / 48), 160, (texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES) * (float)(1 / 3), texture.getHeight());
         Rectangle[] rectangles = {rect1, rect2};
         boxTextureName = Fartlek.BOX_TEXTURE;
         tileTextureName = Fartlek.SCENE_BACKGROUND;
@@ -215,7 +215,7 @@ public class PlayState extends State {
         scoreFontY = (Fartlek.HEIGHT / 5) * 3;
         PLAYSTATE_PHASE = Phase.DEAD;
         Fartlek.SCORES.add(score);
-        Fartlek.SHOW_AD = ((int) (Math.random() * 5) == 1) ? true : false;//I love these
+        Fartlek.SHOW_AD = ((int) (Math.random() * 5) == 1);//I love these
     }
 
 
@@ -270,15 +270,7 @@ public class PlayState extends State {
             //If the runner is running
             if (PLAYSTATE_PHASE == Phase.RUNNING) {
                 //Allows for the player to move using gyro
-                if (Fartlek.GYRO_ON) {
-                    if (Math.abs(yRotationDiff) > 1) {
-                        if (yRotationDiff < 0) {
-                            runner.move(Math.max(-10f,yRotationDiff));
-                        } else {
-                            runner.move(Math.min(10f, yRotationDiff));
-                        }
-                    }
-                }
+
                 // If the x,y position of the click is in the bottom left
                 if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                     runner.left();
@@ -292,8 +284,16 @@ public class PlayState extends State {
                     runner.shoot();
                 }
             }
-
-
+        }
+        //Makes for prtty stuff
+        if (Fartlek.GYRO_ON&&PLAYSTATE_PHASE==Phase.RUNNING) {
+            if (Math.abs(yRotationDiff) > 1.5f) {
+                if (yRotationDiff < 0) {
+                    runner.move(Math.max(-10f, yRotationDiff));
+                } else {
+                    runner.move(Math.min(10f, yRotationDiff));
+                }
+            }
         }
     }
 
