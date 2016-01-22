@@ -51,7 +51,7 @@ public class ScoreState extends State {
             while (!eof) {
                 num++;
                 txt = br.readLine();
-                if (txt.equals(null)) {
+                if (txt == (null)) {
                     eof = true;
                 } else {
                     scores += num + ":" + txt + "\n";

@@ -8,6 +8,7 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 
 /**
  * Created by Nano on 02/01/2016.
+ * A screen where all the settings are shown
  */
 public class SettingsState extends State {
     private Button exitBtn;
@@ -16,6 +17,8 @@ public class SettingsState extends State {
     private Button gyroToggleBtn;
 
     /**
+     * Constructor
+     *
      * @param gsm
      */
     public SettingsState(GameStateManager gsm) {

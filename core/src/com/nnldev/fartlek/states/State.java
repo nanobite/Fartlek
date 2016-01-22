@@ -3,6 +3,11 @@
  * An abstract class to give guidelines for every state
  */
 package com.nnldev.fartlek.states;
+/**
+ * @author Nano
+ * January 20, 2016
+ * Abstract class holding all th restrctions for states
+ */
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nnldev.fartlek.Fartlek;
