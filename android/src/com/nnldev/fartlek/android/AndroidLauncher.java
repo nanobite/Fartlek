@@ -1,25 +1,24 @@
+/**
+ * Fartlek Android Launcher
+ * Nano, Nick & Lazar
+ * January 20 2016
+ * Android launcher for Fartlek game
+ */
 package com.nnldev.fartlek.android;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.GameHelper;
+import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.nnldev.fartlek.Fartlek;
 import com.purplebrain.adbuddiz.sdk.AdBuddiz;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class AndroidLauncher extends AndroidApplication {
-
-    FileOutputStream fos;
-    public String SCORE_FILE = "SCORES";
 
     public AndroidLauncher() {
     }
@@ -30,61 +29,15 @@ public class AndroidLauncher extends AndroidApplication {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Fartlek(), config);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        AdBuddiz.setPublisherKey("3`8e23cd4-a54c-4101-a470-eb9583d04395");
+        
+        AdBuddiz.setLogLevel(AdBuddizLogLevel.Info); 
+        AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
-        AdBuddiz.setTestModeActive();
-        System.out.println((AdBuddiz.isReadyToShowAd(this))?"Show":"Don't Show");
-        AdBuddiz.showAd(this);
+        showAd();
+        ManageAds manageAds = new ManageAds();
+        manageAds.start();
         ManageAchievements manageAchievements = new ManageAchievements();
         manageAchievements.start();
-        ManageScores manageScores = new ManageScores();
-        //manageScores.start();
-        try {
-            fos = openFileOutput(SCORE_FILE, Context.MODE_PRIVATE);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void writeScores(String out) {
-        File f = new File(SCORE_FILE);
-        try {
-            fos = openFileOutput(SCORE_FILE, Context.MODE_PRIVATE);
-            fos.write(out.getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String readScores() {
-        String out = "", collected = null;
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(SCORE_FILE);
-            byte[] dataArray = new byte[fis.available()];
-            while (fis.read(dataArray) != -1) {
-                collected = new String(dataArray);
-            }
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return out;
     }
 
     @Override
@@ -102,14 +55,54 @@ public class AndroidLauncher extends AndroidApplication {
         super.onActivityResult(request, response, data);
     }
 
+
+    public void showAd() {
+        AdBuddiz.showAd(this);
+        System.out.println("Ad Shown");
+        Fartlek.SHOW_AD = false;
+    }
+
     /**
      * Shows an ad on every resume.
      */
     @Override
     protected void onResume() {
         super.onResume();
+        showAd();
+    }
+    /**
+     * Gets rid of useless stuff
+     */
+    @Override 
+    protected void onDestroy(){
+        super.onDestroy();
+        AdBuddiz.onDestroy();
     }
 
+
+    /**
+     * I love libgdx but I hate that I have to make creative solutions to some problems.
+     */
+    public class ManageAds extends Thread {
+        /**
+         * Constructor for the thread.
+         */
+        ManageAds() {
+        }
+
+        /**
+         * Runs the thread
+         */
+        public void run() {
+            while (true) {
+                if (Fartlek.SHOW_AD) {
+                    Fartlek.SHOW_AD = false;
+                    showAd();
+                }
+            }
+
+        }
+    }
 
     /**
      * I love libgdx but I hate that I have to make creative solutions to some problems.
@@ -140,30 +133,6 @@ public class AndroidLauncher extends AndroidApplication {
                         case Five:
                             break;
                     }
-                }
-            }
-        }
-    }
-
-    public class ManageScores extends Thread {
-        /**
-         * Constructor for the thread.
-         */
-        ManageScores() {
-        }
-
-        /**
-         * Runs the thread
-         */
-        public void run() {
-            while (true) {
-                if (Fartlek.writeScore) {
-                    Fartlek.writeScore = false;
-                    writeScores(Fartlek.getAndroidWriteScores);
-                }
-                if (Fartlek.readScore) {
-                    Fartlek.readScore = false;
-                    Fartlek.androidReadScores = readScores();
                 }
             }
         }
