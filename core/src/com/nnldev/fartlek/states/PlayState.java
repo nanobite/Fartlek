@@ -203,6 +203,9 @@ public class PlayState extends State {
         }
     }
 
+    /**
+     * Handles events that occur when th player dies
+     */
     public void gameOver() {
         music.stop();
         restartBtn = new Button("Buttons\\playbtn.png", Fartlek.WIDTH / 4, Fartlek.HEIGHT / 5 * 2, false);
@@ -212,6 +215,7 @@ public class PlayState extends State {
         scoreFontY = (Fartlek.HEIGHT / 5) * 3;
         PLAYSTATE_PHASE = Phase.DEAD;
         Fartlek.SCORES.add(score);
+        Fartlek.SHOW_AD = ((int) (Math.random() * 5) == 1) ? true : false;//I love these
     }
 
 
@@ -265,6 +269,16 @@ public class PlayState extends State {
             }
             //If the runner is running
             if (PLAYSTATE_PHASE == Phase.RUNNING) {
+                //Allows for the player to move using gyro
+                if (Fartlek.GYRO_ON) {
+                    if (Math.abs(yRotationDiff) > 1) {
+                        if (yRotationDiff < 0) {
+                            runner.move(Math.max(-10f,yRotationDiff));
+                        } else {
+                            runner.move(Math.min(10f, yRotationDiff));
+                        }
+                    }
+                }
                 // If the x,y position of the click is in the bottom left
                 if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                     runner.left();
@@ -295,16 +309,7 @@ public class PlayState extends State {
         yRotationDiff = (Fartlek.rotations.y - startYRotation) / 5;
         //Moves the player based on the gyro
         if (PLAYSTATE_PHASE == Phase.RUNNING) {
-            if (Fartlek.GYRO_ON) {
-                if (Math.abs(yRotationDiff) > 3) {
-                    if (yRotationDiff < 0) {
-                        runner.left();
-                    } else {
-                        runner.right();
-                    }
-                }
 
-            }
             runner.update(dt);
             // Loops through all the tiles and updates their positions
             for (int i = 0; i < sceneTiles.size(); i++) {
@@ -388,16 +393,20 @@ public class PlayState extends State {
         for (Scene tile : sceneTiles) {
             sb.draw(tile.getTexture(), tile.getPosition().x, tile.getPosition().y);
         }
+        //Loops through all obstacles and draws them
         for (int i = 0; i < obstacleSet.size(); i++) {
             sb.draw(obstacleSet.get(i).getTexture(), obstacleSet.get(i).getPosition().x,
                     obstacleSet.get(i).getPosition().y, obstacleSet.get(i).getRectangle().width,
                     obstacleSet.get(i).getRectangle().height);
         }
+
         sb.draw(runner.getTexture(), runner.getPosition().x, runner.getPosition().y);
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
+        //Draws play button
         if (PLAYSTATE_PHASE == Phase.PAUSE) {
             sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, 200, 200);
         }
+        //Draws dead guy stuff
         if (PLAYSTATE_PHASE == Phase.DEAD) {
             deadFont.draw(sb, "GAME OVER", (float) (Fartlek.WIDTH / 5.7), (Fartlek.HEIGHT / 4) * 3);
             sb.draw(restartBtn.getTexture(), restartBtn.getPosition().x, restartBtn.getPosition().y, Fartlek.WIDTH / 6,
@@ -412,13 +421,16 @@ public class PlayState extends State {
                         playBtn.getRectangle().height);
             }
         }
+        //Draws bullets
         if (runner.shoot) {
+            //Loops through bullets
             for (int i = 0; i < runner.bullets.size(); i++) {
                 runner.bullets.get(i).render(sb);
             }
         }
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
         if (drawCollat) {
+            //Draws collateral txt
             collatFont.draw(sb, "" + collatCount, Fartlek.WIDTH / 2, collatFontY);
             collatFontY++;
             if (collatFontY > Fartlek.HEIGHT) {
@@ -429,6 +441,11 @@ public class PlayState extends State {
         sb.end();
     }
 
+    /**
+     * Adds score to the txt file on desktop
+     *
+     * @param score The scor to be appended to the text file.
+     */
     public void addScoreToFile(int score) {
         String out = "";
         try {
@@ -470,7 +487,7 @@ public class PlayState extends State {
         Fartlek.writeScore = true;
         pauseBtn.dispose();
         playBtn.dispose();
-        if (dead) {
+        if (PLAYSTATE_PHASE == Phase.DEAD) {
             restartBtn.dispose();
             quitBtn.dispose();
         }

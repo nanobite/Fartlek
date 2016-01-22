@@ -17,6 +17,7 @@ import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
 import com.nnldev.fartlek.Fartlek;
 import com.purplebrain.adbuddiz.sdk.AdBuddiz;
+import com.purplebrain.adbuddiz.sdk.AdBuddizLogLevel;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -29,8 +30,6 @@ public class AndroidLauncher extends AndroidApplication {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new Fartlek(), config);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        
-        AdBuddiz.setLogLevel(AdBuddizLogLevel.Info); 
         AdBuddiz.setPublisherKey("38e23cd4-a54c-4101-a470-eb9583d04395");
         AdBuddiz.cacheAds(this);
         showAd();
