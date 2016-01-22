@@ -1,3 +1,6 @@
+//Lazar and Nano
+//Dec 12 2015
+//Concrete class used to create obstacles from obstacle abstract class
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -5,21 +8,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
-/**
- * Created by Nano on 12/12/2015.
- * This is th box obstacle
- */
 public class Box extends Obstacle {
+	//instance var
 	private int health;
+	//class var
 	public static final float BOX_WIDTH = (Fartlek.WIDTH) / 5.5f;
 
 	/**
-	 * Creates a
-	 *
-	 * @param path
-	 * @param x
-	 * @param y
-	 * @param health
+	 * Creates a box
+	 * @param path the path to sprite image
+	 * @param x the x position
+	 * @param y the y position
+	 * @param health the health
 	 */
 	public Box(String path, float x, float y, int health) {
 		super(path, x, y, BOX_WIDTH, BOX_WIDTH);
@@ -28,9 +28,7 @@ public class Box extends Obstacle {
 
 	/**
 	 * Updates the box
-	 *
-	 * @param dt
-	 *            The time which passed since the last update
+	 * @param dt The time which has passed since the last update
 	 */
 	@Override
 	public void update(float dt) {
@@ -44,8 +42,7 @@ public class Box extends Obstacle {
 
 	/**
 	 * Gets the position of the box
-	 *
-	 * @return
+	 * @return the position
 	 */
 	@Override
 	public Vector3 getPosition() {
@@ -54,48 +51,77 @@ public class Box extends Obstacle {
 
 	/**
 	 * Sets the position of the box
-	 *
-	 * @param position
-	 *            The Vector3 of the position you would like to set the
-	 *            obstacle's position to.
+	 * @param position The Vector3 of the position you would like to set the obstacle's position to
 	 */
 	@Override
 	public void setPosition(Vector3 position) { super.position = position; }
-
+	
+	/**
+	 * Sets x position
+	 * @param x The x position being set
+	 */
 	@Override
 	public void setXPosition(float x) {
 		super.position.x = x;
 	}
-
+	
+	/**
+	 * gets x position
+	 * @return the x position
+	 */
 	public float getXPosition() {
 		return position.x;
 	}
-
+	
+	/**
+	 * Sets y position
+	 * @param y The x position being used
+	 */
 	@Override
 	public void setYPosition(float y) {
 		super.position.y = y;
 
 	}
-
+	
+	/**
+	 * gets y position
+	 * @return the x position
+	 */
 	public float getYPosition() {
 		return super.position.y;
 	}
-
+	
+	/**
+	 * gets the velocity
+	 * @return the velocity
+	 */
 	@Override
 	public Vector3 getVelocity() {
 		return super.getVelocity();
 	}
-
+	
+	/**
+	 * sets the velocity
+	 * @return the velocity being used
+	 */
 	@Override
 	public void setVelocity(Vector3 velocity) {
 		super.setVelocity(velocity);
 	}
-
+	
+	/**
+	 * gets the path to the sprite image
+	 * @return the path
+	 */
 	@Override
 	public String getPath() {
 		return super.getPath();
 	}
-
+	
+	/**
+	 * sets the path
+	 * @param texturePath the path being used
+	 */
 	@Override
 	public void setPath(String texturePath) {
 		// TODO Auto-generated method stub
@@ -104,8 +130,7 @@ public class Box extends Obstacle {
 
 	/**
 	 * Gets the texture of the box
-	 *
-	 * @return
+	 * @return the texture
 	 */
 	@Override
 	public Texture getTexture() {
@@ -113,8 +138,8 @@ public class Box extends Obstacle {
 	}
 
 	/**
-	 * @param texture
-	 *            The texture which the obstacle will be set to
+	 * sets the texture of the box
+	 * @param texture the texture which the obstacle will be set to
 	 */
 	@Override
 	public void setTexture(Texture texture) {
@@ -122,7 +147,8 @@ public class Box extends Obstacle {
 	}
 
 	/**
-	 * @return
+	 * gets the rectangle
+	 * @return the rectangle
 	 */
 	@Override
 	public Rectangle getRectangle() {
@@ -130,8 +156,8 @@ public class Box extends Obstacle {
 	}
 
 	/**
-	 * @param rectangle
-	 *            The rectangle for whome the bounds of this obstacle shall be
+	 * sets the rectangle
+	 * @param rectangle the rectangle for whom the bounds of this obstacle shall be
 	 *            set to
 	 */
 	@Override
@@ -141,7 +167,6 @@ public class Box extends Obstacle {
 
 	/**
 	 * Gets the health of the box
-	 *
 	 * @return The health of the box
 	 */
 	public int getHealth() {
@@ -150,7 +175,6 @@ public class Box extends Obstacle {
 
 	/**
 	 * Sets the health of the box
-	 *
 	 * @param health
 	 */
 	public void setHealth(int health) {
@@ -164,7 +188,12 @@ public class Box extends Obstacle {
 	public void dispose() {
 		super.dispose();
 	}
-
+	
+	/**
+	 * checks if an box is equal to another
+	 * @param obstacle the obstacle being compared
+	 * @return true or false
+	 */
 	@Override
 	public boolean equals(Obstacle obstacle) {
 		if ((obstacle.path.equals(this.path))) {
@@ -173,7 +202,11 @@ public class Box extends Obstacle {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends all info about the box as a string
+	 * @return the string
+	 */
 	@Override
 	public String toString() {
 		return "Path: " + path + "\nCoordinates: (" + getXPosition() + "," + getYPosition() + ")" + "\nVelocities: X="
