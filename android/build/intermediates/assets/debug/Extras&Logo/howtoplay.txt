@@ -1,0 +1,2 @@
+Tough the lower left and right to
+move left and right and avoid obstacles.

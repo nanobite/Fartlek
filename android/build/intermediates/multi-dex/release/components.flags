@@ -1,0 +1,30 @@
+-injars 'C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\transforms\jarMerging\release\jars\1\1f\combined.jar'
+-outjars 'C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\multi-dex\release\componentClasses.jar'
+
+-libraryjars 'C:\Users\Nano\AppData\Local\Android\Sdk\build-tools\23.0.0\lib\shrinkedAndroid.jar'
+
+-forceprocessing
+-dontoptimize
+-dontobfuscate
+-dontusemixedcaseclassnames
+-dontpreverify
+-dontwarn
+-printconfiguration 'C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\multi-dex\release\components.flags'
+
+
+-keep class com.purplebrain.adbuddiz.sdk.AdBuddizActivity {
+    <init>();
+}
+
+-keep class com.nnldev.fartlek.android.AndroidLauncher {
+    <init>();
+}
+
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+
+-keep public class * extends java.lang.annotation.Annotation {
+    <fields>;
+    <methods>;
+}
