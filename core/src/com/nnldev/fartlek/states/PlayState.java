@@ -91,7 +91,7 @@ public class PlayState extends State {
         Texture texture = new Texture(Fartlek.PLAYER_ANIMATION_NAME);
         //rect one is the horizontal one
         Rectangle rect1 = new Rectangle(240 - (texture.getWidth() / 16), 160 + ((float) texture.getHeight() * (float) (1 / 3)), texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES, texture.getHeight() * (1 / 3));
-        Rectangle rect2 = new Rectangle(240 - (texture.getWidth() / 48), 160, (texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES) * (float)(1 / 3), texture.getHeight());
+        Rectangle rect2 = new Rectangle(240 - (texture.getWidth() / 48), 160, (texture.getWidth() / Fartlek.PLAYER_ANIMATION_FRAMES) * (float) (1 / 3), texture.getHeight());
         Rectangle[] rectangles = {rect1, rect2};
         boxTextureName = Fartlek.BOX_TEXTURE;
         tileTextureName = Fartlek.SCENE_BACKGROUND;
@@ -285,8 +285,9 @@ public class PlayState extends State {
                 }
             }
         }
-        //Makes for prtty stuff
-        if (Fartlek.GYRO_ON&&PLAYSTATE_PHASE==Phase.RUNNING) {
+        //Makes the player move from gyro rotation
+        if (Fartlek.GYRO_ON && PLAYSTATE_PHASE == Phase.RUNNING) {
+            //if rotation has reached a threshold it moves the player
             if (Math.abs(yRotationDiff) > 1.5f) {
                 if (yRotationDiff < 0) {
                     runner.move(Math.max(-10f, yRotationDiff));

@@ -24,6 +24,7 @@ import com.nnldev.fartlek.states.MenuState;
 import java.util.ArrayList;
 
 public class Fartlek extends ApplicationAdapter implements InputProcessor {
+    public static boolean GAME_RUNNING;
     public static final int WIDTH = 480, HEIGHT = 800;
     public static final String TITLE = "Fartlek";
     //Can use this in any class to see if it is inside a rectangle.
@@ -75,6 +76,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
      */
     @Override
     public void create() {
+        GAME_RUNNING = true;
         writeScore = false;
         androidScores = "";
         SCORES = new ArrayList<Integer>();
@@ -186,6 +188,7 @@ public class Fartlek extends ApplicationAdapter implements InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
+        GAME_RUNNING = false;
     }
 
     /**

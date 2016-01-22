@@ -7,6 +7,7 @@ import com.nnldev.fartlek.Fartlek;
 
 /**
  * Created by Nano on 12/12/2015.
+ * Scene tile object which is the background screen
  */
 public class Scene {
     private Texture texture;
@@ -64,7 +65,8 @@ public class Scene {
     public void setPosition(Vector3 position) {
         this.position = position;
     }
-    public void setY(float y){
+
+    public void setY(float y) {
         this.position.y = y;
     }
 

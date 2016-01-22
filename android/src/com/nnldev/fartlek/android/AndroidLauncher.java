@@ -69,11 +69,12 @@ public class AndroidLauncher extends AndroidApplication {
         super.onResume();
         showAd();
     }
+
     /**
      * Gets rid of useless stuff
      */
-    @Override 
-    protected void onDestroy(){
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         AdBuddiz.onDestroy();
     }
@@ -93,7 +94,7 @@ public class AndroidLauncher extends AndroidApplication {
          * Runs the thread
          */
         public void run() {
-            while (true) {
+            while (Fartlek.GAME_RUNNING) {
                 if (Fartlek.SHOW_AD) {
                     Fartlek.SHOW_AD = false;
                     showAd();

@@ -1,3 +1,8 @@
+/**
+ * @author Nano
+ * January 20, 2016
+ * The state which is shown when the game is loading
+ */
 package com.nnldev.fartlek.states;
 
 import com.badlogic.gdx.graphics.Texture;

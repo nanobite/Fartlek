@@ -7,6 +7,7 @@ import com.nnldev.fartlek.Fartlek;
 
 /**
  * Created by Nano on 12/12/2015.
+ * This is th box obstacle
  */
 public class Box extends Obstacle {
 	private int health;

@@ -8,6 +8,8 @@ import com.nnldev.fartlek.essentials.GameStateManager;
 
 /**
  * Nano, Nick
+ * January 20, 2016
+ * Runner & map selection screen
  */
 public class RunnerSelectState extends State {
     private Button exitBtn;

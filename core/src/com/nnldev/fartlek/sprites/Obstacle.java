@@ -5,6 +5,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
+/**
+ * Nano, Nick & Lazar
+ * January 20, 2016
+ * Obstacle class for making other obstacls
+ */
 
 public abstract class Obstacle {
     protected Texture texture;
@@ -27,8 +32,9 @@ public abstract class Obstacle {
         texture = new Texture(path);
         position = new Vector3(x, y, 0); // position
         velocity = new Vector3(0, obstacleSpeed, 0);
-        
+
     }
+
     protected Obstacle(String path, float x, float y, float width, float height) {
         this(path, x, y);
         rectangle = new Rectangle(x, y, width, height);

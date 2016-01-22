@@ -18,6 +18,7 @@ import java.io.IOException;
 
 /**
  * Created by Nano on 02/01/2016.
+ * The information state which has all the info for the player to read
  */
 public class InfoState extends State {
     private Button exitBtn;
@@ -216,6 +217,11 @@ public class InfoState extends State {
         return out;
     }
 
+    /**
+     * Invrts an array
+     *
+     * @param arr
+     */
     private void invertArray(int arr[]) {
         int[] tmp = new int[arr.length];
         for (int i = 0; i < tmp.length; i++) {

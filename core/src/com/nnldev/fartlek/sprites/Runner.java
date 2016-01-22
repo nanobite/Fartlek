@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 /**
  * Nano, Nick
+ * January 20, 2016
+ * Runner class which is the player who is running
  */
 public class Runner {
     public boolean reloaded;
@@ -120,11 +122,11 @@ public class Runner {
         rectangle[0].x = position.x;
         rectangle[1].y = position.y;
         rectangle[1].x = position.x + 22;
-        if (position.x < (0+Fartlek.HorizontalPlayerBuffer))
-            position.x = (0+Fartlek.HorizontalPlayerBuffer);
+        if (position.x < (0 + Fartlek.HorizontalPlayerBuffer))
+            position.x = (0 + Fartlek.HorizontalPlayerBuffer);
         //problem here, hitbox keeps moving
-        if (position.x + rectangle[0].getWidth() > (Fartlek.WIDTH-Fartlek.HorizontalPlayerBuffer))
-            position.x = (Fartlek.WIDTH-Fartlek.HorizontalPlayerBuffer) - rectangle[0].getWidth();
+        if (position.x + rectangle[0].getWidth() > (Fartlek.WIDTH - Fartlek.HorizontalPlayerBuffer))
+            position.x = (Fartlek.WIDTH - Fartlek.HorizontalPlayerBuffer) - rectangle[0].getWidth();
     }
 
     /**
@@ -133,7 +135,7 @@ public class Runner {
     public void left() {
         playMoveSound();
         //velocity.x = -horizontalSpeed;
-        position.x-=horizontalSpeed;
+        position.x -= horizontalSpeed;
     }
 
     /**
@@ -142,10 +144,11 @@ public class Runner {
     public void right() {
         playMoveSound();
         //velocity.x = horizontalSpeed;
-        position.x+=horizontalSpeed;
+        position.x += horizontalSpeed;
     }
-    public void move(float speed){
-        position.x+=speed;
+
+    public void move(float speed) {
+        position.x += speed;
     }
 
     /**
@@ -249,7 +252,7 @@ public class Runner {
 
         if (reloaded) {
             System.out.println("Shoot");
-            bullets.add(new Bullet("Items\\bullet.png", (getPosition().x+(15))-(new Texture("Items\\bullet.png").getWidth()/2)));
+            bullets.add(new Bullet("Items\\bullet.png", (getPosition().x + (15)) - (new Texture("Items\\bullet.png").getWidth() / 2)));
             shoot = true;
             reloaded = false;
             startCounting = true;

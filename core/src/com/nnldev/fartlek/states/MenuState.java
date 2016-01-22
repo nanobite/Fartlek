@@ -3,6 +3,11 @@
  * Menu state for the Fartlek game
  */
 package com.nnldev.fartlek.states;
+/**
+ * @author Nano
+ * January 20, 2016
+ * Menu state screen
+ */
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
