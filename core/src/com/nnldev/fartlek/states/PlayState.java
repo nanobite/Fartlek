@@ -34,6 +34,9 @@ public class PlayState extends State {
     private Button playBtn;
     private Button restartBtn;
     private Button quitBtn;
+    private Button btnLeft;
+    private Button btnRight;
+    private Button btnShoot;
     private Rectangle pauseRect;
     private Rectangle playRect;
     private Runner runner;
@@ -107,6 +110,10 @@ public class PlayState extends State {
         playBtn.setRectangle(playRect);
         exitBtn = new Button("Buttons\\exitbtn.png", (float) (Fartlek.WIDTH - 30), (float) (Fartlek.HEIGHT - 30), true);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
+
+        btnLeft = new Button("Buttons\\leftbtn.png", 75, 75, true);
+        btnRight = new Button("Buttons\\rightbtn.png", Fartlek.WIDTH - 75, 75, true);
+        btnShoot = new Button("Buttons\\shootbtn.png", Fartlek.WIDTH / 2, 75, true);
 
         score = 0;
         dead = false;
@@ -272,14 +279,14 @@ public class PlayState extends State {
                 //Allows for the player to move using gyro
 
                 // If the x,y position of the click is in the bottom left
-                if (bottomLeft.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                if (btnLeft.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                     runner.left();
                 }
                 // If the x,y position of the click is in the bottom right
-                if (bottomRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
+                if (btnRight.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                     runner.right();
                 }// If the x,y position of the click is in the bottom middle
-                if (bottomMiddle.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
+                if (btnShoot.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)
                         && Gdx.input.justTouched()) {
                     runner.shoot();
                 }
@@ -354,7 +361,7 @@ public class PlayState extends State {
                         if (obstacleSet.get(i).getPath().equals(Fartlek.ENEMY_TEXTURE)) {
                             obstacleSet.get(i).dispose();
                             obstacleSet.get(i).setRectangle(new Rectangle(-420, -69, 1, 1));
-                            score += 5;
+                            score += 5*runner.bullets.get(i).kills;
                             runner.bullets.get(j).kills++;
                             if (killerID == -1) {
                                 killerID = j;
@@ -421,6 +428,11 @@ public class PlayState extends State {
                 sb.draw(playBtn.getTexture(), playBtn.getPosition().x, playBtn.getPosition().y, playBtn.getRectangle().width,
                         playBtn.getRectangle().height);
             }
+        }
+        if (PLAYSTATE_PHASE == Phase.RUNNING) {
+            sb.draw(btnLeft.getTexture(), btnLeft.getPosition().x, btnLeft.getPosition().y);
+            sb.draw(btnRight.getTexture(), btnRight.getPosition().x, btnRight.getPosition().y);
+            sb.draw(btnShoot.getTexture(), btnShoot.getPosition().x, btnShoot.getPosition().y);
         }
         //Draws bullets
         if (runner.shoot) {
@@ -502,6 +514,9 @@ public class PlayState extends State {
         for (int i = 0; i < obstacleSet.size(); i++) {
             obstacleSet.get(i).dispose();
         }
+        btnLeft.dispose();
+        btnRight.dispose();
+        btnShoot.dispose();
         sceneTiles.clear();
         obstacleSet.clear();
     }

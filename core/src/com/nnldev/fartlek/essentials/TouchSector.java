@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Nano on 12/12/2015.
+ * Sectors of the screen which if touched will allow for actions
  */
 public class TouchSector {
     private Vector3 position;
