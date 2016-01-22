@@ -16,6 +16,7 @@ import java.io.IOException;
 
 /**
  * Created by Nano on 1/20/2016.
+ * Screen where all the scores were going to be displayed
  */
 public class ScoreState extends State {
     private String scores;
@@ -75,11 +76,21 @@ public class ScoreState extends State {
         }
     }
 
+    /**
+     * Th update method
+     *
+     * @param deltaTime The time since the previous update
+     */
     @Override
     public void update(float deltaTime) {
         handleInput();
     }
 
+    /**
+     * The render method where everything is drawn
+     *
+     * @param sb All the graphics that will be drawn
+     */
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
@@ -88,6 +99,9 @@ public class ScoreState extends State {
         sb.end();
     }
 
+    /**
+     * The method where all useless objects are disposed of
+     */
     @Override
     public void dispose() {
         exitBtn.dispose();

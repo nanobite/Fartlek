@@ -39,7 +39,7 @@ public class SettingsState extends State {
     }
 
     /**
-     * Hanldes usr input
+     * Handles user input
      */
     @Override
     protected void handleInput() {
