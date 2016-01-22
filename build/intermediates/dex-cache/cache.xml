@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\core\build\libs\core-1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1326a50efbd054c5390977f24d07ebbf05537254">
+        <dex dex="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\pre-dexed\debug\core-1.0_e249f3db457da3fa70d5e045f5d0042d45599943.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nano\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-freetype\1.7.1\af361631aeda42eab0f9fc83e5f48a93df459766\gdx-freetype-1.7.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="af361631aeda42eab0f9fc83e5f48a93df459766">
+        <dex dex="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\pre-dexed\debug\gdx-freetype-1.7.1_1c8e3e93ed2eee211940c4499f0194f136e7dbbe.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nano\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-backend-android\1.7.1\454871d4783564f17959bf9247660e7f56ecc4ab\gdx-backend-android-1.7.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="454871d4783564f17959bf9247660e7f56ecc4ab">
+        <dex dex="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\pre-dexed\debug\gdx-backend-android-1.7.1_09ec5753b3c0a19c1e6a51bb2e150601bcd21bec.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nano\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-box2d\1.7.1\fd23897393900f8f888222795e3229eff600fb3d\gdx-box2d-1.7.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="fd23897393900f8f888222795e3229eff600fb3d">
+        <dex dex="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\pre-dexed\debug\gdx-box2d-1.7.1_9697a8d3fd7d6503a78904ec10b36d496d5cd261.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nano\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx\1.7.1\2179cc613447c297623a4a6d2ba6692c3aaff804\gdx-1.7.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="2179cc613447c297623a4a6d2ba6692c3aaff804">
+        <dex dex="C:\Users\Nano\Documents\Grade 12\Programming\Fartlek\android\build\intermediates\pre-dexed\debug\gdx-1.7.1_2b8eb9d937ffdbd7bd774f70624a1476468f03ad.jar" />
+    </item>
+
+</items>
