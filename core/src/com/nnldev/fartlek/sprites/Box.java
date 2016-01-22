@@ -1,5 +1,5 @@
-//Lazar Vukoje
-//Jan 07 2016
+//Lazar and Nano
+//Dec 12 2015
 //Concrete class used to create obstacles from obstacle abstract class
 
 package com.nnldev.fartlek.sprites;
