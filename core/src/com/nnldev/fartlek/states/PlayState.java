@@ -1,5 +1,5 @@
 /**
- * @author Nano, Nick
+ * @author Nano, Nick, Lazar
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
