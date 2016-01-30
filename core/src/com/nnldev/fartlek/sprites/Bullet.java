@@ -1,3 +1,6 @@
+//Lazar Vukoje
+//Jan 17 2016
+//Concrete class used to create bullet objects for the runner to shoot
 package com.nnldev.fartlek.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -8,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.nnldev.fartlek.Fartlek;
 
 public class Bullet {
+    //instance vars
     private Vector3 position;
     private Vector3 velocity;
     private Texture texture;
@@ -19,7 +23,7 @@ public class Bullet {
 
     /**
      * Main constuctor for bullet
-     * Sets a basic position and its speed
+     * Sets a basic position with its speed and number of kills
      */
     public Bullet() {
         position = new Vector3(0, 160, 0);
@@ -43,7 +47,11 @@ public class Bullet {
         velocity = new Vector3(0, verticalSpeed, 0);
         rectangle = new Rectangle(x, getYPosition(), 32, 32);
     }
-
+    
+     /**
+     * Updates the bullet, moves it in accordance to the background
+     * @param dt The time which has passed since the last update
+     */
     public void update(float dt) {
         setYPosition(position.y + velocity.y);
         rectangle.setY(position.y + velocity.y);
@@ -54,63 +62,120 @@ public class Bullet {
         }
     }
 
+    /**
+     * draws the bullet
+     * @param sb the SpriteBatch being used to draw
+     */
     public void render(SpriteBatch sb) {
         sb.draw(texture, getXPosition(), getYPosition(), 32, 32);
     }
 
+    /**
+     * gets the texture of the box
+     * @return the texture
+     */
     public Texture getTexture() {
         return texture;
     }
 
+    /**
+     * gets the rectangle
+     * @return the rectangle
+     */
     public Rectangle getRectangle() {
         return rectangle;
     }
 
+   /**
+     * sets rectangle
+     * @param rectangle The rectangle for whom the bounds of this bullet shall be set to
+     */
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
     }
 
+    /**
+     * Gets the position of the box
+     * @return the position
+     */
     public Vector3 getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3 position) {
-        this.position = position;
-    }
+    /**
+     * Sets the position of the bullet
+     * @param position The Vector3 of the position you would like to set the obstacle's position to
+     */
+    public void setPosition(Vector3 position) { this.position = position; }
 
+    /**
+     * Sets x position
+     * @param x The x position being set
+     */
     public void setXPosition(float x) {
         position.x = x;
     }
 
+    /**
+     * gets x position
+     * @return the x position
+     */
     public float getXPosition() {
         return position.x;
     }
 
+    /**
+     * Sets y position
+     * @param y The x position being used
+     */
     public void setYPosition(float y) {
         position.y = y;
 
     }
 
+    /**
+     * gets y position
+     * @return the x position
+     */
     public float getYPosition() {
         return position.y;
     }
 
+    /**
+     * gets the velocity
+     * @return the velocity
+     */
     public Vector3 getVelocity() {
         return velocity;
     }
 
+    /**
+     * sets the velocity
+     * @param velocity the velocity being set
+     */
     public void setVelocity(Vector3 velocity) {
         this.velocity = velocity;
     }
-
+    
+    /**
+     * gets the path to the sprite image
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
-
+    
+    /**
+     * sets the path
+     * @param texturePath the path being used
+     */
     public void setPath(String texturePath) {
         path = texturePath;
     }
-
+    
+    /**
+     * Disposes of the bullets texture
+     */
     public void dispose() {
         texture.dispose();
     }
