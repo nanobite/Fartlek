@@ -65,9 +65,9 @@ public class PlayState extends State {
 
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
     public static float startYRotation, yRotationDiff;
+
     /**
      * All the phases of the game
-     * 
      */
     public enum Phase {
         RUNNING, PAUSE, DEAD
@@ -103,9 +103,9 @@ public class PlayState extends State {
         playBtn.setRectangle(playRect);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
 
-        btnLeft = new Button("Buttons\\leftbtn.png", 75, 75, true);
-        btnRight = new Button("Buttons\\rightbtn.png", Fartlek.WIDTH - 75, 75, true);
-        btnShoot = new Button("Buttons\\shootbtn.png", Fartlek.WIDTH / 2, 75, true);
+        btnLeft = new Button("Buttons\\leftbtn.png", 75, 75, true, false);
+        btnRight = new Button("Buttons\\rightbtn.png", Fartlek.WIDTH - 75, 75, true, false);
+        btnShoot = new Button("Buttons\\shootbtn.png", Fartlek.WIDTH / 2, 75, true, false);
 
         score = 0;
 
@@ -159,8 +159,10 @@ public class PlayState extends State {
     public void resetSceneTile(int index) {
         sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
+
     /**
      * Makes new obstacles
+     *
      * @param amt The amount of obstacles to make
      */
     public void newObstacles(int amt) {
@@ -174,8 +176,10 @@ public class PlayState extends State {
             prevY++;
         }
     }
+
     /**
      * Generates a random x position for the obstacle
+     *
      * @return returns a random float value for the x position of an obstacle
      */
     public float generateObXPos() {
@@ -185,8 +189,10 @@ public class PlayState extends State {
         }
         return xPos;
     }
+
     /**
      * Generates a random y position for the obstacle
+     *
      * @return returns a random float value for the y position of an obstacle
      */
     public float generateObYPos(int prevY) {

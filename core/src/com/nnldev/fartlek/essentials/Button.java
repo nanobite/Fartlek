@@ -15,6 +15,7 @@ public class Button {
     private Texture texture;
     private Rectangle rectangle;
     private String path;
+    private boolean vibrate;
 
     /**
      * Draws a button, allowing for the decision to draw the button centred or not textured.
@@ -33,7 +34,19 @@ public class Button {
             position = new Vector3(x, y, 0);
         }
         rectangle = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
+    }/**
+     * Draws a button, allowing for the decision to draw the button centred or not textured.
+     *
+     * @param path   The path of the image to fetch the image from.
+     * @param x      The X coordinate of the image to be drawn.
+     * @param y      The Y coordinate of the image to be drawn.
+     * @param centre Whether the image will be centred onto the point or not.
+     */
+    public Button(String path, float x, float y, boolean centre,boolean vibrate) {
+        this(path,x,y,centre);
+        this.vibrate = vibrate;
     }
+
 
     /**
      * Gets the position of the button
@@ -97,7 +110,7 @@ public class Button {
      * @return
      */
     public boolean contains(Vector3 coords) {
-        if (rectangle.contains(coords.x, coords.y)) Gdx.input.vibrate(50);
+        if (rectangle.contains(coords.x, coords.y)&&vibrate) Gdx.input.vibrate(50);
         return (rectangle.contains(coords.x, coords.y)) ? true : false;
     }
 
