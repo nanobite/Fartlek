@@ -19,6 +19,7 @@ import java.util.ArrayList;
  */
 public class Runner {
     public boolean reloaded;
+    private float reloadTimer = ((float)1/(float)3);    
     private boolean startCounting;
     private Vector3 position;
     private Vector3 velocity;
@@ -101,7 +102,7 @@ public class Runner {
         if (startCounting) {
             shotTimer += dt;
         }
-        if (shotTimer >= 1) {
+        if (shotTimer >= reloadTimer) {
             shotTimer = 0;
             reloaded = true;
             startCounting = false;
