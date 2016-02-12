@@ -1,5 +1,5 @@
 /**
- * @author Nano, Nick
+ * @author Nano, Nick, Lazar
  * In game Play State for the Fartlek game.
  */
 package com.nnldev.fartlek.states;
@@ -66,6 +66,9 @@ public class PlayState extends State {
     public static String tileTextureName = Fartlek.SCENE_BACKGROUND;
     public static float startYRotation, yRotationDiff;
 
+    /**
+     * All the phases of the game
+     */
     public enum Phase {
         RUNNING, PAUSE, DEAD
     }
@@ -100,9 +103,9 @@ public class PlayState extends State {
         playBtn.setRectangle(playRect);
         runner = new Runner(Fartlek.PLAYER_ANIMATION_NAME, Fartlek.PLAYER_ANIMATION_FRAMES, rectangles);
 
-        btnLeft = new Button("Buttons\\leftbtn.png", 75, 75, true);
-        btnRight = new Button("Buttons\\rightbtn.png", Fartlek.WIDTH - 75, 75, true);
-        btnShoot = new Button("Buttons\\shootbtn.png", Fartlek.WIDTH / 2, 75, true);
+        btnLeft = new Button("Buttons\\leftbtn.png", 75, 75, true, false);
+        btnRight = new Button("Buttons\\rightbtn.png", Fartlek.WIDTH - 75, 75, true, false);
+        btnShoot = new Button("Buttons\\shootbtn.png", Fartlek.WIDTH / 2, 75, true, false);
 
         score = 0;
 
@@ -123,6 +126,7 @@ public class PlayState extends State {
         tiles = 3;
         sceneTiles = new ArrayList<Scene>();
         sceneTiles.add(0, new Scene(tileTextureName, 0, 0));
+        //Adds a bunch of scene tiles
         for (int i = 1; i < tiles; i++) {
             sceneTiles.add(i, new Scene(tileTextureName, 0, i * sceneTiles.get(0).getTexture().getHeight()));
         }
@@ -156,6 +160,11 @@ public class PlayState extends State {
         sceneTiles.get(index).setY((sceneTiles.get(0).getTexture().getHeight() * (tiles - 1)) - 8);
     }
 
+    /**
+     * Makes new obstacles
+     *
+     * @param amt The amount of obstacles to make
+     */
     public void newObstacles(int amt) {
         for (int i = 0; i < amt; i++) {
             obTypeChoose = (int) (Math.random() * 2);
@@ -168,6 +177,11 @@ public class PlayState extends State {
         }
     }
 
+    /**
+     * Generates a random x position for the obstacle
+     *
+     * @return returns a random float value for the x position of an obstacle
+     */
     public float generateObXPos() {
         float xPos = -1;
         while ((xPos < 0) || (xPos > (Fartlek.WIDTH - Box.BOX_WIDTH))) {
@@ -176,6 +190,11 @@ public class PlayState extends State {
         return xPos;
     }
 
+    /**
+     * Generates a random y position for the obstacle
+     *
+     * @return returns a random float value for the y position of an obstacle
+     */
     public float generateObYPos(int prevY) {
         float yPos = obstacleSet.get(prevY).getYPosition() + Box.BOX_WIDTH;
         yPos += ((float) (Math.random() * Fartlek.HEIGHT / 3)) + (runner.getRectangle()[0].getWidth() / 2);
@@ -217,12 +236,13 @@ public class PlayState extends State {
      */
     @Override
     protected void handleInput() {
-        //If th screen is touched
+        //Checks if the screen was touched
         if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
-            //if the screen is touchd once
+            //If it was pressed only once, not pressed and held
             if (Gdx.input.justTouched()) {
-                //Switches between actionsfo the playr while running, while dead and while pausing
+                //If the game is paused it will handle more functionality
                 if (PLAYSTATE_PHASE == Phase.PAUSE) {
+                    //If the mouse position is on the pause button
                     if (pauseBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         if (pauseBtn.getRectangle().contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                             gsm.push(new MenuState(gsm));
@@ -245,6 +265,7 @@ public class PlayState extends State {
                         pauseBtn.setTexture("Buttons\\exitbtn.png");
                     }
                 }
+                //If the player is dead
                 if (PLAYSTATE_PHASE == Phase.DEAD) {
                     if (restartBtn.contains(Fartlek.mousePos.x, Fartlek.mousePos.y)) {
                         dispose();
@@ -255,7 +276,6 @@ public class PlayState extends State {
                         gsm.push(new MenuState(gsm));
                     }
                 }
-
             }
             //If the runner is running
             if (PLAYSTATE_PHASE == Phase.RUNNING) {
@@ -420,7 +440,6 @@ public class PlayState extends State {
         }
         scoreFont.draw(sb, "Score: " + score, scoreFontX, scoreFontY);
         if (drawCollat) {
-            //Draws collateral txt
             collatFont.draw(sb, "" + collatCount, Fartlek.WIDTH / 2, collatFontY);
             collatFontY++;
             if (collatFontY > Fartlek.HEIGHT) {

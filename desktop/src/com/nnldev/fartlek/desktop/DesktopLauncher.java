@@ -1,4 +1,11 @@
 package com.nnldev.fartlek.desktop;
+/**
+ * Desktop launcher
+ *
+ * @author Nano
+ * January 20, 2016
+ * Desktop launcher
+ */
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;

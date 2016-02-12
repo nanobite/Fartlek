@@ -13,12 +13,13 @@ import com.nnldev.fartlek.states.PlayState;
 import java.util.ArrayList;
 
 /**
- * Nano, Nick
+ * Nano, Nick, Lazar
  * January 20, 2016
  * Runner class which is the player who is running
  */
 public class Runner {
     public boolean reloaded;
+    private float reloadTimer = ((float)1/(float)3);    
     private boolean startCounting;
     private Vector3 position;
     private Vector3 velocity;
@@ -101,7 +102,7 @@ public class Runner {
         if (startCounting) {
             shotTimer += dt;
         }
-        if (shotTimer >= 1) {
+        if (shotTimer >= reloadTimer) {
             shotTimer = 0;
             reloaded = true;
             startCounting = false;
@@ -249,7 +250,7 @@ public class Runner {
      * Adds a new bullet to the bullet timer
      */
     public void shoot() {
-
+        //only if reloaded (1 sec delay)
         if (reloaded) {
             System.out.println("Shoot");
             bullets.add(new Bullet("Items\\bullet.png", (getPosition().x + (15)) - (new Texture("Items\\bullet.png").getWidth() / 2)));
@@ -258,7 +259,8 @@ public class Runner {
             startCounting = true;
         }
     }
-
+    
+    //disposes of texture and sound
     public void dispose() {
         texture.dispose();
         moveSound.dispose();
